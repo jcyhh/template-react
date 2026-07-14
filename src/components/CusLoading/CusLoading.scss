@@ -1,0 +1,40 @@
+.cus-loading-popup {
+    z-index: 1000000;
+
+    &__content {
+        background: transparent;
+    }
+}
+
+.cus-loading {
+    width: 300px;
+    height: 300px;
+
+    &__svg {
+        width: 300px;
+        height: 300px;
+        overflow: visible;
+    }
+
+    &__dot {
+        transform-origin: 150px 150px;
+        animation: cus-loading-rotate 3s ease-in-out infinite;
+        animation-delay: calc(0.2s * var(--i));
+
+        circle {
+            fill: url("#cus-loading-gradient");
+            filter: drop-shadow(0 0 30px #152535);
+        }
+    }
+}
+
+@keyframes cus-loading-rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50%,
+    100% {
+        transform: rotate(360deg);
+    }
+}

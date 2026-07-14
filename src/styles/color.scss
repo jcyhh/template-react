@@ -1,0 +1,29 @@
+:root {
+    --app-color: #FFE5A5;
+    --app-green: #34B926;
+    --app-red: #F1463D;
+    --app-blue: #1385FF;
+    --app-yellow: #F5C245;
+
+    --app-card-bg: #1E1E1E;
+    --app-box-bg: #2A2A2A;
+}
+
+body{
+    background-color: #040404;
+    color: #FFFFFF;
+}
+
+input{
+    &::placeholder{
+        color: #FFFFFF80;
+    }
+}
+
+.app-color{ color: var(--app-color); }
+.white{ color: #FFFFFF; } 
+.black{ color: #000000; }
+.green{ color: var(--app-green); }
+.red{ color: var(--app-red); }
+.blue{ color: var(--app-blue); }
+.yellow{ color: var(--app-yellow); }

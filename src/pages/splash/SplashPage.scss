@@ -1,0 +1,49 @@
+.splash-page {
+    position: relative;
+    min-height: 100svh;
+    overflow: hidden;
+    background-color: #040404;
+
+    &__logo {
+        position: fixed;
+        bottom: 953px;
+        left: 263px;
+        width: 224px;
+        height: 211px;
+        object-fit: contain;
+        animation-delay: 0.3s;
+    }
+
+    &__tips {
+        position: fixed;
+        bottom: 30px;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100vw;
+        color: #8D9094;
+        font-size: 20px;
+        text-align: center;
+        animation-delay: 0.3s;
+    }
+
+    &__tips-text {
+        margin-right: 10px;
+    }
+
+    &__loading {
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgb(141 144 148 / 30%);
+        border-top-color: #8D9094;
+        border-radius: 50%;
+        animation: splash-loading 0.8s linear infinite;
+    }
+}
+
+@keyframes splash-loading {
+    to {
+        transform: rotate(360deg);
+    }
+}
