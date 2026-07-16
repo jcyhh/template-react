@@ -22,39 +22,48 @@ Project conventions such as import paths, page modules, styles and asset naming 
 ## Development
 ## 开发命令
 
+This template uses pnpm as the package manager.
+本模板使用 pnpm 作为依赖管理工具。
+
+pnpm keeps one global content-addressable store, which is friendlier when many projects are created from the same template.
+pnpm 会复用全局内容寻址存储，对基于同一模板创建多个项目的场景更友好。
+
+The project rejects npm and yarn for dependency installation and common scripts.
+项目会拒绝使用 npm 和 yarn 安装依赖或运行常用脚本。
+
 Install dependencies before running the project.
 运行项目前先安装依赖。
 
 ```bash
-npm install
+pnpm install
 ```
 
 Start the local development server.
 启动本地开发服务。
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Build the production bundle.
 构建生产包。
 
 ```bash
-npm run build
+pnpm build
 ```
 
 Run the test suite.
 运行测试。
 
 ```bash
-npm test
+pnpm test
 ```
 
 Run Oxlint.
 运行 Oxlint。
 
 ```bash
-npm run lint
+pnpm lint
 ```
 
 ## VS Code extensions

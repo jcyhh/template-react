@@ -7,6 +7,21 @@ Read this file before changing code in this template.
 These rules are part of the template and should be preserved when creating new projects from it.
 这些规则属于模板的一部分，基于模板创建新项目时应保留。
 
+## Package manager
+## 依赖管理
+
+Use pnpm for dependency installation, scripts, tests, builds and lint checks.
+依赖安装、脚本运行、测试、构建和 lint 检查统一使用 pnpm。
+
+Keep `pnpm-lock.yaml` as the only package lock file.
+只保留 `pnpm-lock.yaml` 作为依赖锁文件。
+
+Do not create or commit `package-lock.json` or `yarn.lock`.
+不要创建或提交 `package-lock.json` 或 `yarn.lock`。
+
+Keep the package-manager guard enabled so npm and yarn fail fast.
+保留包管理器校验脚本，让 npm 和 yarn 尽早失败。
+
 ## Import paths
 ## 引入路径
 
@@ -103,8 +118,8 @@ Use PNG or WebP for complex raster images, screenshots, glow effects and exporte
 Run tests, build and lint before claiming a change is complete.
 声明改动完成前需要运行测试、构建和 lint。
 
-At minimum, run `npm test`, `npm run build` and `npm run lint`.
-至少运行 `npm test`、`npm run build` 和 `npm run lint`。
+At minimum, run `pnpm test`, `pnpm build` and `pnpm lint`.
+至少运行 `pnpm test`、`pnpm build` 和 `pnpm lint`。
 
 ## Test design
 ## 测试设计
