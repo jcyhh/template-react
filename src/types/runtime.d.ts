@@ -15,6 +15,7 @@ interface EthereumProvider {
 declare global {
     interface Window {
         __FROM_FLUTTER__?: boolean
+        __EXPECT_DAPP_PROVIDER__?: boolean
         Flutter?: {
             postMessage?: (message: string) => void
         }

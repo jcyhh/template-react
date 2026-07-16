@@ -1,6 +1,10 @@
 import type { Chain } from 'viem'
 
 import { DAPP_CURRENT_CHAIN } from './config.ts'
+import {
+    clearControlledDappChainChange,
+    markControlledDappChainChange,
+} from './listenerGuard.ts'
 import { getDappProvider } from './provider.ts'
 import type { DappEnsureChainOptions } from './types.ts'
 
@@ -47,10 +51,20 @@ export async function addDappChain(chain: Chain = DAPP_CURRENT_CHAIN): Promise<v
 }
 
 export async function switchDappChain(chain: Chain = DAPP_CURRENT_CHAIN): Promise<void> {
-    await getDappProvider().request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: toHexChainId(chain.id) }],
-    })
+    const isControlledChange = markControlledDappChainChange(chain.id)
+
+    try {
+        await getDappProvider().request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: toHexChainId(chain.id) }],
+        })
+    } catch (error) {
+        if (isControlledChange) {
+            clearControlledDappChainChange()
+        }
+
+        throw error
+    }
 }
 
 export async function ensureDappChain(

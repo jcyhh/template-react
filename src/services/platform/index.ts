@@ -1,6 +1,7 @@
 export {
     getRuntimeHost,
     isDappEnvironment,
+    isDappProviderExpected,
     isFlutterBridgeReady,
     isFlutterHost,
     type RuntimeHost,

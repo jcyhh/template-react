@@ -39,8 +39,11 @@ All enabled languages are defined in `APP_LANGUAGES` inside `config.ts`.
 Each item contains dynamic imports for both common resource packages.
 每个数组项都包含两个 common 资源包的动态 import。
 
-The template enables every language by default.
-模板默认启用全部语言。
+The template enables i18n by default through `APP_CONFIG.enableI18n`.
+模板通过 `APP_CONFIG.enableI18n` 默认开启多语言。
+
+When `enableI18n` is `false`, initialization, local storage and the app store are fixed to `zh-Hans`. Translation calls remain available, but language switching and the request `lang` header are disabled.
+当 `enableI18n` 为 `false` 时，初始化、本地缓存和 app store 都固定为 `zh-Hans`。翻译调用仍可正常使用，但语言切换和请求 `lang` 头会关闭。
 
 When a real project does not need a language, comment out the whole language item so Vite stops generating that language chunk.
 真实项目不需要某种语言时，注释整个语言数组项即可让 Vite 不再生成对应语言 chunk。
@@ -75,5 +78,5 @@ Language changes are synchronized to localStorage, `<html lang>` and the app sto
 The frontend and backend should use the same standard language codes.
 前后端应统一使用同一套标准语言代码。
 
-The request layer automatically reads the current language and sends it through the `lang` request header.
-请求层会自动读取当前语言，并通过 `lang` 请求头传给后端。
+When i18n is enabled, the request layer reads the current language and sends it through the `lang` request header.
+开启多语言时，请求层会读取当前语言，并通过 `lang` 请求头传给后端。

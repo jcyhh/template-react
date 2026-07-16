@@ -7,20 +7,17 @@ import {
 } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import languageIconUrl from '@/assets/layout/headbar/lang.svg'
 import { Picker, type PickerConfirmPayload, type PickerOption } from '@/components/Picker'
+import { APP_CONFIG } from '@/config/index.ts'
 import { changeAppLanguage } from '@/i18n/changeAppLanguage.ts'
 import { APP_LANGUAGES } from '@/i18n/config.ts'
 import { useAppStore } from '@/stores/app/store.ts'
 
 import './LanguageSwitch.scss'
 
-const LANGUAGE_PICKER_OPTIONS: PickerOption[] = APP_LANGUAGES.map((language) => ({
-    label: language.name,
-    value: language.code,
-}))
-
 export interface LanguageSwitchProps {
-    children: ReactNode
+    children?: ReactNode
     className?: string
     onOpen?: () => void
 }
@@ -30,7 +27,15 @@ function getLanguageIndex(languageCode: string): number {
     return index >= 0 ? index : 0
 }
 
-export function LanguageSwitch({
+export function LanguageSwitch(props: LanguageSwitchProps) {
+    if (!APP_CONFIG.enableI18n) {
+        return <div style={{ display: 'none' }} />
+    }
+
+    return <LanguageSwitchContent {...props} />
+}
+
+function LanguageSwitchContent({
     children,
     className = '',
     onOpen,
@@ -40,6 +45,13 @@ export function LanguageSwitch({
     const confirmedLanguageCodeRef = useRef('')
     const [showLanguagePopup, setShowLanguagePopup] = useState(false)
     const [pendingLanguageCode, setPendingLanguageCode] = useState(languageCode)
+    const languagePickerOptions = useMemo<PickerOption[]>(
+        () => APP_LANGUAGES.map((language) => ({
+            label: language.name,
+            value: language.code,
+        })),
+        [],
+    )
     const pendingLanguageIndex = useMemo(
         () => getLanguageIndex(pendingLanguageCode),
         [pendingLanguageCode],
@@ -47,6 +59,9 @@ export function LanguageSwitch({
     const classes = ['language-switch', className]
         .filter(Boolean)
         .join(' ')
+    const triggerContent = children === undefined ? (
+        <img src={languageIconUrl} className="language-switch__default" alt="Language" />
+    ) : children
 
     function openLanguageSwitch() {
         confirmedLanguageCodeRef.current = ''
@@ -109,12 +124,12 @@ export function LanguageSwitch({
                 onClick={handleOpenLanguageSwitch}
                 onKeyDown={handleLanguageSwitchKeyDown}
             >
-                {children}
+                {triggerContent}
             </div>
 
             <Picker
                 show={showLanguagePopup}
-                options={LANGUAGE_PICKER_OPTIONS}
+                options={languagePickerOptions}
                 value={pendingLanguageIndex}
                 title={t('切换语言')}
                 confirmText={t('确认')}

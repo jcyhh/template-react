@@ -10,12 +10,12 @@ async function readSource(file) {
     }
 }
 
-test('app layout brand extracts the shared logo and app name block', async () => {
+test('main layout brand extracts the shared logo and app name block', async () => {
     const [brand, styles, header, entry] = await Promise.all([
-        readSource('src/layouts/AppLayout/AppBrand/AppBrand.tsx'),
-        readSource('src/layouts/AppLayout/AppBrand/AppBrand.scss'),
-        readSource('src/layouts/AppLayout/HeaderBar/HeaderBar.tsx'),
-        readSource('src/layouts/AppLayout/index.ts'),
+        readSource('src/pages/main/layout/AppBrand/AppBrand.tsx'),
+        readSource('src/pages/main/layout/AppBrand/AppBrand.scss'),
+        readSource('src/pages/main/layout/HeaderBar/HeaderBar.tsx'),
+        readSource('src/pages/main/layout/index.ts'),
     ])
 
     assert.match(brand, /export function AppBrand/)
@@ -38,8 +38,8 @@ test('app layout brand extracts the shared logo and app name block', async () =>
 })
 
 test('app brand navigates back to home only when it is not already on home', async () => {
-    const brand = await readSource('src/layouts/AppLayout/AppBrand/AppBrand.tsx')
-    const sidebar = await readSource('src/layouts/AppLayout/SidebarMenu.tsx')
+    const brand = await readSource('src/pages/main/layout/AppBrand/AppBrand.tsx')
+    const sidebar = await readSource('src/pages/main/layout/SidebarMenu.tsx')
 
     assert.match(brand, /useLocation/)
     assert.match(brand, /useAppNavigate/)

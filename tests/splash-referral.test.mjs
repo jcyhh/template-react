@@ -43,15 +43,21 @@ test('splash route reuses the same page and clears referral URL after caching', 
     assert.match(source, /navigate\(ROUTE_PATH\.root,\s*\{\s*replace:\s*true\s*\}\)/)
 })
 
-test('splash page keeps the old logo, tips, loading and animation content', async () => {
+test('splash page uses a fixed English welcome text and reusable loading icon', async () => {
     const source = await readFile(
         new URL('../src/pages/splash/SplashPage.tsx', import.meta.url),
         'utf8',
     )
 
     assert.match(source, /assets\/start\/splash-logo\.png/)
-    assert.match(source, /Welcome to X SmartPay/)
-    assert.match(source, /splash-page__loading/)
+    assert.match(source, /APP_CONFIG\.name/)
+    assert.match(source, /`Welcome to \$\{APP_CONFIG\.name\}`/)
+    assert.doesNotMatch(source, /useTranslation/)
+    assert.doesNotMatch(source, /欢迎来到\{\{name\}\}/)
+    assert.match(source, /<Icon[\s\S]*name="loading"/)
+    assert.match(source, /name="loading"[\s\S]*size=\{\d+\}/)
+    assert.match(source, /loading \? \(/)
+    assert.match(source, /AUTH_STARTUP_RESULT\.walletRequired/)
     assert.match(source, /animate__zoomIn/)
     assert.match(source, /animate__slideInUp/)
 })

@@ -28,6 +28,11 @@ export interface DappInitializeWalletOptions {
     attachListeners?: boolean
 }
 
+export interface DappWalletListenerOptions {
+    onAccountsChanged?: (address: Address | undefined) => void
+    onChainChanged?: (chainId: number | undefined) => void
+}
+
 export interface DappContractReadParams<TAbi extends Abi = Abi> {
     address: Address
     abi: TAbi

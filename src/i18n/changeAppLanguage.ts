@@ -1,9 +1,12 @@
+import { APP_CONFIG } from '../config/index.ts'
 import { setLanguage } from '../services/storage/index.ts'
 import { useAppStore } from '../stores/app/index.ts'
 import { findAppLanguage } from './config.ts'
 import { appI18n } from './instance.ts'
 
 export async function changeAppLanguage(languageCode: string): Promise<boolean> {
+    if (!APP_CONFIG.enableI18n) return false
+
     const language = findAppLanguage(languageCode)
     if (!language) return false
 

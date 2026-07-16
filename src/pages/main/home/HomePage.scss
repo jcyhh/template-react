@@ -1,0 +1,11 @@
+.home-banner{
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    .home-carousel-card {
+        width: 100%;
+        height: 320px;
+        background-color: var(--app-card-bg);
+    }
+}
+

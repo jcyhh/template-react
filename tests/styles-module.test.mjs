@@ -14,7 +14,7 @@ const styleFiles = [
     'src/styles/layout/device.scss',
     'src/styles/layout/flex.scss',
     'src/styles/layout/grid.scss',
-    'src/layouts/AppLayout/AppLayout.scss',
+    'src/pages/main/layout/MainLayout.scss',
 ]
 
 test('project imports the global SCSS style entry', () => {
@@ -45,6 +45,8 @@ test('style module keeps global initialization in the SCSS entry', async () => {
 
 test('layout style modules expose common flex and grid helpers', () => {
     const mixins = readFileSync('src/styles/mixins.scss', 'utf8')
+    const color = readFileSync('src/styles/color.scss', 'utf8')
+    const common = readFileSync('src/styles/common/common.scss', 'utf8')
     const device = readFileSync('src/styles/layout/device.scss', 'utf8')
     const flex = readFileSync('src/styles/layout/flex.scss', 'utf8')
     const grid = readFileSync('src/styles/layout/grid.scss', 'utf8')
@@ -54,6 +56,11 @@ test('layout style modules expose common flex and grid helpers', () => {
     assert.match(mixins, /@mixin calc-vh\(\$px, \$property: height\)/)
     assert.match(mixins, /#\{\$property\}: calc\(100vh - #\{\$px\}px\)/)
     assert.match(mixins, /#\{\$property\}: calc\(100dvh - #\{\$px\}px\)/)
+    assert.match(color, /--app-btn-color:\s*#000000/)
+    assert.match(mixins, /\$color:\s*var\(--app-btn-color\)/)
+    assert.match(common, /@use '\.\.\/mixins' as \*/)
+    assert.match(common, /\.full-btn\s*\{[\s\S]*@include full-button\(88px, 20px\)/)
+    assert.match(common, /\.auto-btn\s*\{[\s\S]*@include auto-button\(\)/)
     assert.match(device, /\.safe-bottom/)
     assert.match(device, /env\(safe-area-inset-bottom\)/)
     assert.match(device, /\.full-view/)

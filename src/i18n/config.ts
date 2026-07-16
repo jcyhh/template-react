@@ -118,7 +118,10 @@ export const APP_LANGUAGES = [
 ] as const satisfies readonly AppLanguage[]
 
 export const FALLBACK_LANGUAGE_CODE = 'en'
-export const DEFAULT_LANGUAGE_CODE = APP_CONFIG.defaultLanguageCode
+export const FIXED_LANGUAGE_CODE = 'zh-Hans'
+export const DEFAULT_LANGUAGE_CODE = APP_CONFIG.enableI18n
+    ? APP_CONFIG.defaultLanguageCode
+    : FIXED_LANGUAGE_CODE
 
 export function findAppLanguage(code: string): AppLanguage | undefined {
     return APP_LANGUAGES.find((language) => language.code === code)

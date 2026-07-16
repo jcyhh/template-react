@@ -6,6 +6,7 @@ export const HTTP_HEADER = {
     authorization: 'Authorization',
     contentType: 'Content-Type',
     language: 'lang',
+    walletAddress: 'Address',
 } as const
 
 export const HTTP_CONTENT_TYPE = {

@@ -1,3 +1,10 @@
+@use '../mixins' as *;
+
+.container{
+    padding-top: 30px;
+    padding-right: 30px;
+    padding-left: 30px;
+}
 .tl{
     text-align: left;
 }
@@ -23,8 +30,8 @@
 }
 .word-break{
     word-break: break-all;
-	word-wrap: break-word;
-	line-break: anywhere;
+    word-wrap: break-word;
+    line-break: anywhere;
 }
 .word-nowrap{
     text-wrap: nowrap;
@@ -49,4 +56,10 @@
     word-break: break-all;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical !important;
+}
+.full-btn{
+    @include full-button(88px, 20px);
+}
+.auto-btn{
+    @include auto-button();
 }

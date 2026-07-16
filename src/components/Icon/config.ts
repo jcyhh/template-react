@@ -54,6 +54,9 @@ export const ICON_DEFINITIONS = {
             },
         ],
     },
+    'loading': {
+        paths: [],
+    },
 } as const satisfies Record<string, IconDefinition>
 
 export type IconName = keyof typeof ICON_DEFINITIONS | (string & {})

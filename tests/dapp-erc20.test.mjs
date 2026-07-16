@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
 import {
+    DAPP_CONFIG,
     DAPP_ERC20_MAX_APPROVE_AMOUNT,
     ERC20_ABI,
     getErc20ApproveAmount,
@@ -30,20 +31,18 @@ test('erc20 abi contains the common permanent token methods', () => {
     )
 })
 
-test('erc20 max approve is controlled by a string env switch', () => {
-    assert.equal(shouldUseErc20MaxAllowance({ VITE_ENABLE_ERC20_MAX_APPROVE: '1' }), true)
-    assert.equal(shouldUseErc20MaxAllowance({ VITE_ENABLE_ERC20_MAX_APPROVE: '0' }), false)
-    assert.equal(shouldUseErc20MaxAllowance({}), true)
+test('erc20 max approve is controlled by the project setting', () => {
+    assert.equal(shouldUseErc20MaxAllowance(), DAPP_CONFIG.enableErc20MaxApprove)
 })
 
-test('erc20 approve amount uses max allowance only when the setting is enabled', () => {
+test('erc20 approve amount uses the configured max allowance policy', () => {
+    const amount = 123n
+
     assert.equal(
-        getErc20ApproveAmount(123n, { VITE_ENABLE_ERC20_MAX_APPROVE: '1' }),
-        DAPP_ERC20_MAX_APPROVE_AMOUNT,
-    )
-    assert.equal(
-        getErc20ApproveAmount(123n, { VITE_ENABLE_ERC20_MAX_APPROVE: '0' }),
-        123n,
+        getErc20ApproveAmount(amount),
+        DAPP_CONFIG.enableErc20MaxApprove
+            ? DAPP_ERC20_MAX_APPROVE_AMOUNT
+            : amount,
     )
 })
 

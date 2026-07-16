@@ -42,7 +42,11 @@ export function Icon(props: IconProps) {
     }
 
     const iconSize = normalizeIconSize(size)
-    const iconClassName = className ? `app-icon ${className}` : 'app-icon'
+    const iconClassName = [
+        'app-icon',
+        `app-icon--${name}`,
+        className,
+    ].filter(Boolean).join(' ')
     const iconStyle: CSSProperties = {
         ...style,
         ...(iconSize ? { width: iconSize, height: iconSize } : {}),

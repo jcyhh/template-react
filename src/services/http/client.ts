@@ -1,7 +1,11 @@
 import axios from 'axios'
 
+import { APP_CONFIG } from '../../config/index.ts'
+import { logout } from '../../features/auth/session.ts'
 import { getRequestLanguage } from '../../i18n/getRequestLanguage.ts'
-import { getToken, removeToken } from '../storage/token.ts'
+import { isDappEnvironment } from '../platform/runtime.ts'
+import { getWalletAddress } from '../storage/common.ts'
+import { getToken } from '../storage/token.ts'
 import { isFormDataBody } from './body.ts'
 import {
     HTTP_AUTH,
@@ -20,15 +24,21 @@ export const httpClient = axios.create({
 httpClient.interceptors.request.use((config) => {
     const token = getToken()
 
-    config.headers.set(HTTP_HEADER.language, getRequestLanguage())
+    config.headers.set(
+        HTTP_HEADER.authorization,
+        `${HTTP_AUTH.scheme} ${token}`,
+    )
 
-    if (token) {
-        config.headers.set(
-            HTTP_HEADER.authorization,
-            `${HTTP_AUTH.scheme} ${token}`,
-        )
+    if (isDappEnvironment()) {
+        config.headers.set(HTTP_HEADER.walletAddress, getWalletAddress())
     } else {
-        config.headers.delete(HTTP_HEADER.authorization)
+        config.headers.delete(HTTP_HEADER.walletAddress)
+    }
+
+    if (APP_CONFIG.enableI18n) {
+        config.headers.set(HTTP_HEADER.language, getRequestLanguage())
+    } else {
+        config.headers.delete(HTTP_HEADER.language)
     }
 
     if (isFormDataBody(config.data)) {
@@ -37,8 +47,6 @@ httpClient.interceptors.request.use((config) => {
         config.headers.setContentType(HTTP_CONTENT_TYPE.json)
     }
 
-    // TODO(http): Attach the current wallet address after the wallet module is ready.
-    // TODO(http): 钱包模块完成后，在请求头中添加当前钱包地址。
     return config
 })
 
@@ -48,11 +56,7 @@ httpClient.interceptors.response.use(
         const httpError = toHttpError(error)
 
         if (httpError.status === HTTP_STATUS.unauthorized) {
-            removeToken()
-            // TODO(auth): Sync the global signed-out state after the auth store is ready.
-            // TODO(auth): 认证 Store 完成后，同步全局退出状态。
-            // TODO(router): Redirect to the login page after route guards are ready, and avoid duplicate redirects.
-            // TODO(router): React Router 完成后，跳转登录页并避免重复跳转。
+            logout()
         }
 
         // TODO(http): Show request errors through the shared message module after it is ready.

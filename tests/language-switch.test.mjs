@@ -3,13 +3,20 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 
 test('language switch exposes a reusable children wrapper module', async () => {
-    const [component, entry, readme] = await Promise.all([
+    const [component, entry, readme, showcasePage, showcaseStyle] = await Promise.all([
         readFile('src/components/LanguageSwitch/LanguageSwitch.tsx', 'utf8'),
         readFile('src/components/LanguageSwitch/index.ts', 'utf8'),
         readFile('src/components/LanguageSwitch/README.md', 'utf8'),
+        readFile('src/showcase/components/language-switch/LanguageSwitchShowcasePage.tsx', 'utf8'),
+        readFile('src/showcase/components/language-switch/LanguageSwitchShowcasePage.scss', 'utf8'),
     ])
 
-    assert.match(component, /children:\s*ReactNode/)
+    assert.match(component, /children\?:\s*ReactNode/)
+    assert.match(component, /languageIconUrl from '@\/assets\/layout\/headbar\/lang\.svg'/)
+    assert.doesNotMatch(component, /import \{ Icon \} from '@\/components\/Icon'/)
+    assert.match(component, /APP_CONFIG\.enableI18n/)
+    assert.match(component, /style=\{\{ display: 'none' \}\}/)
+    assert.match(component, /function LanguageSwitchContent/)
     assert.match(component, /useState\(false\)/)
     assert.match(component, /import \{ Picker/)
     assert.match(component, /APP_LANGUAGES/)
@@ -21,7 +28,7 @@ test('language switch exposes a reusable children wrapper module', async () => {
     assert.match(component, /setShowLanguagePopup\(true\)/)
     assert.match(component, /setShowLanguagePopup\(false\)/)
     assert.match(component, /<Picker\s+show=\{showLanguagePopup\}/)
-    assert.match(component, /options=\{LANGUAGE_PICKER_OPTIONS\}/)
+    assert.match(component, /options=\{languagePickerOptions\}/)
     assert.match(component, /value=\{pendingLanguageIndex\}/)
     assert.match(component, /onChange=\{handleLanguagePickerChange\}/)
     assert.match(component, /onConfirm=\{handleLanguagePickerConfirm\}/)
@@ -33,10 +40,33 @@ test('language switch exposes a reusable children wrapper module', async () => {
     assert.match(component, /const hasLanguageChanged = option\.value !== languageCode/)
     assert.match(component, /if \(!hasLanguageChanged\) return/)
     assert.match(component, /window\.location\.reload\(\)/)
-    assert.match(component, /\{children\}/)
+    assert.match(component, /const triggerContent = children === undefined \?/)
+    assert.match(component, /language-switch__default/)
+    assert.match(component, /<img src=\{languageIconUrl\}/)
+    assert.doesNotMatch(component, /<Icon name="arrow-down"/)
+    assert.match(component, /\{triggerContent\}/)
     assert.match(entry, /export \{ LanguageSwitch \} from '\.\/LanguageSwitch\.tsx'/)
     assert.match(readme, /children/)
-    assert.match(readme, /Vue slot/)
+    assert.doesNotMatch(readme, /Vue|slot/)
+    assert.match(readme, /Default icon trigger/)
+    assert.match(readme, /Custom button trigger/)
     assert.match(readme, /Picker/)
     assert.match(readme, /reloads the page/)
+    assert.match(showcasePage, /export function LanguageSwitchShowcasePage/)
+    assert.match(showcasePage, /useAppStore/)
+    assert.match(showcasePage, /<SecondaryHeader title="语言切换" \/>/)
+    assert.doesNotMatch(showcasePage, /Vue|slot/)
+    assert.doesNotMatch(showcasePage, /useState/)
+    assert.doesNotMatch(showcasePage, /打开次数/)
+    assert.doesNotMatch(showcasePage, /onOpen/)
+    assert.match(showcasePage, /<LanguageSwitch \/>/)
+    assert.match(showcasePage, /<LanguageSwitch>/)
+    assert.match(showcasePage, /默认图标入口/)
+    assert.match(showcasePage, /自定义按钮入口/)
+    assert.match(showcasePage, /切换语言/)
+    assert.match(showcasePage, /className="full-btn mt-30"/)
+    assert.match(showcasePage, /className="flex items-center mt-30"/)
+    assert.doesNotMatch(showcaseStyle, /&-icon-row/)
+    assert.doesNotMatch(showcaseStyle, /&-trigger/)
+    assert.match(showcaseStyle, /\.language-switch-showcase\s*\{/)
 })

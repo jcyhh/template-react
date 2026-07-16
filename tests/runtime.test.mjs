@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 import {
     getRuntimeHost,
     isDappEnvironment,
+    isDappProviderExpected,
     isFlutterBridgeReady,
     isFlutterHost,
 } from '../src/services/platform/runtime.ts'
@@ -23,6 +24,15 @@ test('classifies an injected wallet browser as dapp', () => {
 
     assert.equal(isDappEnvironment(), true)
     assert.equal(getRuntimeHost(), 'dapp')
+})
+
+test('identifies an explicit delayed DApp provider marker', () => {
+    globalThis.window = {
+        __FROM_FLUTTER__: true,
+        __EXPECT_DAPP_PROVIDER__: true,
+    }
+
+    assert.equal(isDappProviderExpected(), true)
 })
 
 test('gives the agreed Flutter marker host priority', () => {

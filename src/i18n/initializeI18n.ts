@@ -1,11 +1,13 @@
 import { initReactI18next } from 'react-i18next'
 
+import { APP_CONFIG } from '../config/index.ts'
 import { getLanguage, setLanguage } from '../services/storage/index.ts'
 import { useAppStore } from '../stores/app/index.ts'
 import {
     APP_LANGUAGES,
     DEFAULT_LANGUAGE_CODE,
     FALLBACK_LANGUAGE_CODE,
+    FIXED_LANGUAGE_CODE,
     findAppLanguage,
     type AppLanguage,
     type LanguageMessages,
@@ -17,11 +19,15 @@ async function loadResource(language: AppLanguage): Promise<LanguageMessages> {
 }
 
 export async function initializeI18n(): Promise<void> {
-    const selectedLanguage = findAppLanguage(getLanguage())
+    const selectedLanguageCode = APP_CONFIG.enableI18n
+        ? getLanguage()
+        : FIXED_LANGUAGE_CODE
+    const selectedLanguage = findAppLanguage(selectedLanguageCode)
         ?? findAppLanguage(DEFAULT_LANGUAGE_CODE)
         ?? APP_LANGUAGES[0]
-    const fallbackLanguage = findAppLanguage(FALLBACK_LANGUAGE_CODE)
-        ?? APP_LANGUAGES[0]
+    const fallbackLanguage = APP_CONFIG.enableI18n
+        ? findAppLanguage(FALLBACK_LANGUAGE_CODE) ?? APP_LANGUAGES[0]
+        : selectedLanguage
 
     const selectedMessages = await loadResource(selectedLanguage)
     const fallbackMessages = selectedLanguage.code === fallbackLanguage.code

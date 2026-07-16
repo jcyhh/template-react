@@ -74,6 +74,8 @@ test('agent rules document reuse of global style utilities', () => {
     const source = readFileSync('AGENTS.md', 'utf8')
 
     assert.match(source, /Reuse existing global utility classes from `src\/styles`/)
+    assert.match(source, /combining existing utility classes/)
     assert.match(source, /put that class directly in `className`/)
     assert.match(source, /Do not duplicate utility styles in page or component SCSS/)
+    assert.match(source, /Only write custom SCSS for styles that are genuinely page-specific/)
 })

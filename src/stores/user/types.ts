@@ -1,1 +1,5 @@
-export type UserStoreState = Record<string, never>
+export interface UserStoreState {
+    isAuthenticated: boolean
+    markSignedIn: () => void
+    markSignedOut: () => void
+}

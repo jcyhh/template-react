@@ -1,10 +1,11 @@
-import type { ComponentPropsWithoutRef, ComponentType } from 'react'
+import type { ComponentPropsWithoutRef, ComponentType, ReactNode } from 'react'
 
 import type { PopupPosition } from '../Popup.tsx'
 import { PopupContentBottom } from './Bottom.tsx'
 import { PopupContentCenter } from './Center.tsx'
 
-export type PopupContentProps = Omit<ComponentPropsWithoutRef<'div'>, 'onClose'> & {
+export type PopupContentProps = Omit<ComponentPropsWithoutRef<'div'>, 'onClose' | 'title'> & {
+    title?: ReactNode
     onClose?: () => void
 }
 

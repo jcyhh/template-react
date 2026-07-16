@@ -1,6 +1,7 @@
 export {
     DAPP_APPROVE_AMOUNT,
     DAPP_AMOUNT_DECIMALS,
+    DAPP_CONFIG,
     DAPP_CURRENT_CHAIN,
     DAPP_DEFAULT_GAS_PRICE,
     DAPP_DEFAULT_AMOUNT_DECIMALS,
@@ -12,6 +13,7 @@ export {
     DAPP_MIN_GAS_BALANCE,
     DAPP_PRODUCTION_CHAIN,
     DAPP_PROVIDER_STATUS,
+    DAPP_PROVIDER_DETECT_TIMEOUT,
     getDappAmountDecimals,
     getErc20ApproveAmount,
     shouldCheckDappGas,
@@ -32,6 +34,7 @@ export {
     getDappProvider,
     getDappWalletClient,
     resetDappProviderCache,
+    type DappProviderDetectOptions,
 } from './provider.ts'
 export {
     attachDappWalletListeners,
@@ -41,6 +44,8 @@ export {
     getConnectedDappAddress,
     initializeDappWallet,
     signDappMessage,
+    startDappWalletListeners,
+    stopDappWalletListeners,
 } from './wallet.ts'
 export {
     checkDappGasBalance,
@@ -92,6 +97,7 @@ export type {
     DappEthereumProvider,
     DappInitializeWalletOptions,
     DappSignResult,
+    DappWalletListenerOptions,
     DappWalletConnection,
 } from './types.ts'
 export type {

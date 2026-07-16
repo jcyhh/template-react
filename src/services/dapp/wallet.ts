@@ -12,6 +12,10 @@ import {
     getDappChainId,
 } from './chain.ts'
 import {
+    consumeControlledDappChainChange,
+    setDappWalletListenerActive,
+} from './listenerGuard.ts'
+import {
     detectDappProvider,
     getDappProvider,
     getDappWalletClient,
@@ -21,6 +25,7 @@ import type {
     DappEthereumProvider,
     DappInitializeWalletOptions,
     DappSignResult,
+    DappWalletListenerOptions,
     DappWalletConnection,
 } from './types.ts'
 
@@ -34,6 +39,17 @@ function getListenerRemover(provider: DappEthereumProvider) {
 }
 
 let removeDappWalletListeners: (() => void) | undefined
+
+function parseDappChainId(chainId: unknown): number | undefined {
+    if (typeof chainId === 'number' && Number.isFinite(chainId)) return chainId
+    if (typeof chainId !== 'string' || !chainId) return undefined
+
+    const parsed = chainId.startsWith('0x')
+        ? Number.parseInt(chainId, 16)
+        : Number(chainId)
+
+    return Number.isFinite(parsed) ? parsed : undefined
+}
 
 export async function detectDappWallet(): Promise<boolean> {
     useDappStore.getState().setProviderStatus(DAPP_PROVIDER_STATUS.checking)
@@ -65,9 +81,8 @@ export async function initializeDappWallet(
         useDappStore.getState().setChainId(DAPP_CURRENT_CHAIN.id)
     }
 
-    if (options.attachListeners !== false) {
-        removeDappWalletListeners?.()
-        removeDappWalletListeners = attachDappWalletListeners()
+    if (options.attachListeners === true) {
+        startDappWalletListeners()
     }
 
     return true
@@ -97,8 +112,7 @@ export async function connectDappWallet(): Promise<DappWalletConnection> {
 export function disconnectDappWallet(): void {
     useDappStore.getState().clearWalletAddress()
     useDappStore.getState().setChainId(undefined)
-    removeDappWalletListeners?.()
-    removeDappWalletListeners = undefined
+    stopDappWalletListeners()
     resetDappProviderCache()
 }
 
@@ -121,7 +135,17 @@ export async function signDappMessage(
     }
 }
 
-export function attachDappWalletListeners(): () => void {
+export function stopDappWalletListeners(): void {
+    removeDappWalletListeners?.()
+    removeDappWalletListeners = undefined
+    setDappWalletListenerActive(false)
+}
+
+export function startDappWalletListeners(
+    options: DappWalletListenerOptions = {},
+): () => void {
+    stopDappWalletListeners()
+
     const provider = getDappProvider()
 
     const handleAccountsChanged = (accounts: unknown) => {
@@ -129,28 +153,42 @@ export function attachDappWalletListeners(): () => void {
 
         if (typeof address === 'string' && address) {
             useDappStore.getState().setWalletAddress(address as Address)
+            options.onAccountsChanged?.(address as Address)
             return
         }
 
         useDappStore.getState().clearWalletAddress()
+        options.onAccountsChanged?.(undefined)
     }
 
     const handleChainChanged = (chainId: unknown) => {
-        const parsedChainId = typeof chainId === 'string'
-            ? Number.parseInt(chainId, 16)
-            : Number(chainId)
+        const parsedChainId = parseDappChainId(chainId)
 
         useDappStore.getState().setChainId(
-            Number.isFinite(parsedChainId) ? parsedChainId : undefined,
+            parsedChainId,
         )
+
+        if (consumeControlledDappChainChange(parsedChainId)) return
+
+        options.onChainChanged?.(parsedChainId)
     }
 
     provider.on?.('accountsChanged', handleAccountsChanged)
     provider.on?.('chainChanged', handleChainChanged)
 
-    return () => {
+    const removeListeners = () => {
         const removeListener = getListenerRemover(provider)
         removeListener?.call(provider, 'accountsChanged', handleAccountsChanged)
         removeListener?.call(provider, 'chainChanged', handleChainChanged)
     }
+
+    removeDappWalletListeners = removeListeners
+    setDappWalletListenerActive(true)
+    return stopDappWalletListeners
+}
+
+export function attachDappWalletListeners(
+    options: DappWalletListenerOptions = {},
+): () => void {
+    return startDappWalletListeners(options)
 }

@@ -3,26 +3,25 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 
 const tabbarMenuSource = await readFile(
-    new URL('../src/layouts/AppLayout/TabbarMenu.tsx', import.meta.url),
+    new URL('../src/pages/main/layout/TabbarMenu.tsx', import.meta.url),
     'utf8',
 )
-const layoutConfigSource = await readFile(
-    new URL('../src/layouts/AppLayout/config.ts', import.meta.url),
+const mainConfigSource = await readFile(
+    new URL('../src/pages/main/config.ts', import.meta.url),
     'utf8',
 )
 const tabbarStyleSource = await readFile(
-    new URL('../src/layouts/AppLayout/AppLayout.scss', import.meta.url),
+    new URL('../src/pages/main/layout/MainLayout.scss', import.meta.url),
     'utf8',
 )
 
 test('tabbar uses the retained home and user icon assets with active variants', () => {
-    assert.match(layoutConfigSource, /home\.png/)
-    assert.match(layoutConfigSource, /homeAct\.png/)
-    assert.match(layoutConfigSource, /user\.png/)
-    assert.match(layoutConfigSource, /userAct\.png/)
-    assert.match(layoutConfigSource, /layoutMenuIconMap/)
-    assert.match(layoutConfigSource, /export const layoutMenuItems = appRouteItems\.map/)
-    assert.match(tabbarMenuSource, /layoutMenuItems\.map/)
+    assert.match(mainConfigSource, /home\.png/)
+    assert.match(mainConfigSource, /homeAct\.png/)
+    assert.match(mainConfigSource, /user\.png/)
+    assert.match(mainConfigSource, /userAct\.png/)
+    assert.match(mainConfigSource, /export const MAIN_PAGE_ITEMS/)
+    assert.match(tabbarMenuSource, /MAIN_PAGE_ITEMS\.map/)
     assert.match(tabbarMenuSource, /isActive \? item\.activeIcon : item\.icon/)
     assert.match(tabbarMenuSource, /flex-1/)
     assert.match(tabbarMenuSource, /flex-column/)

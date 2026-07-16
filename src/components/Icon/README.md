@@ -18,6 +18,9 @@ It is designed for copying a few common Vant icon paths into the project instead
 The icon path uses `currentColor`, so `className`, parent text color, or the `color` prop can change the icon color.
 图标 path 使用 `currentColor`，因此可以通过 `className`、父级文字颜色或 `color` 属性改变颜色。
 
+`loading` preserves the original thin gray rotating ring. Use `<Icon name="loading" size={20} />` instead of drawing a page-specific CSS spinner.
+`loading` 保留原先的灰色细环旋转样式。使用 `<Icon name="loading" size={20} />`，不要为页面单独绘制 CSS loading。
+
 ## Add icons
 添加图标。
 
@@ -33,6 +36,7 @@ Current built-in icons are copied from the Vant iconfont glyphs used by the old 
 - `arrow-down`
 - `cross`
 - `scan`
+- `loading`
 
 ```ts
 export const ICON_DEFINITIONS = {

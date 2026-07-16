@@ -14,6 +14,10 @@ export function isFlutterBridgeReady(): boolean {
     )
 }
 
+export function isDappProviderExpected(): boolean {
+    return hasWindow() && window.__EXPECT_DAPP_PROVIDER__ === true
+}
+
 export function isDappEnvironment(): boolean {
     return hasWindow() && typeof window.ethereum?.request === 'function'
 }

@@ -3,21 +3,18 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
 import {
+    DAPP_CONFIG,
     shouldCheckDappGas,
     shouldEstimateDappGas,
 } from '../src/services/dapp/config.ts'
 
-test('dapp gas check is controlled by a string env switch', () => {
-    assert.equal(shouldCheckDappGas({ VITE_ENABLE_DAPP_GAS_CHECK: '1' }), true)
-    assert.equal(shouldCheckDappGas({ VITE_ENABLE_DAPP_GAS_CHECK: '0' }), false)
-    assert.equal(shouldCheckDappGas({}), true)
+test('dapp gas check is controlled by the project setting', () => {
+    assert.equal(shouldCheckDappGas(), DAPP_CONFIG.enableGasCheck)
 })
 
-test('dapp gas estimation is controlled by env but always disabled in development', () => {
-    assert.equal(shouldEstimateDappGas({ VITE_ENABLE_DAPP_GAS_ESTIMATE: '1' }, true), true)
-    assert.equal(shouldEstimateDappGas({ VITE_ENABLE_DAPP_GAS_ESTIMATE: '0' }, true), false)
-    assert.equal(shouldEstimateDappGas({}, true), true)
-    assert.equal(shouldEstimateDappGas({ VITE_ENABLE_DAPP_GAS_ESTIMATE: '1' }, false), false)
+test('dapp gas estimation follows the project setting and stays disabled in development', () => {
+    assert.equal(shouldEstimateDappGas(true), DAPP_CONFIG.enableGasEstimate)
+    assert.equal(shouldEstimateDappGas(false), false)
 })
 
 test('contract writes run the shared gas check before sending transactions', () => {

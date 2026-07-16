@@ -31,6 +31,7 @@ let popupPreviousBodyOverflow = ''
 export interface PopupProps {
     show: boolean
     children: ReactNode
+    title?: ReactNode
     onClose?: () => void
     onAfterClose?: () => void
     position?: PopupPosition
@@ -72,6 +73,7 @@ function lockBodyScroll() {
 export function Popup({
     show,
     children,
+    title,
     onClose,
     onAfterClose,
     position = 'center',
@@ -179,6 +181,7 @@ export function Popup({
                 ) : (
                     <PopupContentComponent
                         className={popupContentClassName}
+                        title={title}
                         onClose={onClose}
                         onClick={handleContentClick}
                         onAnimationEnd={handleContentAnimationEnd}

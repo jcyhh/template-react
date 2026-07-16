@@ -1,5 +1,9 @@
 export { AppRouter } from './AppRouter.tsx'
 export {
+    registerAppRouteReplacer,
+    replaceAppRoute,
+} from './bridge.ts'
+export {
     APP_ROUTE_BASE,
     APP_ROUTER_BASENAME,
     DEFAULT_LAYOUT_MENU_TYPE,
@@ -16,5 +20,5 @@ export {
     type RouteQuery,
     type RouteQueryValue,
 } from './navigation.ts'
-export { appRouteItems, ROUTE_PATH, type AppRouteItem, type RoutePath } from './routes.ts'
+export { ROUTE_PATH, type RoutePath } from './routes.ts'
 export { useAppNavigate } from './useAppNavigate.ts'

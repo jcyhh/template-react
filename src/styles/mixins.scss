@@ -54,7 +54,7 @@
 @mixin full-button(
     $height: 80px,
     $radius: 40px,
-    $color: #000,
+    $color: var(--app-btn-color),
     $bg: var(--app-color)
 ){
     width: 100%;
@@ -71,7 +71,7 @@
     $height: 52px,
     $radius: 26px,
     $padding: 20px,
-    $color: #000,
+    $color: var(--app-btn-color),
     $bg: var(--app-color)
 ){
     height: $height;
