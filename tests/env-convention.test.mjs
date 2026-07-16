@@ -52,3 +52,12 @@ test('only real environment files are ignored', async () => {
     assert.equal(rules.has('.env.production'), true)
     assert.equal(rules.has('.env.example'), false)
 })
+
+test('readme documents creating local env files from the example file', async () => {
+    const readme = await readFile(new URL('../README.md', import.meta.url), 'utf8')
+
+    assert.match(readme, /Only `.env.example` is tracked by git\./)
+    assert.match(readme, /cp \.env\.example \.env\.development/)
+    assert.match(readme, /cp \.env\.example \.env\.production/)
+    assert.match(readme, /Keep `.env.development` and `.env.production` local only\./)
+})

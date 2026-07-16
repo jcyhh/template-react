@@ -31,6 +31,26 @@ pnpm 会复用全局内容寻址存储，对基于同一模板创建多个项目
 The project rejects npm and yarn for dependency installation and common scripts.
 项目会拒绝使用 npm 和 yarn 安装依赖或运行常用脚本。
 
+## Environment files
+## 环境变量文件
+
+Only `.env.example` is tracked by git.
+只有 `.env.example` 会被 git 追踪。
+
+After downloading or copying this template, create local runtime env files from `.env.example`.
+下载或复制本模板后，需要根据 `.env.example` 创建本地运行用的 env 文件。
+
+```bash
+cp .env.example .env.development
+cp .env.example .env.production
+```
+
+Then fill the values for the current project.
+然后根据当前项目填写对应配置值。
+
+Keep `.env.development` and `.env.production` local only.
+`.env.development` 和 `.env.production` 只保留在本地，不提交到 git。
+
 Install dependencies before running the project.
 运行项目前先安装依赖。
 
