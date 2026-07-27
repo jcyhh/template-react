@@ -42,8 +42,11 @@ Use this short prompt when only an empty project folder has been created.
 当你只创建了一个空项目文件夹时，复制下面这句即可。
 
 ```txt
-请从 https://github.com/jcyhh/template-react.git 把 React H5 DApp 模板复制到当前空项目目录，并按模板文档开始初始化项目。
+请使用 pnpm dlx @jcy/create-template-react . 在当前空项目目录创建 React H5 DApp 项目，并按模板文档开始初始化项目。
 ```
+
+If the npm create package is unavailable, the fallback source is `https://github.com/jcyhh/template-react.git`.
+如果 npm 创建包暂不可用，备用来源是 `https://github.com/jcyhh/template-react.git`。
 
 After the template is copied, the AI should start the project before asking the first setup question.
 模板下载完毕后，AI 应先将项目运行起来，再询问第一个初始化问题。

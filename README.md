@@ -22,6 +22,20 @@ Project conventions such as import paths, page modules, styles and asset naming 
 ## New project setup
 ## 新项目初始化
 
+Create a new project from the npm create package.
+通过 npm create 包创建新项目。
+
+```bash
+pnpm dlx @jcy/create-template-react my-app
+```
+
+Or run it inside an empty project directory.
+也可以在空项目目录中执行。
+
+```bash
+pnpm dlx @jcy/create-template-react .
+```
+
 Before using this template for a real project, read `PROJECT_SETUP.md`.
 使用本模板创建真实项目前，先阅读 `PROJECT_SETUP.md`。
 

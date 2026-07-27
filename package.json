@@ -8,6 +8,8 @@
         "env:init": "node scripts/create-env-files.mjs",
         "favicon:generate": "node scripts/create-favicon-from-logo.mjs",
         "empty:asset": "node scripts/update-empty-asset.mjs",
+        "create:pack": "node scripts/pack-create-template.mjs",
+        "create:publish": "pnpm create:pack && cd packages/create-template-react && npm publish",
         "predev": "node scripts/ensure-pnpm.mjs",
         "dev": "vite --host 0.0.0.0",
         "prebuild": "node scripts/ensure-pnpm.mjs && pnpm verify && node scripts/verify-brand-assets.mjs",

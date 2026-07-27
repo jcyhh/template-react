@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+packages/create-template-react/*.tgz
 
 # Local environment values (keep .env.example trackable)
 .env.development
