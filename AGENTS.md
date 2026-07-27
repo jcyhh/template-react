@@ -22,6 +22,12 @@ Do not create or commit `package-lock.json` or `yarn.lock`.
 Keep the package-manager guard enabled so npm and yarn fail fast.
 保留包管理器校验脚本，让 npm 和 yarn 尽早失败。
 
+Keep the template package name fixed as `@jcy/template-react`.
+模板包名固定为 `@jcy/template-react`。
+
+Do not ask for or rewrite the package name during real project setup.
+真实项目初始化时不要询问或改写包名。
+
 ## New project setup
 ## 新项目初始化
 

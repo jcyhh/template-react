@@ -17,6 +17,8 @@ AI 应一次询问一项，汇总全部回答，并在开发者确认后统一�
 - 只使用 pnpm，不使用 npm 或 yarn。
 - Keep `pnpm-lock.yaml` as the only lock file.
 - 只保留 `pnpm-lock.yaml` 作为依赖锁文件。
+- Keep the template package name fixed as `@jcy/template-react`; do not ask for or rewrite it during real project setup.
+- 模板包名固定为 `@jcy/template-react`；真实项目初始化时不要询问或改写它。
 - Keep `.env.production` `VITE_BASE_URL` empty so production API requests use the current site origin.
 - `.env.production` 的 `VITE_BASE_URL` 保持为空，生产接口请求使用当前网站同源地址。
 - Keep `.env.production` `VITE_RPC_URL` empty because production uses `DAPP_PRODUCTION_CHAIN`.
@@ -25,8 +27,8 @@ AI 应一次询问一项，汇总全部回答，并在开发者确认后统一�
 ## Required before development
 ## 开发前必改
 
-1. Project name and package name.
-1. 项目名称与包名。
+1. Project name.
+1. 项目名称。
 2. Run `pnpm env:init`; it reads `.env.example` and creates `.env.development` and `.env.production` without copying example comments.
 2. 运行 `pnpm env:init`；它会读取 `.env.example` 并创建 `.env.development` 和 `.env.production`，不要复制 example 里的注释。
 3. Replace `public/brand/app-logo.png`.

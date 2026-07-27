@@ -29,6 +29,7 @@ test('new project setup guide records template bootstrapping decisions', () => {
     const setup = readFileSync('PROJECT_SETUP.md', 'utf8')
     const readme = readFileSync('README.md', 'utf8')
     const agentRules = readFileSync('AGENTS.md', 'utf8')
+    const workflow = readFileSync('PROJECT_WORKFLOW.md', 'utf8')
 
     assert.match(setup, /\.env\.example/)
     assert.match(setup, /\.env\.development/)
@@ -38,6 +39,12 @@ test('new project setup guide records template bootstrapping decisions', () => {
     assert.match(setup, /public\/brand\/app-logo\.png/)
     assert.match(setup, /Figma/)
     assert.match(setup, /PROJECT_TERMS\.md/)
+    assert.doesNotMatch(setup, /Project name and package name/)
+    assert.doesNotMatch(setup, /项目名称与包名/)
+    assert.doesNotMatch(workflow, /Package name/)
+    assert.match(setup, /@jcy\/template-react/)
+    assert.match(agentRules, /@jcy\/template-react/)
+    assert.match(workflow, /@jcy\/template-react/)
 
     assert.match(readme, /PROJECT_SETUP\.md/)
     assert.match(readme, /PROJECT_TERMS\.md/)

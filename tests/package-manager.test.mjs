@@ -18,6 +18,8 @@ test('template uses pnpm as the package manager', () => {
     assert.equal(packageJson.scripts.prepreview, 'node scripts/ensure-pnpm.mjs')
     assert.match(packageJson.scripts.dev, /vite --host 0\.0\.0\.0/)
     assert.equal(packageJson.scripts.verify, 'pnpm lint && pnpm test')
+    assert.equal(packageJson.name, '@jcy/template-react')
+    assert.equal(packageJson.private, undefined)
 
     assert.equal(existsSync('pnpm-lock.yaml'), true)
     assert.equal(existsSync('package-lock.json'), false)

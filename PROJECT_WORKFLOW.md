@@ -98,6 +98,8 @@ pnpm env:init
 6. Confirm project-level settings in `src/config/app.ts`.
 6. 确认 `src/config/app.ts` 中的项目级设置。
 
+- The npm package name stays fixed as `@jcy/template-react`.
+- npm 包名固定为 `@jcy/template-react`。
 - Project name.
 - 项目名。
 - Route base and home route.
@@ -147,7 +149,6 @@ Suggested content:
 ## 已确认
 
 - Project name:
-- Package name:
 - Login mode:
 - Layout menu type:
 - I18n:

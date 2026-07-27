@@ -58,6 +58,12 @@ pnpm 会复用全局内容寻址存储，对基于同一模板创建多个项目
 The project rejects npm and yarn for dependency installation and common scripts.
 项目会拒绝使用 npm 和 yarn 安装依赖或运行常用脚本。
 
+The template package name is fixed as `@jcy/template-react`.
+模板包名固定为 `@jcy/template-react`。
+
+Do not rename it during real project setup; use project config and env values for business project names.
+真实项目初始化时不要改这个包名；业务项目名通过项目配置和 env 配置控制。
+
 ## Environment files
 ## 环境变量文件
 
