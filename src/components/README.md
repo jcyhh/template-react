@@ -6,3 +6,6 @@ This directory stores reusable UI components that are shared by multiple busines
 
 Keep business-specific components inside their feature or page directory until they are reused.
 业务专属组件先放在对应 feature 或页面目录中，直到确实被复用后再抽到这里。
+
+`PagePullRefresh` is the authenticated business route pull-refresh container. Pages opt in by registering `usePageRefresh()`.
+`PagePullRefresh` 是已登录业务路由的下拉刷新容器，页面通过注册 `usePageRefresh()` 启用刷新。

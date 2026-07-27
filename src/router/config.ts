@@ -7,8 +7,8 @@ import {
 
 export const APP_ROUTE_BASE = APP_CONFIG.routeBase
 
-// React Router basename should not end with a trailing slash.
-// React Router 的 basename 不应该以斜杠结尾。
+// Browser route base without a trailing slash for AppBrowserRouter.
+// 给 AppBrowserRouter 使用的浏览器路由前缀，不带结尾斜杠。
 export const APP_ROUTER_BASENAME = APP_CONFIG.routerBasename
 
 export const APP_HOME_ROUTE_NAME = APP_CONFIG.homeRouteName

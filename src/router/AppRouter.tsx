@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import {
-    BrowserRouter,
     Navigate,
     Outlet,
     Route,
@@ -8,14 +7,15 @@ import {
     useNavigate,
 } from 'react-router'
 
+import { PagePullRefresh } from '@/components/PagePullRefresh'
+import { LoginPage } from '@/pages/auth/index.ts'
 import { HomePage, MainLayout, UserPage } from '@/pages/main'
 import { SplashPage } from '@/pages/splash/SplashPage.tsx'
 import { SHOWCASE_ROUTE_ELEMENTS } from '@/showcase/router/index.ts'
-import { LoginPage } from '@/pages/auth/index.ts'
 import { useUserStore } from '@/stores/user/store.ts'
 
+import { AppBrowserRouter } from './AppBrowserRouter.tsx'
 import { registerAppRouteReplacer } from './bridge.ts'
-import { APP_ROUTER_BASENAME } from './config.ts'
 import { ROUTE_PATH } from './routes.ts'
 
 function RouterNavigationBridge() {
@@ -38,9 +38,17 @@ function RequireAuthentication() {
     return <Outlet />
 }
 
+function PullRefreshRouteOutlet() {
+    return (
+        <PagePullRefresh>
+            <Outlet />
+        </PagePullRefresh>
+    )
+}
+
 export function AppRouter() {
     return (
-        <BrowserRouter basename={APP_ROUTER_BASENAME}>
+        <AppBrowserRouter>
             <RouterNavigationBridge />
             <Routes>
                 <Route path={ROUTE_PATH.root} element={<SplashPage />} />
@@ -48,9 +56,11 @@ export function AppRouter() {
                 <Route path={ROUTE_PATH.login} element={<LoginPage />} />
 
                 <Route element={<RequireAuthentication />}>
-                    <Route element={<MainLayout />}>
-                        <Route path={ROUTE_PATH.home.slice(1)} element={<HomePage />} />
-                        <Route path={ROUTE_PATH.user.slice(1)} element={<UserPage />} />
+                    <Route element={<PullRefreshRouteOutlet />}>
+                        <Route element={<MainLayout />}>
+                            <Route path={ROUTE_PATH.home.slice(1)} element={<HomePage />} />
+                            <Route path={ROUTE_PATH.user.slice(1)} element={<UserPage />} />
+                        </Route>
                     </Route>
                 </Route>
 
@@ -58,6 +68,6 @@ export function AppRouter() {
 
                 <Route path="*" element={<Navigate to={ROUTE_PATH.root} replace />} />
             </Routes>
-        </BrowserRouter>
+        </AppBrowserRouter>
     )
 }

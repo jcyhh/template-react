@@ -8,3 +8,8 @@ export const AUTH_ERROR_MESSAGE = {
     dappUnavailable: '没有钱包环境',
     dappSessionChanged: '钱包账户或网络已切换',
 } as const
+
+export function shouldUseTemporaryDappLogin(): boolean {
+    return Boolean(import.meta.env?.DEV)
+        && !(import.meta.env?.VITE_BASE_URL ?? '').trim()
+}

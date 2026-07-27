@@ -6,3 +6,6 @@ This directory stores reusable React hooks that can be shared by multiple pages 
 
 Prefer clear names such as `useWalletStatus` or `usePageVisible` instead of generic names.
 优先使用 `useWalletStatus` 或 `usePageVisible` 这类明确名称，不要使用过于泛的名字。
+
+`useLatestRequest()` protects page data from old async requests writing back after a newer refresh has started.
+`useLatestRequest()` 用于避免旧异步请求在新刷新之后回写页面数据。

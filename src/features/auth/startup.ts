@@ -10,7 +10,10 @@ import {
 } from '@/services/platform/index.ts'
 import { getToken } from '@/services/storage/index.ts'
 
-import { logout } from './session.ts'
+import {
+    clearAuthSession,
+    logout,
+} from './session.ts'
 
 export const AUTH_STARTUP_RESULT = {
     completed: 'completed',
@@ -20,6 +23,8 @@ export const AUTH_STARTUP_RESULT = {
 export type AuthStartupResult =
     (typeof AUTH_STARTUP_RESULT)[keyof typeof AUTH_STARTUP_RESULT]
 
+let resumeStoredDappSessionPromise: Promise<void> | undefined
+
 async function detectStartupDappProvider(): Promise<boolean> {
     const { detectDappProvider } = await import('@/services/dapp/provider.ts')
 
@@ -28,10 +33,31 @@ async function detectStartupDappProvider(): Promise<boolean> {
     }))
 }
 
+async function resumeStoredDappSession(): Promise<void> {
+    if (!resumeStoredDappSessionPromise) {
+        resumeStoredDappSessionPromise = (async () => {
+            const { resumeDappAuthSession } = await import('./dapp.ts')
+            await resumeDappAuthSession()
+        })().finally(() => {
+            resumeStoredDappSessionPromise = undefined
+        })
+    }
+
+    return resumeStoredDappSessionPromise
+}
+
+async function loadAuthenticatedUserProfile(): Promise<void> {
+    try {
+        const { getCurrentUser } = await import('@/features/user/api.ts')
+        await getCurrentUser()
+    } catch {
+        // HTTP interceptors own auth failures; startup should not block the app here.
+    }
+}
+
 async function startDappAuthFlow(token: string): Promise<void> {
     if (token) {
-        const { resumeDappAuthSession } = await import('./dapp.ts')
-        await resumeDappAuthSession()
+        await resumeStoredDappSession()
         replaceAppRoute(ROUTE_PATH.home)
         return
     }
@@ -40,8 +66,49 @@ async function startDappAuthFlow(token: string): Promise<void> {
     await loginWithDapp()
 }
 
+async function restartDappLoginAfterStoredSessionChange(): Promise<void> {
+    const {
+        loginWithDapp,
+        resetDappLoginAttempt,
+    } = await import('./dapp.ts')
+
+    resetDappLoginAttempt()
+    clearAuthSession()
+    await loginWithDapp()
+}
+
 function shouldSkipDelayedDappDetection(): boolean {
     return isFlutterHost() && !isDappProviderExpected()
+}
+
+export async function initializeAuthenticatedDappSession(): Promise<AuthStartupResult> {
+    const token = getToken()
+
+    if (!token) return AUTH_STARTUP_RESULT.completed
+
+    if (APP_CONFIG.loginMode === APP_LOGIN_MODE.account) {
+        await loadAuthenticatedUserProfile()
+        return AUTH_STARTUP_RESULT.completed
+    }
+
+    if (shouldSkipDelayedDappDetection()) {
+        return AUTH_STARTUP_RESULT.completed
+    }
+
+    const hasDappProvider = await detectStartupDappProvider()
+
+    if (!hasDappProvider) {
+        return AUTH_STARTUP_RESULT.completed
+    }
+
+    try {
+        await resumeStoredDappSession()
+        await loadAuthenticatedUserProfile()
+    } catch {
+        logout()
+    }
+
+    return AUTH_STARTUP_RESULT.completed
 }
 
 export async function startAuthFlow(): Promise<AuthStartupResult> {
@@ -70,6 +137,16 @@ export async function startAuthFlow(): Promise<AuthStartupResult> {
         try {
             await startDappAuthFlow(token)
         } catch {
+            if (token) {
+                try {
+                    await restartDappLoginAfterStoredSessionChange()
+                } catch {
+                    logout()
+                }
+
+                return AUTH_STARTUP_RESULT.completed
+            }
+
             logout()
         }
 

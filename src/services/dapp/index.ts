@@ -56,6 +56,9 @@ export {
     writeDappContractWithGas,
 } from './contract.ts'
 export {
+    waitForDappContractDataSync,
+} from './contractRefresh.ts'
+export {
     formatDappAmountUnits,
     parseDappAmountUnits,
 } from './units.ts'
@@ -76,6 +79,12 @@ export {
     writeErc20Transfer,
     writeErc20TransferFrom,
 } from './erc20.ts'
+export {
+    UNISWAP_V2_ROUTER_ABI,
+    readUniswapV2RouterAmountsIn,
+    readUniswapV2RouterAmountsOut,
+    readUniswapV2RouterWeth,
+} from './uniswapV2Router.ts'
 export {
     getDappBatchStatus,
     sendDappBatchCalls,

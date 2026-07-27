@@ -12,20 +12,27 @@ import {
 } from '@/services/storage/index.ts'
 
 import { requestDappLogin } from './api.ts'
-import { AUTH_ERROR_MESSAGE } from './config.ts'
+import {
+    AUTH_ERROR_MESSAGE,
+    shouldUseTemporaryDappLogin,
+} from './config.ts'
 import { registerAuthLogoutCleanup } from './lifecycle.ts'
 import { completeLogin, logout } from './session.ts'
 
 let removeDappLogoutCleanup: (() => void) | undefined
 let dappLoginAttempt = 0
 
-function handleDappAccountsChanged(): void {
+export function resetDappLoginAttempt(): void {
     dappLoginAttempt += 1
+}
+
+function handleDappAccountsChanged(): void {
+    resetDappLoginAttempt()
     logout()
 }
 
 function handleDappChainChanged(): void {
-    dappLoginAttempt += 1
+    resetDappLoginAttempt()
     logout()
 }
 
@@ -74,6 +81,16 @@ export async function loginWithDapp(): Promise<void> {
     const attempt = ++dappLoginAttempt
     const { address } = await initializeDappAuthSession()
     const signResult = await signDappMessage('Login')
+
+    if (shouldUseTemporaryDappLogin()) {
+        if (attempt !== dappLoginAttempt) {
+            throw new Error(AUTH_ERROR_MESSAGE.dappSessionChanged)
+        }
+
+        completeLogin('token')
+        return
+    }
+
     const response = await requestDappLogin({
         referralCode: getReferralCode(),
         address,

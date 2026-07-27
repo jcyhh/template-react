@@ -24,6 +24,10 @@ The splash page calls `startAuthFlow()` to make the startup decision.
 - 未设置 `window.__EXPECT_DAPP_PROVIDER__` 的 Flutter 宿主会跳过延迟检测；Flutter 在 React 启动前设置该标识时，则使用相同的延迟钱包检测。
 - Existing token with a detected provider: restore the wallet session, validate the configured chain, then enter home.
 - 已有 Token 且检测到 Provider：恢复钱包会话、校验目标网络，再进入首页。
+- Existing token in DApp modes: validate the current wallet account before loading authenticated APIs such as `/api/users/my`.
+- DApp 模式已有 Token：先校验当前钱包账号，再加载 `/api/users/my` 等鉴权接口。
+- If the cached wallet address no longer matches the current wallet during splash startup, clear stale auth state and start DApp login again in the same flow.
+- 开屏启动时如果缓存钱包地址与当前钱包不一致，清理旧登录态并在同一轮流程里重新发起 DApp 登录。
 - No token with a detected provider: connect the wallet, sign, then call the address-login API.
 - 没有 Token 且检测到 Provider：连接钱包、签名并请求地址登录接口。
 - In `hybrid` mode, Flutter or a regular browser without an injected provider opens the email/password login page.
@@ -39,9 +43,13 @@ Every logout path calls `logout()`; it runs registered session cleanups, clears 
 
 所有退出场景都调用 `logout()`；它会停止已注册的登录态清理项、清除 Token、同步 Store，并替换跳转开屏页。
 
-In an injected-wallet environment, `logout()` also clears the cached wallet address. HTTP requests always include the old project's `Address` header: an injected-wallet environment sends its current cached address, while Flutter and regular browsers without a wallet send an empty string.
+`clearAuthSession()` performs the same cleanup without replacing the route. Use it when startup needs to clear a stale token and immediately retry DApp login.
 
-在注入钱包环境中，`logout()` 还会清除钱包地址缓存。请求始终沿用旧项目的 `Address` 请求头：注入钱包环境传当前缓存地址，未注入钱包的 Flutter 与普通浏览器传空字符串。
+`clearAuthSession()` 会执行同样的清理但不替换路由。启动流程需要清旧 Token 并立即重试 DApp 登录时使用它。
+
+In an injected-wallet environment, auth cleanup also clears the cached wallet address. HTTP requests only send the `Address` header in wallet environments.
+
+在注入钱包环境中，登录态清理还会清除钱包地址缓存。请求只在钱包环境中发送 `Address` 请求头。
 
 When a project needs extra post-login or post-logout work, add it to these two methods instead of duplicating it in pages, HTTP interceptors, or wallet listeners.
 

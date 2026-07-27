@@ -79,6 +79,10 @@ export const DAPP_CONFIG = {
     // ERC20 授权不足时是否授权最大额度。
     enableErc20MaxApprove: true,
 
+    // Delay refreshes after a confirmed contract write so indexed backend data can catch up.
+    // 写合约确认后刷新数据前的等待时间，给后端索引链上交易留出同步时间。
+    contractWriteRefreshDelayMs: 3000,
+
     // Decimals used to convert DApp display amounts and on-chain integer units.
     // DApp 展示金额和链上整数单位互转使用的小数位。
     amountDecimals: 18,

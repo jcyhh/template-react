@@ -85,6 +85,18 @@ When enabled, `ensureErc20Allowance()` approves the max amount.
 When disabled, it only approves the requested amount.
 关闭时，只授权本次传入的目标额度。
 
+`UNISWAP_V2_ROUTER_ABI` is provided as a common router ABI for swap-style projects.
+`UNISWAP_V2_ROUTER_ABI` 作为 swap 类项目常用的通用 Router ABI 提供。
+
+Project-specific router addresses and page-facing methods should live in `src/services/contracts`.
+项目专属 Router 地址和页面会调用的方法应放在 `src/services/contracts`。
+
+After a successful contract write, call `waitForDappContractDataSync()` before refreshing API data that depends on chain indexing.
+写合约成功后，如果要刷新依赖链上索引的接口数据，先调用 `waitForDappContractDataSync()`。
+
+The wait duration is controlled by `DAPP_CONFIG.contractWriteRefreshDelayMs`.
+等待时长由 `DAPP_CONFIG.contractWriteRefreshDelayMs` 控制。
+
 DApp amount unit conversion is controlled by `DAPP_CONFIG.amountDecimals`.
 DApp 金额单位转换由 `DAPP_CONFIG.amountDecimals` 控制。
 
@@ -111,6 +123,10 @@ For 6-decimal networks or assets, set `DAPP_CONFIG.amountDecimals` to `6`.
 - `units.ts`：按配置的小数位转换展示金额和链上整数单位。
 - `erc20.ts`: wraps common ERC20 balance, allowance, approve and transfer operations.
 - `erc20.ts`：封装常用 ERC20 信息读取、余额、授权额度、自动补授权、授权和转账操作。
+- `uniswapV2Router.ts`: exports common Uniswap V2 Router ABI and read helpers.
+- `uniswapV2Router.ts`：导出通用 Uniswap V2 Router ABI 和读取辅助方法。
+- `contractRefresh.ts`: centralizes the post-write data-sync wait.
+- `contractRefresh.ts`：统一封装写合约后的数据同步等待。
 - `batch.ts`: keeps low-level `wallet_sendCalls` and `wallet_getCallsStatus` helpers for future 7702-style flows.
 - `batch.ts`：保留底层 `wallet_sendCalls` 和 `wallet_getCallsStatus` 方法，方便后续扩展 7702 类流程。
 - `eip7702.ts`: wraps EIP-7702/EIP-5792 support detection, batch call sending and status query.

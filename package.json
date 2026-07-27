@@ -7,13 +7,14 @@
     "scripts": {
         "preinstall": "node scripts/ensure-pnpm.mjs",
         "predev": "node scripts/ensure-pnpm.mjs",
-        "dev": "vite",
-        "prebuild": "node scripts/ensure-pnpm.mjs",
+        "dev": "vite --host 0.0.0.0",
+        "prebuild": "node scripts/ensure-pnpm.mjs && pnpm verify",
         "build": "tsc -b && vite build",
         "prelint": "node scripts/ensure-pnpm.mjs",
         "lint": "oxlint",
         "pretest": "node scripts/ensure-pnpm.mjs",
         "test": "node --test tests/*.test.mjs",
+        "verify": "pnpm lint && pnpm test",
         "prepreview": "node scripts/ensure-pnpm.mjs",
         "preview": "vite preview"
     },

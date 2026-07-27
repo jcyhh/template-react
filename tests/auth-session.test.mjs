@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 
 import {
+    clearAuthSession,
     completeLogin,
     logout,
 } from '../src/features/auth/session.ts'
@@ -62,6 +63,26 @@ test('logout clears the token, updates auth state, and replaces to splash', () =
     assert.equal(getToken(), '')
     assert.equal(useUserStore.getState().isAuthenticated, false)
     assert.deepEqual(destinations, [ROUTE_PATH.root])
+    unregister()
+})
+
+test('clearAuthSession clears local auth state without forcing a route replacement', () => {
+    globalThis.window = { localStorage: createStorage() }
+    resetAuthState()
+
+    const destinations = []
+    const unregister = registerAppRouteReplacer((path) => {
+        destinations.push(path)
+    })
+
+    completeLogin('access-token')
+    destinations.length = 0
+
+    clearAuthSession()
+
+    assert.equal(getToken(), '')
+    assert.equal(useUserStore.getState().isAuthenticated, false)
+    assert.deepEqual(destinations, [])
     unregister()
 })
 
@@ -140,6 +161,82 @@ test('splash delegates login branching to the auth startup module', async () => 
     assert.match(startupSource, /ROUTE_PATH\.home/)
 })
 
+test('splash opening animation gates every auth startup path', async () => {
+    const [splashSource, appSource, animationSource] = await Promise.all([
+        readFile(new URL('../src/pages/splash/SplashPage.tsx', import.meta.url), 'utf8'),
+        readFile(new URL('../src/app/App.tsx', import.meta.url), 'utf8'),
+        readFile(new URL('../src/pages/splash/animation.ts', import.meta.url), 'utf8'),
+    ])
+
+    assert.match(animationSource, /export const SPLASH_ANIMATION_DURATION = 1000/)
+    assert.match(animationSource, /export function waitForSplashAnimation\(\): Promise<void>/)
+    assert.match(animationSource, /export function isSplashRoutePath/)
+    assert.match(splashSource, /import \{ waitForSplashAnimation \} from '\.\/animation\.ts'/)
+    assert.match(
+        splashSource,
+        /async function startSplashAuthFlow\(\): Promise<void> \{[\s\S]*await waitForSplashAnimation\(\)[\s\S]*const result = await startAuthFlow\(\)/,
+    )
+    assert.doesNotMatch(
+        splashSource,
+        /APP_CONFIG\.loginMode === APP_LOGIN_MODE\.account[\s\S]*await waitForSplashAnimation\(\)/,
+    )
+    assert.match(appSource, /waitForSplashAnimation/)
+    assert.match(appSource, /isSplashRoutePath/)
+    assert.match(
+        appSource,
+        /if \(isSplashRoutePath\(\)\) \{[\s\S]*await waitForSplashAnimation\(\)[\s\S]*\}[\s\S]*await initializeAuthenticatedDappSession\(\)/,
+    )
+})
+
+test('app startup resumes an authenticated DApp session before page modules load user data', async () => {
+    const [appSource, routerSource, startupSource] = await Promise.all([
+        readFile(new URL('../src/app/App.tsx', import.meta.url), 'utf8'),
+        readFile(new URL('../src/router/AppRouter.tsx', import.meta.url), 'utf8'),
+        readFile(new URL('../src/features/auth/startup.ts', import.meta.url), 'utf8'),
+    ])
+
+    assert.match(appSource, /AuthenticatedDappSessionBootstrap/)
+    assert.match(appSource, /initializeAuthenticatedDappSession/)
+    assert.match(appSource, /void initializeAuthenticatedDappSessionAfterOpening\(\)/)
+    assert.match(startupSource, /export async function initializeAuthenticatedDappSession/)
+    assert.match(startupSource, /const token = getToken\(\)/)
+    assert.match(startupSource, /if \(!token\) return AUTH_STARTUP_RESULT\.completed/)
+    assert.match(startupSource, /async function loadAuthenticatedUserProfile\(\)/)
+    assert.match(startupSource, /getCurrentUser/)
+    assert.match(
+        startupSource,
+        /if \(APP_CONFIG\.loginMode === APP_LOGIN_MODE\.account\) \{[\s\S]*await loadAuthenticatedUserProfile\(\)[\s\S]*return AUTH_STARTUP_RESULT\.completed[\s\S]*\}/,
+    )
+    assert.match(
+        startupSource,
+        /await resumeStoredDappSession\(\)[\s\S]*await loadAuthenticatedUserProfile\(\)/,
+    )
+    assert.doesNotMatch(routerSource, /initializeAuthenticatedDappSession/)
+})
+
+test('DApp startup retries wallet login immediately when a stored token belongs to another wallet account', async () => {
+    const [startupSource, dappSource] = await Promise.all([
+        readFile(new URL('../src/features/auth/startup.ts', import.meta.url), 'utf8'),
+        readFile(new URL('../src/features/auth/dapp.ts', import.meta.url), 'utf8'),
+    ])
+
+    assert.match(startupSource, /async function restartDappLoginAfterStoredSessionChange\(\): Promise<void>/)
+    assert.match(
+        startupSource,
+        /restartDappLoginAfterStoredSessionChange[\s\S]*clearAuthSession\(\)[\s\S]*await loginWithDapp\(\)/,
+    )
+    assert.match(
+        startupSource,
+        /try \{[\s\S]*await startDappAuthFlow\(token\)[\s\S]*\} catch \{[\s\S]*if \(token\) \{[\s\S]*await restartDappLoginAfterStoredSessionChange\(\)[\s\S]*\}/,
+    )
+    assert.match(startupSource, /clearAuthSession/)
+    assert.match(dappSource, /export function resetDappLoginAttempt\(\): void/)
+    assert.match(
+        startupSource,
+        /\.finally\(\(\) => \{[\s\S]*resumeStoredDappSessionPromise = undefined[\s\S]*\}\)/,
+    )
+})
+
 test('DApp login invalidates stale signature requests after an account or chain change', async () => {
     const source = await readFile(
         new URL('../src/features/auth/dapp.ts', import.meta.url),
@@ -147,8 +244,27 @@ test('DApp login invalidates stale signature requests after an account or chain 
     )
 
     assert.match(source, /let dappLoginAttempt = 0/)
-    assert.match(source, /handleDappAccountsChanged[\s\S]*dappLoginAttempt \+= 1/)
-    assert.match(source, /handleDappChainChanged[\s\S]*dappLoginAttempt \+= 1/)
+    assert.match(source, /resetDappLoginAttempt[\s\S]*dappLoginAttempt \+= 1/)
+    assert.match(source, /handleDappAccountsChanged[\s\S]*resetDappLoginAttempt\(\)/)
+    assert.match(source, /handleDappChainChanged[\s\S]*resetDappLoginAttempt\(\)/)
     assert.match(source, /attempt !== dappLoginAttempt/)
     assert.match(source, /verifyStoredAddress/)
+})
+
+test('DApp login can use a temporary dev token when local API is not configured', async () => {
+    const [configSource, dappSource] = await Promise.all([
+        readFile(new URL('../src/features/auth/config.ts', import.meta.url), 'utf8'),
+        readFile(new URL('../src/features/auth/dapp.ts', import.meta.url), 'utf8'),
+    ])
+
+    assert.match(configSource, /shouldUseTemporaryDappLogin/)
+    assert.match(configSource, /import\.meta\.env\?\.DEV/)
+    assert.match(configSource, /VITE_BASE_URL/)
+    assert.match(dappSource, /shouldUseTemporaryDappLogin\(\)/)
+    assert.match(dappSource, /completeLogin\('token'\)/)
+    assert.equal(
+        dappSource.indexOf('shouldUseTemporaryDappLogin()')
+            < dappSource.indexOf('requestDappLogin({'),
+        true,
+    )
 })

@@ -32,8 +32,14 @@ function Demo() {
 Do not manually prepend `/h5` when calling `pushRoute(ROUTE_PATH.home)`.
 调用 `pushRoute(ROUTE_PATH.home)` 时不要手动拼接 `/h5`。
 
-React Router handles the base path through `basename`.
-React Router 会通过 `basename` 自动处理基础路径。
+`AppBrowserRouter` accepts URLs both with and without the `/h5` prefix.
+`AppBrowserRouter` 同时兼容带 `/h5` 和不带 `/h5` 的访问路径。
+
+This matches H5 deployments where `/`, `/ref/...` and `/h5/...` all return the same entry HTML without an HTTP redirect.
+这用于适配服务端将 `/`、`/ref/...` 和 `/h5/...` 都直接返回同一份入口 HTML、但不做 HTTP 重定向的部署方式。
+
+Inside the app, keep route paths prefix-free. `AppBrowserRouter` strips `/h5` before matching and adds `/h5` when React Router creates browser hrefs or navigates.
+应用内部路由仍保持不带前缀。`AppBrowserRouter` 会在匹配前剥离 `/h5`，并在 React Router 生成浏览器链接或跳转时补回 `/h5`。
 
 Use `buildRouteHref` only when code outside React components needs to generate a link.
 只有组件外代码需要生成链接时，才使用 `buildRouteHref`。

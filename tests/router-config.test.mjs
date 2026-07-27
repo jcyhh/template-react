@@ -16,6 +16,15 @@ test('router uses the fixed h5 base path for history mode', () => {
     assert.equal(APP_ROUTER_BASENAME, '/h5')
 })
 
+test('vite build output also uses the fixed h5 base path', async () => {
+    const source = await readFile(
+        new URL('../vite.config.ts', import.meta.url),
+        'utf8',
+    )
+
+    assert.match(source, /base:\s*'\/h5\/'/)
+})
+
 test('router derives the home path from the project-level home route name', async () => {
     const [routesSource, routerConfigSource] = await Promise.all([
         readFile(new URL('../src/router/routes.ts', import.meta.url), 'utf8'),

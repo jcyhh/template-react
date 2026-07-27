@@ -82,6 +82,7 @@ export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), 'VITE_')
 
     return {
+        base: '/h5/',
         plugins: [
             react(),
             createSocialMetaPlugin(env),

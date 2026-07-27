@@ -22,6 +22,48 @@ Do not create or commit `package-lock.json` or `yarn.lock`.
 Keep the package-manager guard enabled so npm and yarn fail fast.
 保留包管理器校验脚本，让 npm 和 yarn 尽早失败。
 
+## New project setup
+## 新项目初始化
+
+Before developing a real project from this template, read `PROJECT_SETUP.md` and complete the setup checklist with the developer.
+基于本模板开发真实项目前，先阅读 `PROJECT_SETUP.md` 并与开发者完成初始化清单。
+
+Ask one setup item at a time, summarize the answers, then update project files after confirmation.
+一次询问一项初始化配置，汇总答案后再在确认后回填项目文件。
+
+Do not treat template defaults as confirmed project decisions.
+不要把模板默认值当成项目已经确认的决策。
+
+## Project terminology
+## 项目术语
+
+Read `PROJECT_TERMS.md` before copying visible text from Figma or old project code.
+从 Figma 或旧项目代码复制可见文案前，先阅读 `PROJECT_TERMS.md`。
+
+If Figma uses a banned term, replace it with the approved term in source code.
+如果 Figma 使用了禁用词，源码中必须替换为推荐术语。
+
+Do not use `提现` in user-facing UI source; use `提取` for token claim, redeem or withdraw style actions.
+面向用户的 UI 源码中不要使用 `提现`；Token 领取、取回、赎回类动作统一使用 `提取`。
+
+## Production API origin
+## 生产接口地址
+
+Keep `VITE_BASE_URL` empty in `.env.production`.
+`.env.production` 中的 `VITE_BASE_URL` 必须保持为空。
+
+Production API requests must use relative `/api/...` paths against the current site origin.
+生产接口请求必须使用相对 `/api/...` 路径并访问当前网站同源地址。
+
+Do not write a production API domain into source code or production env.
+不要在源码或生产环境变量中填写正式接口域名。
+
+Keep `VITE_RPC_URL` empty in `.env.production` because production uses `DAPP_PRODUCTION_CHAIN` and does not read the local-chain RPC setting.
+`.env.production` 中的 `VITE_RPC_URL` 必须保持为空，因为生产环境使用 `DAPP_PRODUCTION_CHAIN`，不会读取本地测试链 RPC 配置。
+
+These rules do not apply to `.env.development`, which may use a LAN API URL and local-chain RPC URL during integration.
+这些规则不适用于 `.env.development`，开发联调时可以填写局域网接口地址和本地测试链 RPC 地址。
+
 ## Import paths
 ## 引入路径
 
@@ -54,6 +96,81 @@ Keep same-directory page helpers next to the page and import them with `./`.
 
 Use optional files only when the page needs them, such as `types.ts`, `utils.ts`, `service.ts` or `components/`.
 仅在页面需要时增加 `types.ts`、`utils.ts`、`service.ts` 或 `components/` 等可选文件。
+
+## Figma page implementation workflow
+## Figma 页面生成流程
+
+Before implementing a page from a Figma link, do not write code immediately.
+根据 Figma 链接开发页面前，不要直接开始写代码。
+
+First inspect the design and the current project, then provide an implementation checklist for developer confirmation.
+先分析设计稿和当前项目，再输出实现清单给开发者确认。
+
+The checklist must include required exported assets, semantic UI elements, reusable components, reusable style classes, reusable mixins and page-specific exceptions.
+清单必须包含所需切图资源、语义化 UI 元素、可复用组件、可复用样式类、可复用 mixin 以及页面特例。
+
+Check existing components, `src/styles`, `src/styles/mixins.scss`, showcase pages and nearby page implementations before adding new page SCSS.
+新增页面私有 SCSS 前，先检查已有组件、`src/styles`、`src/styles/mixins.scss`、演示页面和相近页面实现。
+
+Map visual controls to semantic elements before styling them: inputs use `input` or `textarea`, actions use `button`, links use route/navigation helpers, and progress uses shared progress components when available.
+样式实现前先确认控件语义：输入区使用 `input` 或 `textarea`，操作使用 `button`，跳转使用路由/导航封装，进度展示优先使用已有进度组件。
+
+Static pages still implement basic local interactions when the design includes interactive controls, such as tab switching, inputs, expand-collapse areas, popups and copy buttons.
+静态页面如果设计里包含交互控件，仍应实现基础本地交互，例如 tab 切换、输入框、展开收起、弹窗开关和复制按钮。
+
+If the checklist is incomplete or required assets are missing, pause and report the gap instead of filling it with improvised CSS or placeholder markup.
+如果清单不完整或必需资源缺失，应暂停并报告缺口，不要用临时 CSS 或占位结构硬补。
+
+## Page data refresh
+## 页面数据刷新
+
+Authenticated business routes are wrapped by `PagePullRefresh`; splash, login and other flow pages must not be wrapped.
+已登录业务路由由 `PagePullRefresh` 包裹；开屏页、登录页和其他流程页不能包裹下拉刷新。
+
+Pages that support pull refresh must register a real refresh function with `usePageRefresh()`.
+支持下拉刷新的页面必须通过 `usePageRefresh()` 注册真实刷新函数。
+
+The refresh function must return or await the actual page data loading work, such as API requests, contract reads, list reloads or timer-driven screen refreshes.
+刷新函数必须返回或等待真实页面数据加载，例如接口请求、合约读取、列表重载或定时整屏刷新。
+
+Do not use a refresh handler that only increments a version value while the refresh component cannot know when data has actually finished loading.
+不要只在刷新函数里递增版本号却让刷新组件无法知道真实数据何时完成。
+
+Disable `usePageRefresh()` while the page is submitting, writing a contract or otherwise unable to safely refresh.
+页面提交中、写合约中或其他不适合刷新时，应临时禁用 `usePageRefresh()`。
+
+After API or contract integration, use `useLatestRequest()` or `AbortController` to prevent stale async requests from writing old data back into the page.
+接口或合约联调后，使用 `useLatestRequest()` 或 `AbortController` 防止旧异步请求把旧数据回写到页面。
+
+When a page has timers, manual pull refresh and post-write refresh should reuse the same screen refresh function and guard timer restart with mounted or lifecycle tokens.
+页面存在定时器时，手动下拉刷新和写入成功后的刷新应复用同一个整屏刷新函数，并用 mounted 或生命周期 token 防止离页后旧异步重启定时器。
+
+## Auth startup
+## 认证启动
+
+Splash animation is the shared startup gate. If startup logic runs while the browser path is splash or referral, wait for `waitForSplashAnimation()` before authentication recovery or login branching.
+开屏动画是统一启动门槛。如果启动逻辑运行时浏览器路径仍是开屏页或邀请页，认证恢复或登录分流前必须等待 `waitForSplashAnimation()`。
+
+In DApp login modes, an existing token must validate and resume the current wallet account before authenticated APIs such as `/api/users/my` are requested.
+在 DApp 登录模式中，已有 Token 必须先校验并恢复当前钱包账号，再请求 `/api/users/my` 等鉴权接口。
+
+If the cached token and wallet address belong to a different current wallet account during splash startup, clear the stale auth session and immediately start DApp login again in the same startup flow.
+开屏启动时如果缓存 Token 与钱包地址属于旧账号，应清理旧登录态，并在同一轮启动流程中立即重新发起 DApp 登录。
+
+Use `clearAuthSession()` when stale auth state must be cleared without forcing a route replacement; use `logout()` when the user should be redirected to splash.
+需要清理旧登录态但不强制替换路由时使用 `clearAuthSession()`；需要用户回到开屏页时使用 `logout()`。
+
+## History route fallback
+## history 路由 fallback
+
+Use `AppBrowserRouter` instead of a strict `BrowserRouter basename="/h5"`.
+使用 `AppBrowserRouter`，不要使用严格的 `BrowserRouter basename="/h5"`。
+
+The router must accept browser URLs both with and without the `/h5` prefix because some H5 servers return the same entry HTML for `/`, `/ref/...` and `/h5/...` without HTTP redirects.
+路由必须同时兼容带 `/h5` 和不带 `/h5` 的浏览器地址，因为部分 H5 服务端会把 `/`、`/ref/...` 和 `/h5/...` 都直接返回同一份入口 HTML，而不做 HTTP 重定向。
+
+Keep internal route paths prefix-free and let navigation helpers or `AppBrowserRouter` add the browser base path.
+内部路由路径保持不带前缀，由导航辅助方法或 `AppBrowserRouter` 负责补浏览器基础路径。
 
 ## Styles
 ## 样式
@@ -112,6 +229,24 @@ Use SVG for clean icons and vector graphics when available.
 Use PNG or WebP for complex raster images, screenshots, glow effects and exported design slices.
 复杂位图、截图、发光效果和设计稿切图使用 PNG 或 WebP。
 
+Before implementing a designed page, confirm that required exported page assets are already available in the project.
+开发设计稿页面前，先确认页面所需切图资源已经放入项目。
+
+Prefer human-exported Figma slices for complex images, decorative frames, glow effects, page backgrounds and non-trivial icons.
+复杂图片、装饰边框、光效、页面背景和非常规图标优先使用人工从 Figma 导出的切图。
+
+Decorative design slices do not require `alt`; do not treat missing `alt` on page artwork as a blocking issue.
+装饰性设计切图不强制要求编写 `alt`；不要把页面视觉图缺少 `alt` 当作阻塞问题。
+
+Do not replace missing designed assets with CSS drawings, text, emoji or temporary symbols unless the developer explicitly asks for a placeholder prototype.
+缺少设计资源时，不要擅自用 CSS 绘制、文字、表情或临时符号顶替，除非开发者明确要求先做占位原型。
+
+If required assets are missing, pause page implementation and list the missing semantic asset names and suggested target paths.
+如果必需资源缺失，应暂停页面实现，并列出缺少的语义化资源名和建议放置路径。
+
+Place page-specific assets under `src/assets/<page-name>/`; keep initialization brand assets under `public/brand/`.
+页面专属资源放在 `src/assets/<page-name>/`；初始化品牌资源继续放在 `public/brand/`。
+
 ## Verification
 ## 验证
 
@@ -120,6 +255,9 @@ Run tests, build and lint before claiming a change is complete.
 
 At minimum, run `pnpm test`, `pnpm build` and `pnpm lint`.
 至少运行 `pnpm test`、`pnpm build` 和 `pnpm lint`。
+
+`pnpm build` is a hard quality gate: its prebuild lifecycle runs `pnpm verify`, which runs lint and tests before TypeScript and Vite can emit production assets. Do not bypass or remove this lifecycle.
+`pnpm build` 是强制质量门禁：prebuild 生命周期会先运行 `pnpm verify`，由它执行 lint 和测试，全部通过后 TypeScript 和 Vite 才能生成生产产物。不得绕过或删除该生命周期。
 
 ## Test design
 ## 测试设计

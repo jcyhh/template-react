@@ -1,4 +1,12 @@
+export { AppBrowserRouter } from './AppBrowserRouter.tsx'
 export { AppRouter } from './AppRouter.tsx'
+export {
+    addAppBasenameToPathname,
+    createAppBrowserHistory,
+    stripAppBasenameFromLocation,
+    stripAppBasenameFromPathname,
+    type AppBrowserHistory,
+} from './appBrowserHistory.ts'
 export {
     registerAppRouteReplacer,
     replaceAppRoute,

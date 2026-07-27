@@ -19,6 +19,30 @@ AI 工具和协作工程师修改代码前应先阅读 `AGENTS.md`。
 Project conventions such as import paths, page modules, styles and asset naming are recorded there.
 引入路径、页面模块、样式和资源命名等项目规范都记录在其中。
 
+## New project setup
+## 新项目初始化
+
+Before using this template for a real project, read `PROJECT_SETUP.md`.
+使用本模板创建真实项目前，先阅读 `PROJECT_SETUP.md`。
+
+Project-facing terms are recorded in `PROJECT_TERMS.md`.
+面向项目用户的术语规范记录在 `PROJECT_TERMS.md`。
+
+## Included template guards
+## 内置模板防护
+
+Authenticated business pages can use `PagePullRefresh` and `usePageRefresh()` for page-level pull refresh that waits for real data loading.
+已登录业务页可使用 `PagePullRefresh` 和 `usePageRefresh()` 做页面级下拉刷新，并等待真实数据加载完成。
+
+Pages can use `useLatestRequest()` to prevent old API or contract reads from writing stale data back after a newer refresh starts.
+页面可使用 `useLatestRequest()`，避免旧接口或合约读取在新刷新后回写旧数据。
+
+DApp startup validates the current wallet account before authenticated APIs run, and splash animation is shared as the startup gate.
+DApp 启动会在鉴权接口执行前校验当前钱包账号，并统一把开屏动画作为启动门槛。
+
+`AppBrowserRouter` accepts URLs with or without `/h5`, then adds `/h5` for app navigations.
+`AppBrowserRouter` 兼容带 `/h5` 与不带 `/h5` 的访问路径，并在应用内跳转时补回 `/h5`。
+
 ## Development
 ## 开发命令
 

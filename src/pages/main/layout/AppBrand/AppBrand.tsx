@@ -1,10 +1,7 @@
 import { useLocation } from 'react-router'
 
-import headerLogoUrl from '@/assets/layout/headbar/logo.svg'
-
+import { APP_CONFIG } from '@/config'
 import { ROUTE_PATH, useAppNavigate } from '@/router'
-
-import { LAYOUT_HEADER_TITLE } from '../config.ts'
 
 import './AppBrand.scss'
 
@@ -36,9 +33,13 @@ export function AppBrand({
 
     return (
         <div className={brandClassName} onClick={handleBrandClick}>
-            <img src={headerLogoUrl} className="app-brand__logo" alt="Logo" />
+            <img
+                src={`${APP_CONFIG.routeBase}brand/app-logo.png`}
+                className="app-brand__logo"
+                alt={APP_CONFIG.name}
+            />
             <div className="ml-10 size-24 bold-6">
-                {LAYOUT_HEADER_TITLE}
+                {APP_CONFIG.name}
             </div>
         </div>
     )

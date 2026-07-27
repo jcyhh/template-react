@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
 import { DAPP_CONFIG } from '../src/services/dapp/config.ts'
+import { waitForDappContractDataSync } from '../src/services/dapp/contractRefresh.ts'
 
 test('dapp production chain and transaction policies are project settings', () => {
     const source = readFileSync('src/services/dapp/config.ts', 'utf8')
@@ -18,7 +19,10 @@ test('dapp production chain and transaction policies are project settings', () =
     assert.equal(typeof DAPP_CONFIG.enableGasCheck, 'boolean')
     assert.equal(typeof DAPP_CONFIG.enableGasEstimate, 'boolean')
     assert.equal(typeof DAPP_CONFIG.enableErc20MaxApprove, 'boolean')
+    assert.equal(typeof DAPP_CONFIG.contractWriteRefreshDelayMs, 'number')
     assert.equal(typeof DAPP_CONFIG.amountDecimals, 'number')
+    assert.equal(Number.isFinite(DAPP_CONFIG.contractWriteRefreshDelayMs), true)
+    assert.equal(DAPP_CONFIG.contractWriteRefreshDelayMs >= 0, true)
     assert.doesNotMatch(source, /VITE_DAPP_AMOUNT_DECIMALS/)
     assert.doesNotMatch(source, /VITE_MIN_GAS_BALANCE/)
     assert.doesNotMatch(source, /VITE_ENABLE_DAPP_GAS_CHECK/)
@@ -37,4 +41,15 @@ test('dapp reusable constants live in the module config file', () => {
     assert.match(configSource, /DAPP_DEFAULT_AMOUNT_DECIMALS/)
     assert.match(configSource, /DAPP_ERC20_MAX_APPROVE_AMOUNT/)
     assert.doesNotMatch(unitsSource, /const MAX_DAPP_AMOUNT_DECIMALS/)
+})
+
+test('contract write refresh wait is controlled by the dapp config', () => {
+    const refreshSource = readFileSync('src/services/dapp/contractRefresh.ts', 'utf8')
+    const readme = readFileSync('src/services/dapp/README.md', 'utf8')
+
+    assert.equal(typeof waitForDappContractDataSync, 'function')
+    assert.match(refreshSource, /DAPP_CONFIG\.contractWriteRefreshDelayMs/)
+    assert.match(refreshSource, /setTimeout/)
+    assert.match(readme, /waitForDappContractDataSync/)
+    assert.match(readme, /contractWriteRefreshDelayMs/)
 })

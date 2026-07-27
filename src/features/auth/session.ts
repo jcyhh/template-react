@@ -20,7 +20,7 @@ export function completeLogin(token: string): void {
     replaceAppRoute(ROUTE_PATH.home)
 }
 
-export function logout(): void {
+export function clearAuthSession(): void {
     runAuthLogoutCleanups()
     removeToken()
 
@@ -29,5 +29,9 @@ export function logout(): void {
     }
 
     useUserStore.getState().markSignedOut()
+}
+
+export function logout(): void {
+    clearAuthSession()
     replaceAppRoute(ROUTE_PATH.root)
 }

@@ -49,7 +49,8 @@ test('splash page uses a fixed English welcome text and reusable loading icon', 
         'utf8',
     )
 
-    assert.match(source, /assets\/start\/splash-logo\.png/)
+    assert.match(source, /APP_CONFIG\.routeBase/)
+    assert.match(source, /brand\/app-logo\.png/)
     assert.match(source, /APP_CONFIG\.name/)
     assert.match(source, /`Welcome to \$\{APP_CONFIG\.name\}`/)
     assert.doesNotMatch(source, /useTranslation/)
@@ -62,21 +63,20 @@ test('splash page uses a fixed English welcome text and reusable loading icon', 
     assert.match(source, /animate__slideInUp/)
 })
 
-test('splash page copies only the old logo asset without the old background', async () => {
-    await assert.doesNotReject(() => access('src/assets/start/splash-logo.png'))
-    await assert.rejects(() => access('src/assets/start/logo.png'))
-    await assert.rejects(() => access('src/assets/start/1.png'))
+test('splash page uses the shared public brand logo', async () => {
+    await assert.doesNotReject(() => access('public/brand/app-logo.png'))
 })
 
-test('splash page style follows the old opening page layout without background image', async () => {
+test('splash page style keeps the centered brand and bottom tips without background image', async () => {
     const source = await readFile(
         new URL('../src/pages/splash/SplashPage.scss', import.meta.url),
         'utf8',
     )
 
-    assert.match(source, /width:\s*224px/)
-    assert.match(source, /height:\s*211px/)
-    assert.match(source, /bottom:\s*953px/)
+    assert.match(source, /&__brand/)
+    assert.match(source, /inset:\s*0/)
+    assert.match(source, /width:\s*160px/)
+    assert.match(source, /height:\s*160px/)
     assert.match(source, /bottom:\s*30px/)
     assert.doesNotMatch(source, /background-image/)
 })
