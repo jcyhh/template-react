@@ -371,6 +371,21 @@ Ask the developer to manually export the needed page assets before implementatio
 Figma slicing is too free-form for AI to reliably choose the best export combination, so AI should list semantic asset names and target paths instead of guessing or silently downloading arbitrary slices.
 Figma 切图方式太自由，AI 很难稳定判断最合适的导出组合，因此 AI 应列出语义化资源名和目标路径，而不是自己猜或静默下载随意切片。
 
+Shared module layout styles and interactions must not be changed to follow a page design unless there is explicit manual developer intervention.
+公共模块的样式布局和交互不要为了贴合某个页面设计稿而修改，除非开发者人工手动介入并明确要求。
+
+For shared modules, replace resources, text configuration or project settings only by default.
+公共模块默认只替换资源、文案配置或项目设置。
+
+For example, do not rewrite the shared header because Figma shows a single left image instead of logo plus app name, a gradient wallet button, or different icon spacing.
+例如，不要因为 Figma 里顶部是单独左侧图片而不是 logo 加 app name、渐变钱包按钮或不同图标间距，就重写公共 header。
+
+Mobile status bar, carrier, battery, time and other device chrome in Figma frames are not H5 page content.
+Figma 画板里的手机信息状态栏、运营商、电量、时间等设备外壳信息不属于 H5 页面内容。
+
+Do not implement device chrome in HTML, reserve height for it, or export it as an asset unless the developer explicitly says it is real in-page artwork.
+不要把设备外壳信息写进 HTML、为它预留高度，或把它导出成切图，除非开发者明确说明它是真实页面内装饰图。
+
 ### Figma page prompt
 ### Figma 页面提示词
 
@@ -387,11 +402,13 @@ Figma 切图方式太自由，AI 很难稳定判断最合适的导出组合，�
 2. 页面语义结构：哪些地方用 button、input、textarea、img、nav 等。
 3. 主题颜色处理：自动判断哪些颜色复用或提升到 src/styles/color.scss，哪些只属于页面私有样式。
 4. 可复用组件：优先检查 src/components、src/shared/components、src/showcase。
-5. 可复用样式：优先检查 src/styles 和已有 showcase。
-6. 可复用 mixin。
-7. 页面本身必须单独写的特殊样式。
-8. 本地交互：tab、输入、展开收起、popup、copy 等。
-9. 接口和合约 TODO。
+5. 公共模块保护：header、AppBrand、tabbar、sidebar、Popup、Picker 等公共模块默认只替换资源和配置，不因单页设计稿改变样式布局；如确需不同样式，先询问是否创建页面专属组件。
+6. 设备外壳过滤：Figma 中的手机信息状态栏、运营商、电量、时间等不写进 H5 页面。
+7. 可复用样式：优先检查 src/styles 和已有 showcase。
+8. 可复用 mixin。
+9. 页面本身必须单独写的特殊样式。
+10. 本地交互：tab、输入、展开收起、popup、copy 等。
+11. 接口和合约 TODO。
 
 等我确认清单后再实现。
 ```

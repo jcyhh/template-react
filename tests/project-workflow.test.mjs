@@ -175,3 +175,20 @@ test('post-setup development workflow is sequential with skippable contract prep
     assert.match(agentRules, /Step 3 is the only skippable step/i)
     assert.match(agentRules, /record the skipped contract step/)
 })
+
+test('figma page workflow protects shared modules and ignores device chrome', () => {
+    const workflow = readFileSync('PROJECT_WORKFLOW.md', 'utf8')
+    const agentRules = readFileSync('AGENTS.md', 'utf8')
+
+    for (const content of [workflow, agentRules]) {
+        assert.match(content, /shared module[\s\S]*layout/i)
+        assert.match(content, /公共模块[\s\S]*样式布局/)
+        assert.match(content, /replace[\s\S]*resources[\s\S]*configuration/i)
+        assert.match(content, /只替换资源/)
+        assert.match(content, /manual[\s\S]*intervention/i)
+        assert.match(content, /人工手动介入/)
+        assert.match(content, /mobile status bar|device chrome/i)
+        assert.match(content, /手机信息状态栏/)
+        assert.match(content, /H5/)
+    }
+})

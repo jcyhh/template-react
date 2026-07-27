@@ -238,6 +238,24 @@ Figma 的切图和导出组合太自由，AI 不应猜测最合适的切图组�
 AI should list the required semantic asset names and target paths, then wait for the exported assets before writing the page.
 AI 应先列出需要的语义化资源名和目标路径，等切图资源准备好后再写页面。
 
+Shared module layout styles and interactions must stay stable regardless of the page design, unless there is explicit manual developer intervention.
+不管项目设计稿看起来怎样，公共模块的样式布局和交互都必须保持稳定，除非有开发者人工手动介入并明确要求修改。
+
+For shared modules such as app layout, header, AppBrand, tabbar, sidebar, language switch, Popup and Picker, only replace resources, text configuration or project settings by default.
+对于 app layout、header、AppBrand、tabbar、sidebar、language switch、Popup、Picker 等公共模块，默认只替换资源、文案配置或项目设置。
+
+Do not rewrite a shared header layout just because Figma shows a single left image instead of logo plus app name, a gradient wallet button, or a different icon arrangement.
+不要因为 Figma 顶部展示的是单独左侧图片而不是 logo 加 app name、渐变钱包按钮或不同图标排列，就重写公共 header 布局。
+
+If a design truly needs a one-off header or navigation area, pause and ask whether to create a page-specific component instead of changing the shared module.
+如果设计确实需要一次性的顶部或导航区域，应暂停并询问是否创建页面专属组件，而不是改公共模块。
+
+Treat mobile status bar, carrier, battery, time and other device chrome in Figma frames as design-frame annotations, not H5 page content.
+Figma 画板里的手机信息状态栏、运营商、电量、时间等设备外壳信息属于设计稿标注，不属于 H5 页面内容。
+
+Do not implement device chrome in HTML, reserve layout height for it, or export it as a page asset unless the developer explicitly says it is real in-page artwork.
+不要把设备外壳信息写进 HTML、为它预留布局高度，或把它当页面切图导出，除非开发者明确说明它是真实页面内的装饰图。
+
 The checklist must include required exported assets, semantic UI elements, reusable components, reusable style classes, reusable mixins and page-specific exceptions.
 清单必须包含所需切图资源、语义化 UI 元素、可复用组件、可复用样式类、可复用 mixin 以及页面特例。
 
