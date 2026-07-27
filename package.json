@@ -6,9 +6,10 @@
     "scripts": {
         "preinstall": "node scripts/ensure-pnpm.mjs",
         "env:init": "node scripts/create-env-files.mjs",
+        "favicon:generate": "node scripts/create-favicon-from-logo.mjs",
         "predev": "node scripts/ensure-pnpm.mjs",
         "dev": "vite --host 0.0.0.0",
-        "prebuild": "node scripts/ensure-pnpm.mjs && pnpm verify",
+        "prebuild": "node scripts/ensure-pnpm.mjs && pnpm verify && node scripts/verify-brand-assets.mjs",
         "build": "tsc -b && vite build",
         "prelint": "node scripts/ensure-pnpm.mjs",
         "lint": "oxlint",

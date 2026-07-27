@@ -40,6 +40,21 @@ After setup, follow `PROJECT_WORKFLOW.md` to decide the next development step in
 Ask one setup item at a time, summarize the answers, then update project files after confirmation.
 一次询问一项初始化配置，汇总答案后再在确认后回填项目文件。
 
+After the template is copied into a real project, run `pnpm install`, `pnpm env:init` and `pnpm dev` before asking the first setup question.
+模板复制到真实项目后，先运行 `pnpm install`、`pnpm env:init` 和 `pnpm dev`，再询问第一个初始化问题。
+
+When the dev server is ready, report the Vite `Local` and `Network` URLs, especially the LAN address, in the same message as the first setup question.
+开发服务启动成功后，将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和第一个初始化问题放在同一条消息里发给开发者。
+
+Ask for the project logo resource only; generate favicon from the logo and do not ask the developer for favicon.
+只向开发者索要项目 logo 资源；favicon 由 logo 生成，不要再向开发者索要 favicon。
+
+If the developer has no project logo yet, tell them it can be skipped during early development, keep `public/brand/brand-status.json` not ready, and do not mark it ready until the real logo is replaced.
+如果开发者暂时没有项目 logo，告诉他前期开发可先跳过，保持 `public/brand/brand-status.json` 为未就绪，直到替换真实 logo 后才能标记为就绪。
+
+Production build must fail while `public/brand/brand-status.json` says the project logo is not ready.
+当 `public/brand/brand-status.json` 表示项目 logo 未就绪时，生产构建必须失败。
+
 Do not treat template defaults as confirmed project decisions.
 不要把模板默认值当成项目已经确认的决策。
 

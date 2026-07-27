@@ -10,6 +10,12 @@ After this checklist is confirmed, follow `PROJECT_WORKFLOW.md` for daily page, 
 AI should ask one item at a time, summarize all answers, then update project files after the developer confirms.
 AI 应一次询问一项，汇总全部回答，并在开发者确认后统一回填项目文件。
 
+After the template is copied, AI should run `pnpm install`, `pnpm env:init` and `pnpm dev` before the first setup question.
+模板下载完毕后，AI 应先运行 `pnpm install`、`pnpm env:init` 和 `pnpm dev`，再询问第一个初始化问题。
+
+When the dev server is ready, send the Vite `Local` and `Network` URLs, especially the LAN address, together with the first setup question.
+开发服务启动成功后，将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和第一个初始化问题放在同一条消息里发给开发者。
+
 ## Fixed constraints
 ## 固定约束
 
@@ -31,18 +37,22 @@ AI 应一次询问一项，汇总全部回答，并在开发者确认后统一�
 1. 项目名称。
 2. Run `pnpm env:init`; it reads `.env.example` and creates `.env.development` and `.env.production` without copying example comments.
 2. 运行 `pnpm env:init`；它会读取 `.env.example` 并创建 `.env.development` 和 `.env.production`，不要复制 example 里的注释。
-3. Replace `public/brand/app-logo.png`.
-3. 替换 `public/brand/app-logo.png`。
-4. Replace `public/favicon.ico`.
-4. 替换 `public/favicon.ico`。
-5. Confirm route base, default home route and layout menu type.
-5. 确认部署路径、默认首页路由和 layout 菜单类型。
-6. Confirm login mode: `dapp`, `hybrid` or `account`.
-6. 确认登录模式：`dapp`、`hybrid` 或 `account`。
-7. Confirm whether i18n is enabled.
-7. 确认是否启用多语言。
-8. Confirm `PROJECT_TERMS.md`.
-8. 确认 `PROJECT_TERMS.md`。
+3. Ask whether the project logo is ready. It must be a square PNG, and the recommended size is 100x100.
+3. 询问项目 logo 是否已准备好。必须是正方形 PNG，建议 100x100。
+4. If there is no logo yet, tell the developer it can be skipped during early development, and keep `public/brand/brand-status.json` as not ready.
+4. 如果暂时没有 logo，告诉开发者前期开发可先跳过，并保持 `public/brand/brand-status.json` 为未就绪。
+5. Generate the fixed 68x68 favicon from the logo with `pnpm favicon:generate`; do not ask the developer for favicon.
+5. favicon 由 logo 自动生成固定 68x68 尺寸：运行 `pnpm favicon:generate`，不要再向开发者索要 favicon。
+6. Production build is blocked until the project logo is replaced and `public/brand/brand-status.json` is marked ready.
+6. 生产构建会在项目 logo 替换、并将 `public/brand/brand-status.json` 标记为就绪前被阻止。
+7. Confirm route base, default home route and layout menu type.
+7. 确认部署路径、默认首页路由和 layout 菜单类型。
+8. Confirm login mode: `dapp`, `hybrid` or `account`.
+8. 确认登录模式：`dapp`、`hybrid` 或 `account`。
+9. Confirm whether i18n is enabled.
+9. 确认是否启用多语言。
+10. Confirm `PROJECT_TERMS.md`.
+10. 确认 `PROJECT_TERMS.md`。
 
 ## Can be skipped until integration
 ## 可等到联调阶段补充
@@ -90,3 +100,6 @@ After setup, create `PROJECT_SETUP_STATUS.md` in the real project.
 
 Only record confirmed items and skipped items with their follow-up stage.
 只记录已确认项和跳过项及其补齐阶段。
+
+If the developer skips the logo, record that the project logo is still not replaced and production build cannot pass yet.
+如果开发者暂时没有 logo，要记录项目 logo 尚未替换，生产构建暂时不能通过。

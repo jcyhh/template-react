@@ -13,6 +13,7 @@ test('template uses pnpm as the package manager', () => {
     assert.equal(packageJson.scripts.predev, 'node scripts/ensure-pnpm.mjs')
     assert.match(packageJson.scripts.prebuild, /^node scripts\/ensure-pnpm\.mjs/)
     assert.match(packageJson.scripts.prebuild, /pnpm verify/)
+    assert.match(packageJson.scripts.prebuild, /verify-brand-assets\.mjs/)
     assert.equal(packageJson.scripts.prelint, 'node scripts/ensure-pnpm.mjs')
     assert.equal(packageJson.scripts.pretest, 'node scripts/ensure-pnpm.mjs')
     assert.equal(packageJson.scripts.prepreview, 'node scripts/ensure-pnpm.mjs')

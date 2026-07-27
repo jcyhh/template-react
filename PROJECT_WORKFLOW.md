@@ -45,6 +45,21 @@ Use this short prompt when only an empty project folder has been created.
 请从 https://github.com/jcyhh/template-react.git 把 React H5 DApp 模板复制到当前空项目目录，并按模板文档开始初始化项目。
 ```
 
+After the template is copied, the AI should start the project before asking the first setup question.
+模板下载完毕后，AI 应先将项目运行起来，再询问第一个初始化问题。
+
+Run the startup commands first.
+先运行启动命令。
+
+```bash
+pnpm install
+pnpm env:init
+pnpm dev
+```
+
+When the dev server is ready, report the Vite `Local` and `Network` URLs, including the LAN address, in the same message as the first setup question.
+开发服务启动成功后，将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和第一个初始化问题放在同一条消息里发给开发者。
+
 ### Template project prompt
 ### 已复制模板后的提示词
 
@@ -56,6 +71,10 @@ Use this prompt after the template files already exist in the project directory.
 
 请先阅读 README.md、AGENTS.md、PROJECT_SETUP.md、PROJECT_TERMS.md、PROJECT_WORKFLOW.md 和 .env.example。
 
+先运行 pnpm install、pnpm env:init 和 pnpm dev，让项目跑起来。
+
+项目运行起来后，把 Vite 输出的 Local / Network 访问地址，尤其是局域网地址，和第一个初始化问题一起发给我。
+
 然后按 PROJECT_SETUP.md 一次只问我一个初始化问题。
 
 不要直接改代码，不要把模板默认值当成我的真实项目选择。
@@ -66,8 +85,8 @@ Use this prompt after the template files already exist in the project directory.
 ## 2. First run checklist
 ## 2. 首次运行清单
 
-Run these steps after the project folder is ready.
-项目目录准备好后，按下面步骤运行。
+Run these steps after the project folder is ready. The development server should be started before the first setup question is asked.
+项目目录准备好后，按下面步骤运行。第一个初始化问题抛出前，应先启动开发服务。
 
 1. Install dependencies.
 1. 安装依赖。
@@ -83,20 +102,32 @@ pnpm install
 pnpm env:init
 ```
 
-3. Fill `.env.development` for local integration.
-3. 填写 `.env.development` 用于本地联调。
+3. Start the development server.
+3. 启动开发服务。
 
-4. Keep `.env.production` `VITE_BASE_URL` and `VITE_RPC_URL` empty unless the project rules are changed intentionally.
-4. 除非项目规则明确调整，否则 `.env.production` 的 `VITE_BASE_URL` 和 `VITE_RPC_URL` 保持为空。
+```bash
+pnpm dev
+```
 
-5. Replace the project brand assets.
-5. 替换项目品牌资源。
+4. Report the Vite `Local` and `Network` URLs, especially the LAN address, together with the first setup question.
+4. 将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和第一个初始化问题一起告诉开发者。
 
-- `public/brand/app-logo.png`
-- `public/favicon.ico`
+5. Fill `.env.development` for local integration after the developer confirms the relevant setup item.
+5. 开发者确认相关初始化项后，再填写 `.env.development` 用于本地联调。
 
-6. Confirm project-level settings in `src/config/app.ts`.
-6. 确认 `src/config/app.ts` 中的项目级设置。
+6. Keep `.env.production` `VITE_BASE_URL` and `VITE_RPC_URL` empty unless the project rules are changed intentionally.
+6. 除非项目规则明确调整，否则 `.env.production` 的 `VITE_BASE_URL` 和 `VITE_RPC_URL` 保持为空。
+
+7. Ask whether the project logo resource is ready.
+7. 询问项目 logo 资源是否已准备好：必须是正方形 PNG，建议 100x100。
+
+- Generate the fixed 68x68 favicon from the logo with `pnpm favicon:generate`.
+- favicon 由 logo 自动生成固定 68x68 尺寸：运行 `pnpm favicon:generate`，不要再向开发者索要 favicon。
+- If there is no logo yet, it can be skipped during early development. Keep `public/brand/brand-status.json` not ready, and production build will be blocked.
+- 如果暂时没有 logo，前期开发可先跳过。保持 `public/brand/brand-status.json` 为未就绪，生产构建会被阻止。
+
+8. Confirm project-level settings in `src/config/app.ts`.
+8. 确认 `src/config/app.ts` 中的项目级设置。
 
 - The npm package name stays fixed as `@jcy/template-react`.
 - npm 包名固定为 `@jcy/template-react`。
@@ -113,15 +144,8 @@ pnpm env:init
 - DApp production chain and contract-write policies.
 - DApp 生产网络与写合约策略。
 
-7. Start the development server.
-7. 启动开发服务。
-
-```bash
-pnpm dev
-```
-
-8. Run the quality gates before starting real page work.
-8. 开始真实页面开发前先跑质量门禁。
+9. Run the quality gates before starting real page work.
+9. 开始真实页面开发前先跑质量门禁。
 
 ```bash
 pnpm test
@@ -163,6 +187,7 @@ Suggested content:
 ## Later
 ## 后续补齐
 
+- Project logo if it was skipped:
 - Contract addresses:
 - Social share meta:
 - Page-specific assets:

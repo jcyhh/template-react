@@ -31,3 +31,23 @@ test('project workflow guide records the real project development route', () => 
     assert.match(setup, /PROJECT_WORKFLOW\.md/)
     assert.match(agentRules, /PROJECT_WORKFLOW\.md/)
 })
+
+test('empty project startup flow runs the dev server before the first setup question', () => {
+    const workflow = readFileSync('PROJECT_WORKFLOW.md', 'utf8')
+    const setup = readFileSync('PROJECT_SETUP.md', 'utf8')
+    const agentRules = readFileSync('AGENTS.md', 'utf8')
+
+    assert.match(workflow, /template is copied/)
+    assert.match(workflow, /pnpm install/)
+    assert.match(workflow, /pnpm env:init/)
+    assert.match(workflow, /pnpm dev/)
+    assert.match(workflow, /Local/)
+    assert.match(workflow, /Network/)
+    assert.match(workflow, /局域网/)
+    assert.match(workflow, /first setup question/)
+    assert.match(workflow, /第一个初始化问题/)
+    assert.match(setup, /first setup question/)
+    assert.match(setup, /局域网/)
+    assert.match(agentRules, /first setup question/)
+    assert.match(agentRules, /局域网/)
+})
