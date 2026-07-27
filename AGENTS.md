@@ -79,8 +79,11 @@ Read `PROJECT_TERMS.md` before copying visible text from Figma or old project co
 If Figma uses a banned term, replace it with the approved term in source code.
 如果 Figma 使用了禁用词，源码中必须替换为推荐术语。
 
-Do not use `提现` in user-facing UI source; use `提取` for token claim, redeem or withdraw style actions.
-面向用户的 UI 源码中不要使用 `提现`；Token 领取、取回、赎回类动作统一使用 `提取`。
+Do not use `提现` in user-facing UI source; replace only this banned term with `提取`.
+面向用户的 UI 源码中不要使用 `提现`；只把这个禁用词替换为 `提取`。
+
+Do not replace valid business words such as `领取`, `赎回` or `取回` unless they are explicitly added to `PROJECT_TERMS.md` as banned terms later.
+不要替换 `领取`、`赎回` 或 `取回` 这类有效业务词，除非后续它们被明确加入 `PROJECT_TERMS.md` 禁用词表。
 
 ## Production API origin
 ## 生产接口地址

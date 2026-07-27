@@ -108,6 +108,8 @@ test('new project setup guide records template bootstrapping decisions', () => {
     assert.doesNotMatch(workflow, /Provide `public\/favicon\.ico`/)
     assert.doesNotMatch(setup, /Replace `public\/brand\/app-logo\.png`/)
     assert.doesNotMatch(setup, /替换 `public\/brand\/app-logo\.png`/)
+    assert.doesNotMatch(setup, /Confirm `PROJECT_TERMS\.md`/)
+    assert.doesNotMatch(setup, /确认 `PROJECT_TERMS\.md`/)
 
     assert.match(readme, /PROJECT_SETUP\.md/)
     assert.match(readme, /PROJECT_TERMS\.md/)
@@ -127,6 +129,10 @@ test('project terminology bans wrong user-facing words from source code', () => 
     assert.match(terms, /提现/)
     assert.match(terms, /提取/)
     assert.match(agentRules, /不要使用 `提现`/)
+    assert.match(terms, /Only replace the banned term `提现`/)
+    assert.match(terms, /只替换禁用词 `提现`/)
+    assert.doesNotMatch(terms, /领取、取回、赎回类动作统一使用/)
+    assert.doesNotMatch(agentRules, /领取、取回、赎回类动作统一使用/)
     assert.deepEqual(sourceWithBannedTerm, [])
 })
 

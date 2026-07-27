@@ -74,8 +74,6 @@ When presenting this pack, always include the default value, Available options a
 6. 生产构建会在项目 logo 替换、并将 `public/brand/brand-status.json` 标记为就绪前被阻止。
 7. Confirm the default setup pack. The developer can reply `默认` to accept route base, home route, layout menu, login mode, i18n and DApp production chain defaults together.
 7. 确认默认配置包。开发者可回复 `默认`，一次确认部署目录、首页路由、布局菜单、登录模式、多语言和 DApp 生产网络等默认项。
-8. Confirm `PROJECT_TERMS.md`.
-8. 确认 `PROJECT_TERMS.md`。
 
 ## Can be skipped until integration
 ## 可等到联调阶段补充
