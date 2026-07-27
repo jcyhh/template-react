@@ -371,14 +371,17 @@ Ask the developer to manually export the needed page assets before implementatio
 Figma slicing is too free-form for AI to reliably choose the best export combination, so AI should list semantic asset names and target paths instead of guessing or silently downloading arbitrary slices.
 Figma 切图方式太自由，AI 很难稳定判断最合适的导出组合，因此 AI 应列出语义化资源名和目标路径，而不是自己猜或静默下载随意切片。
 
-Shared module layout styles and interactions must not be changed to follow a page design unless there is explicit manual developer intervention.
-公共模块的样式布局和交互不要为了贴合某个页面设计稿而修改，除非开发者人工手动介入并明确要求。
+Shared module overall layout and interaction contracts must not be changed to follow a page design unless there is explicit manual developer intervention.
+公共模块的整体布局和交互契约不要为了贴合某个页面设计稿而修改，除非开发者人工手动介入并明确要求。
 
-For shared modules, replace resources, text configuration or project settings only by default.
-公共模块默认只替换资源、文案配置或项目设置。
+For shared modules, use content-level adaptation by default: replace resources, update text configuration, hide or show app name, reorder controls inside an existing slot, or adjust project settings.
+公共模块默认做内容级适配：替换资源、更新文案配置、隐藏或显示 appname、在已有插槽内调整内容顺序，或调整项目设置。
 
-For example, do not rewrite the shared header because Figma shows a single left image instead of logo plus app name, a gradient wallet button, or different icon spacing.
-例如，不要因为 Figma 里顶部是单独左侧图片而不是 logo 加 app name、渐变钱包按钮或不同图标间距，就重写公共 header。
+For example, do not rebuild the shared header structure because Figma shows a single left image instead of logo plus app name, a gradient wallet button, or different icon spacing.
+例如，不要因为 Figma 里顶部是单独左侧图片而不是 logo 加 appname、渐变钱包按钮或不同图标间距，就重建公共 header 结构。
+
+If the same overall header layout can match the design by replacing the logo resource, hiding app name, reordering controls inside the existing right slot, or applying an existing button visual variant, do that directly.
+如果在整体 header 布局不变的情况下，通过替换 logo 资源、隐藏 appname、在已有右侧插槽内调整控件顺序，或套用已有按钮视觉变体就能贴近设计稿，应直接这样做。
 
 Mobile status bar, carrier, battery, time and other device chrome in Figma frames are not H5 page content.
 Figma 画板里的手机信息状态栏、运营商、电量、时间等设备外壳信息不属于 H5 页面内容。
@@ -402,7 +405,7 @@ Do not implement device chrome in HTML, reserve height for it, or export it as a
 2. 页面语义结构：哪些地方用 button、input、textarea、img、nav 等。
 3. 主题颜色处理：自动判断哪些颜色复用或提升到 src/styles/color.scss，哪些只属于页面私有样式。
 4. 可复用组件：优先检查 src/components、src/shared/components、src/showcase。
-5. 公共模块保护：header、AppBrand、tabbar、sidebar、Popup、Picker 等公共模块默认只替换资源和配置，不因单页设计稿改变样式布局；如确需不同样式，先询问是否创建页面专属组件。
+5. 公共模块保护：header、AppBrand、tabbar、sidebar、Popup、Picker 等公共模块保护的是整体布局和交互契约；在整体布局不变时，允许内容级适配，例如替换资源、隐藏 appname、在已有插槽内调整内容顺序或套用已有按钮视觉变体；如确需改变结构，先询问是否创建页面专属组件。
 6. 设备外壳过滤：Figma 中的手机信息状态栏、运营商、电量、时间等不写进 H5 页面。
 7. 可复用样式：优先检查 src/styles 和已有 showcase。
 8. 可复用 mixin。
