@@ -48,6 +48,9 @@ Use this short prompt when only an empty project folder has been created.
 After the template is copied, the AI should start the project before asking the first setup question.
 模板下载完毕后，AI 应先将项目运行起来，再询问第一个初始化问题。
 
+Do not ask which package manager should be used during setup; pnpm is fixed.
+初始化时不要询问包管理器；pnpm 是固定规则。
+
 Run the startup commands first.
 先运行启动命令。
 
@@ -104,6 +107,8 @@ Use this prompt after the template files already exist in the project directory.
 
 请先阅读 README.md、AGENTS.md、PROJECT_SETUP.md、PROJECT_TERMS.md、PROJECT_WORKFLOW.md 和 .env.example。
 
+不要询问包管理器，pnpm 是固定规则。
+
 先运行 pnpm install、pnpm env:init 和 pnpm dev，让项目跑起来。
 
 项目运行起来后，把 Vite 输出的 Local / Network 访问地址，尤其是局域网地址，和默认配置包一起发给我。
@@ -126,6 +131,9 @@ Use this prompt after the template files already exist in the project directory.
 
 Run these steps after the project folder is ready. The development server should be started before the first setup question is asked.
 项目目录准备好后，按下面步骤运行。第一个初始化问题抛出前，应先启动开发服务。
+
+Do not ask which package manager should be used during setup; pnpm is fixed.
+初始化时不要询问包管理器；pnpm 是固定规则。
 
 1. Install dependencies.
 1. 安装依赖。

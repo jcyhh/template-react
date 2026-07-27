@@ -13,6 +13,9 @@ These rules are part of the template and should be preserved when creating new p
 Use pnpm for dependency installation, scripts, tests, builds and lint checks.
 依赖安装、脚本运行、测试、构建和 lint 检查统一使用 pnpm。
 
+Do not ask which package manager should be used during setup; pnpm is fixed.
+初始化时不要询问包管理器；pnpm 是固定规则。
+
 Keep `pnpm-lock.yaml` as the only package lock file.
 只保留 `pnpm-lock.yaml` 作为依赖锁文件。
 

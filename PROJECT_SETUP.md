@@ -42,6 +42,8 @@ If the developer replies `默认`, record all default setup pack values as confi
 
 - Use pnpm only. Do not use npm or yarn.
 - 只使用 pnpm，不使用 npm 或 yarn。
+- Do not ask which package manager should be used during setup; pnpm is fixed.
+- 初始化时不要询问包管理器；pnpm 是固定规则。
 - Keep `pnpm-lock.yaml` as the only lock file.
 - 只保留 `pnpm-lock.yaml` 作为依赖锁文件。
 - Keep the template package name fixed as `@jcy/template-react`; do not ask for or rewrite it during real project setup.

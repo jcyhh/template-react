@@ -7,6 +7,8 @@ test('template uses pnpm as the package manager', () => {
     const packageJson = JSON.parse(readFileSync('package.json', 'utf8'))
     const readme = readFileSync('README.md', 'utf8')
     const agentRules = readFileSync('AGENTS.md', 'utf8')
+    const setup = readFileSync('PROJECT_SETUP.md', 'utf8')
+    const workflow = readFileSync('PROJECT_WORKFLOW.md', 'utf8')
 
     assert.match(packageJson.packageManager, /^pnpm@\d+\.\d+\.\d+$/)
     assert.equal(packageJson.scripts.preinstall, 'node scripts/ensure-pnpm.mjs')
@@ -35,6 +37,16 @@ test('template uses pnpm as the package manager', () => {
     assert.match(agentRules, /pnpm test/)
     assert.match(agentRules, /pnpm build/)
     assert.match(agentRules, /pnpm lint/)
+    assert.match(agentRules, /Do not ask which package manager/i)
+    assert.match(agentRules, /不要询问包管理器/)
+    assert.match(setup, /Do not ask which package manager/i)
+    assert.match(setup, /不要询问包管理器/)
+    assert.match(workflow, /Do not ask which package manager/i)
+    assert.match(workflow, /不要询问包管理器/)
+    assert.match(workflow, /pnpm is fixed/i)
+    assert.match(workflow, /pnpm 是固定/)
+    assert.doesNotMatch(workflow, /fixed use npm/i)
+    assert.doesNotMatch(workflow, /固定使用 npm/)
 })
 
 test('package manager guard allows pnpm and rejects npm or yarn', () => {
