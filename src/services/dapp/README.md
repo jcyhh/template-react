@@ -100,6 +100,27 @@ When disabled, it only approves the passed specific amount.
 Project-specific router addresses and page-facing methods should live in `src/services/contracts`.
 项目专属 Router 地址和页面会调用的方法应放在 `src/services/contracts`。
 
+Do not omit `account` only because a contract call is a `view` / `pure` read.
+不要只因为合约调用是 `view` / `pure` 读取就省略 `account`。
+
+For reads without a `user`, `owner` or `account` parameter, check whether the return value belongs to the current user's assets, orders, rewards, claim eligibility or permissions.
+对于没有 `user`、`owner` 或 `account` 参数的读取，要检查返回值是否属于当前用户资产、订单、收益、领取资格或权限。
+
+If the contract uses `msg.sender`, or may depend on `msg.sender` for identity, permission or delegated-account context, pass the connected wallet address with `readContract({ ..., account: connectedAddress })`.
+如果合约使用 `msg.sender`，或可能依赖 `msg.sender` 判断身份、权限或委托账户上下文，就用 `readContract({ ..., account: connectedAddress })` 传入当前连接钱包地址。
+
+`readDappContract` only exposes optional `account`; business wrappers decide when to pass it.
+`readDappContract` 只暴露可选 `account`，由业务封装决定何时传入。
+
+Do not force-inject the wallet address into every read. Global config, public market data, public行情 and Token metadata stay account-free.
+不要把钱包地址强制注入所有读取。全局配置、公共行情、Token 元数据继续不传 `account`。
+
+This matters for EIP-7702 delegated accounts because missing `account` / `from` in `eth_call` may run under an empty-address context and revert.
+这对 EIP-7702 委托账户尤其重要，因为 `eth_call` 缺少 `account` / `from` 时可能以空地址上下文执行并回退。
+
+New user-context reads need regression tests for business address passing, wrapper forwarding to viem `readContract`, and public reads without `account`.
+新增依赖用户上下文的读取需要补回归测试，覆盖业务层传地址、封装层透传给 viem `readContract`，以及公共读取不传 `account`。
+
 After a successful contract write, call `waitForDappContractDataSync()` before refreshing API data that depends on chain indexing.
 写合约成功后，如果要刷新依赖链上索引的接口数据，先调用 `waitForDappContractDataSync()`。
 

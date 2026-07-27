@@ -99,6 +99,8 @@ export type {
     DappBatchCall,
     DappBatchOptions,
     DappContractActions,
+    DappContractBaseParams,
+    DappContractReadOptions,
     DappContractReadParams,
     DappContractWriteOptions,
     DappContractWriteParams,

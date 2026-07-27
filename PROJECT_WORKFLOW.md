@@ -365,6 +365,12 @@ Do not write code immediately after receiving a Figma link.
 First inspect the design, existing components, global styles, mixins, nearby pages and required assets.
 先检查设计稿、已有组件、全局样式、mixin、相近页面和所需切图。
 
+Ask the developer to manually export the needed page assets before implementation whenever possible.
+开发页面前，尽量先让开发者手动导出该页面需要的切图资源。
+
+Figma slicing is too free-form for AI to reliably choose the best export combination, so AI should list semantic asset names and target paths instead of guessing or silently downloading arbitrary slices.
+Figma 切图方式太自由，AI 很难稳定判断最合适的导出组合，因此 AI 应列出语义化资源名和目标路径，而不是自己猜或静默下载随意切片。
+
 ### Figma page prompt
 ### Figma 页面提示词
 
@@ -377,7 +383,7 @@ First inspect the design, existing components, global styles, mixins, nearby pag
 
 请先输出页面实现清单，必须包括：
 
-1. 需要我导出的切图资源，以及建议放到 src/assets/<page-name>/ 下的语义化文件名。
+1. 需要我手动导出的切图资源，以及建议放到 src/assets/<page-name>/ 下的语义化文件名；不要自行猜测或静默下载随意切片。
 2. 页面语义结构：哪些地方用 button、input、textarea、img、nav 等。
 3. 主题颜色处理：自动判断哪些颜色复用或提升到 src/styles/color.scss，哪些只属于页面私有样式。
 4. 可复用组件：优先检查 src/components、src/shared/components、src/showcase。

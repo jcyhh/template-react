@@ -17,6 +17,7 @@ import { getDappWalletClient } from './provider.ts'
 import { getConnectedDappAddress } from './wallet.ts'
 import type {
     DappContractActions,
+    DappContractReadOptions,
     DappContractReadParams,
     DappContractWriteOptions,
     DappContractWriteParams,
@@ -27,6 +28,7 @@ export async function readDappContract<TResult = unknown, TAbi extends Abi = Abi
     abi,
     functionName,
     args = [],
+    account,
 }: DappContractReadParams<TAbi>): Promise<TResult> {
     const walletClient = getDappWalletClient()
 
@@ -35,6 +37,7 @@ export async function readDappContract<TResult = unknown, TAbi extends Abi = Abi
         abi,
         functionName,
         args,
+        ...(account === undefined ? {} : { account }),
     } as any) as Promise<TResult>
 }
 
@@ -135,8 +138,14 @@ export function createDappContractActions<TAbi extends Abi>(
     abi: TAbi,
 ): DappContractActions {
     return {
-        read(functionName, args = []) {
-            return readDappContract({ address, abi, functionName, args })
+        read(functionName, args = [], options: DappContractReadOptions = {}) {
+            return readDappContract({
+                address,
+                abi,
+                functionName,
+                args,
+                ...options,
+            })
         },
         write(functionName, args = [], options: DappContractWriteOptions = {}) {
             return writeDappContract({

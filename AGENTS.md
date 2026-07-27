@@ -157,6 +157,36 @@ Keep `VITE_RPC_URL` empty in `.env.production` because production uses `DAPP_PRO
 These rules do not apply to `.env.development`, which may use a LAN API URL and local-chain RPC URL during integration.
 这些规则不适用于 `.env.development`，开发联调时可以填写局域网接口地址和本地测试链 RPC 地址。
 
+## DApp contract reads
+## DApp 合约读取
+
+Do not omit `account` only because a contract call is a `view` / `pure` read.
+不要只因为合约调用是 `view` / `pure` 读取就省略 `account`。
+
+Before implementing a page or contract wrapper read, check whether the contract function has no `user`, `owner` or `account` address parameter but returns data related to the current user's assets, orders, rewards, claim eligibility or permissions.
+实现页面或合约读取封装前，先检查该合约方法是否没有 `user`、`owner` 或 `account` 等地址参数，但返回值却与当前用户资产、订单、收益、领取资格或权限有关。
+
+Also check whether the contract implementation uses `msg.sender`, or may depend on `msg.sender` for identity, permission or delegated-account context.
+同时检查合约实现是否使用 `msg.sender`，或可能依赖 `msg.sender` 判断身份、权限或委托账户上下文。
+
+If any user-context condition applies, explicitly pass the current connected wallet address, for example `readContract({ ..., account: connectedAddress })`.
+如果满足任一用户上下文条件，必须显式传入当前连接钱包地址，例如 `readContract({ ..., account: connectedAddress })`。
+
+`readDappContract` supports an optional `account`, and the business layer must pass it only when the read depends on the caller context.
+`readDappContract` 支持可选 `account`，业务层只在读取依赖调用者上下文时传入。
+
+Do not force-inject the current wallet address into every contract read.
+不要把当前钱包地址强制注入所有合约读取。
+
+Public reads such as global config, public market data, public行情 and Token metadata should keep no `account`.
+全局配置、公共行情、Token 元数据等与调用者无关的公共读取应保持不传 `account`。
+
+EIP-7702 delegated accounts need extra care: missing `account` / `from` in `eth_call` may execute under an empty-address context and revert, even when transaction simulation or wallet-side calls succeed.
+EIP-7702 委托账户要特别注意：`eth_call` 缺少 `account` / `from` 时，可能以空地址上下文执行并回退，即使实际交易模拟或钱包内调用可以成功。
+
+Every new user-context read must add regression tests covering business-layer address passing, `readDappContract` forwarding to viem `readContract`, and public reads not requiring `account`.
+每次新增依赖用户上下文的读取，都必须补回归测试，覆盖业务层传入钱包地址、`readDappContract` 透传给 viem `readContract`，以及公共读取不要求传 `account`。
+
 ## Import paths
 ## 引入路径
 
@@ -198,6 +228,15 @@ Before implementing a page from a Figma link, do not write code immediately.
 
 First inspect the design and the current project, then provide an implementation checklist for developer confirmation.
 先分析设计稿和当前项目，再输出实现清单给开发者确认。
+
+Before implementing a designed page, ask the developer to manually export the page assets first whenever possible.
+开发设计稿页面前，尽量先让开发者手动导出该页面需要的切图资源。
+
+Figma export and slicing choices are very flexible, so AI should not guess the best asset combination or silently download arbitrary slices.
+Figma 的切图和导出组合太自由，AI 不应猜测最合适的切图组合，也不要静默下载随意切片。
+
+AI should list the required semantic asset names and target paths, then wait for the exported assets before writing the page.
+AI 应先列出需要的语义化资源名和目标路径，等切图资源准备好后再写页面。
 
 The checklist must include required exported assets, semantic UI elements, reusable components, reusable style classes, reusable mixins and page-specific exceptions.
 清单必须包含所需切图资源、语义化 UI 元素、可复用组件、可复用样式类、可复用 mixin 以及页面特例。

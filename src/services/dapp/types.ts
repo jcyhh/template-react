@@ -33,12 +33,20 @@ export interface DappWalletListenerOptions {
     onChainChanged?: (chainId: number | undefined) => void
 }
 
-export interface DappContractReadParams<TAbi extends Abi = Abi> {
+export interface DappContractBaseParams<TAbi extends Abi = Abi> {
     address: Address
     abi: TAbi
     functionName: string
     args?: readonly unknown[]
 }
+
+export interface DappContractReadOptions {
+    account?: Address
+}
+
+export interface DappContractReadParams<TAbi extends Abi = Abi>
+    extends DappContractBaseParams<TAbi>,
+        DappContractReadOptions {}
 
 export interface DappContractWriteOptions {
     gas?: bigint
@@ -47,13 +55,14 @@ export interface DappContractWriteOptions {
 }
 
 export interface DappContractWriteParams<TAbi extends Abi = Abi>
-    extends DappContractReadParams<TAbi>,
+    extends DappContractBaseParams<TAbi>,
         DappContractWriteOptions {}
 
 export interface DappContractActions {
     read<TResult = unknown>(
         functionName: string,
         args?: readonly unknown[],
+        options?: DappContractReadOptions,
     ): Promise<TResult>
     write(
         functionName: string,
