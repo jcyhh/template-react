@@ -57,8 +57,11 @@ pnpm env:init
 pnpm dev
 ```
 
-When the dev server is ready, report the Vite `Local` and `Network` URLs, including the LAN address, in the same message as the first setup question.
-开发服务启动成功后，将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和第一个初始化问题放在同一条消息里发给开发者。
+When the dev server is ready, report the Vite `Local` and `Network` URLs, including the LAN address, in the same message as the first setup question and the default setup pack.
+开发服务启动成功后，将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和第一个初始化问题及默认配置包放在同一条消息里发给开发者。
+
+The developer can reply `默认` to accept the default setup pack. If anything should change, they can answer only the changed fields, such as `菜单 tabbar，多语言关闭`.
+开发者可以回复 `默认` 接受默认配置包。若需要修改，只回复要改的字段即可，例如 `菜单 tabbar，多语言关闭`。
 
 ### Template project prompt
 ### 已复制模板后的提示词
@@ -73,9 +76,11 @@ Use this prompt after the template files already exist in the project directory.
 
 先运行 pnpm install、pnpm env:init 和 pnpm dev，让项目跑起来。
 
-项目运行起来后，把 Vite 输出的 Local / Network 访问地址，尤其是局域网地址，和第一个初始化问题一起发给我。
+项目运行起来后，把 Vite 输出的 Local / Network 访问地址，尤其是局域网地址，和项目名询问、默认配置包一起发给我。
 
-然后按 PROJECT_SETUP.md 一次只问我一个初始化问题。
+默认配置包里的默认项可以一起询问。我回复 `默认` 即全部采用；如果需要改，我会只说要改的字段，例如 `菜单 tabbar，多语言关闭`。
+
+然后按 PROJECT_SETUP.md 继续初始化。除默认配置包外，项目特有配置尽量一次只问一项。
 
 不要直接改代码，不要把模板默认值当成我的真实项目选择。
 
@@ -109,8 +114,13 @@ pnpm env:init
 pnpm dev
 ```
 
-4. Report the Vite `Local` and `Network` URLs, especially the LAN address, together with the first setup question.
-4. 将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和第一个初始化问题一起告诉开发者。
+4. Report the Vite `Local` and `Network` URLs, especially the LAN address, together with the project name question and the default setup pack.
+4. 将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和项目名询问、默认配置包一起告诉开发者。
+
+- The default setup pack can be accepted by replying `默认`.
+- 默认配置包可以直接回复 `默认` 接受。
+- If defaults need changes, reply only with changed fields, for example `菜单 tabbar，多语言关闭`.
+- 如需修改默认项，只回复要改的字段即可，例如 `菜单 tabbar，多语言关闭`。
 
 5. Fill `.env.development` for local integration after the developer confirms the relevant setup item.
 5. 开发者确认相关初始化项后，再填写 `.env.development` 用于本地联调。
@@ -126,8 +136,8 @@ pnpm dev
 - If there is no logo yet, it can be skipped during early development. Keep `public/brand/brand-status.json` not ready, and production build will be blocked.
 - 如果暂时没有 logo，前期开发可先跳过。保持 `public/brand/brand-status.json` 为未就绪，生产构建会被阻止。
 
-8. Confirm project-level settings in `src/config/app.ts`.
-8. 确认 `src/config/app.ts` 中的项目级设置。
+8. Confirm project-level settings in `src/config/app.ts`, usually through the default setup pack.
+8. 确认 `src/config/app.ts` 中的项目级设置，通常通过默认配置包一次确认。
 
 - The npm package name stays fixed as `@jcy/template-react`.
 - npm 包名固定为 `@jcy/template-react`。

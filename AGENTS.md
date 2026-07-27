@@ -37,14 +37,20 @@ Before developing a real project from this template, read `PROJECT_SETUP.md` and
 After setup, follow `PROJECT_WORKFLOW.md` to decide the next development step instead of guessing from template defaults.
 初始化后，按 `PROJECT_WORKFLOW.md` 判断下一步开发内容，不要根据模板默认值猜测。
 
-Ask one setup item at a time, summarize the answers, then update project files after confirmation.
-一次询问一项初始化配置，汇总答案后再在确认后回填项目文件。
+Ask project-specific unknowns one setup item at a time, but common defaults may be grouped as one default setup pack.
+项目特有且未知的配置一次询问一项，但常用默认项可以合并成一个默认配置包统一确认。
+
+The default setup pack may include route base `/h5/`, home route `/home`, layout menu `sidebar`, login mode `dapp`, i18n enabled, BSC production chain and the standard DApp write defaults.
+默认配置包可以包含部署目录 `/h5/`、首页 `/home`、布局菜单 `sidebar`、登录模式 `dapp`、启用多语言、BSC 生产网络和标准 DApp 写合约默认项。
+
+If the developer replies `默认`, record the whole default setup pack as confirmed. If they provide changed fields such as `菜单 tabbar，多语言关闭`, only change those fields.
+如果开发者回复 `默认`，记录整个默认配置包为已确认。如果开发者提供 `菜单 tabbar，多语言关闭` 这类修改字段，则只改这些字段。
 
 After the template is copied into a real project, run `pnpm install`, `pnpm env:init` and `pnpm dev` before asking the first setup question.
 模板复制到真实项目后，先运行 `pnpm install`、`pnpm env:init` 和 `pnpm dev`，再询问第一个初始化问题。
 
-When the dev server is ready, report the Vite `Local` and `Network` URLs, especially the LAN address, in the same message as the first setup question.
-开发服务启动成功后，将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和第一个初始化问题放在同一条消息里发给开发者。
+When the dev server is ready, report the Vite `Local` and `Network` URLs, especially the LAN address, in the same message as the first setup question and the default setup pack.
+开发服务启动成功后，将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和第一个初始化问题及默认配置包放在同一条消息里发给开发者。
 
 Ask for the project logo resource only; generate favicon from the logo and do not ask the developer for favicon.
 只向开发者索要项目 logo 资源；favicon 由 logo 生成，不要再向开发者索要 favicon。

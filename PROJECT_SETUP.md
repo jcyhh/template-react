@@ -7,14 +7,17 @@ Use this checklist when creating a real project from this template.
 After this checklist is confirmed, follow `PROJECT_WORKFLOW.md` for daily page, API and DApp development.
 本清单确认后，按 `PROJECT_WORKFLOW.md` 继续日常页面、接口和 DApp 开发。
 
-AI should ask one item at a time, summarize all answers, then update project files after the developer confirms.
-AI 应一次询问一项，汇总全部回答，并在开发者确认后统一回填项目文件。
+AI should ask project-specific unknowns one item at a time, but common defaults may be grouped as one default setup pack.
+AI 应对项目特有且未知的配置一次询问一项，但常用默认项可以合并成一个默认配置包统一确认。
 
 After the template is copied, AI should run `pnpm install`, `pnpm env:init` and `pnpm dev` before the first setup question.
 模板下载完毕后，AI 应先运行 `pnpm install`、`pnpm env:init` 和 `pnpm dev`，再询问第一个初始化问题。
 
 When the dev server is ready, send the Vite `Local` and `Network` URLs, especially the LAN address, together with the first setup question.
 开发服务启动成功后，将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和第一个初始化问题放在同一条消息里发给开发者。
+
+The first setup question can ask for the project name and the default setup pack together. If the developer replies `默认`, record all default setup pack values as confirmed.
+第一个初始化问题可以同时询问项目名称和默认配置包。开发者回复 `默认` 时，记录默认配置包里的所有值为已确认。
 
 ## Fixed constraints
 ## 固定约束
@@ -29,6 +32,27 @@ When the dev server is ready, send the Vite `Local` and `Network` URLs, especial
 - `.env.production` 的 `VITE_BASE_URL` 保持为空，生产接口请求使用当前网站同源地址。
 - Keep `.env.production` `VITE_RPC_URL` empty because production uses `DAPP_PRODUCTION_CHAIN`.
 - `.env.production` 的 `VITE_RPC_URL` 保持为空，生产环境使用 `DAPP_PRODUCTION_CHAIN`。
+
+## Default setup pack
+## 默认配置包
+
+Ask these common project defaults together. Most projects can reply `默认`; if a project needs changes, the developer can answer only the changed fields, such as `菜单 tabbar，多语言关闭`.
+这些常用项目默认项可以一起询问。大多数项目可以回复 `默认`；如果项目需要修改，开发者只需要回复要改的字段，例如 `菜单 tabbar，多语言关闭`。
+
+- Route base: `/h5/`.
+- 部署目录：`/h5/`。
+- Default home route: `/home`.
+- 默认首页：`/home`。
+- Layout menu: `sidebar`.
+- 布局菜单：`sidebar`。
+- Login mode: `dapp`.
+- 登录模式：`dapp`。
+- i18n: enabled.
+- 多语言：启用。
+- DApp production chain: BSC.
+- DApp 生产网络：BSC。
+- DApp write defaults: gas check enabled, gas estimate enabled, ERC20 max approve enabled, amount decimals 18.
+- DApp 写合约默认项：开启 gas 检查、开启 gas 估算、开启 ERC20 最大额度授权、金额精度 18。
 
 ## Required before development
 ## 开发前必改
@@ -45,14 +69,10 @@ When the dev server is ready, send the Vite `Local` and `Network` URLs, especial
 5. favicon 由 logo 自动生成固定 68x68 尺寸：运行 `pnpm favicon:generate`，不要再向开发者索要 favicon。
 6. Production build is blocked until the project logo is replaced and `public/brand/brand-status.json` is marked ready.
 6. 生产构建会在项目 logo 替换、并将 `public/brand/brand-status.json` 标记为就绪前被阻止。
-7. Confirm route base, default home route and layout menu type.
-7. 确认部署路径、默认首页路由和 layout 菜单类型。
-8. Confirm login mode: `dapp`, `hybrid` or `account`.
-8. 确认登录模式：`dapp`、`hybrid` 或 `account`。
-9. Confirm whether i18n is enabled.
-9. 确认是否启用多语言。
-10. Confirm `PROJECT_TERMS.md`.
-10. 确认 `PROJECT_TERMS.md`。
+7. Confirm the default setup pack. The developer can reply `默认` to accept route base, home route, layout menu, login mode, i18n and DApp production chain defaults together.
+7. 确认默认配置包。开发者可回复 `默认`，一次确认部署目录、首页路由、布局菜单、登录模式、多语言和 DApp 生产网络等默认项。
+8. Confirm `PROJECT_TERMS.md`.
+8. 确认 `PROJECT_TERMS.md`。
 
 ## Can be skipped until integration
 ## 可等到联调阶段补充
