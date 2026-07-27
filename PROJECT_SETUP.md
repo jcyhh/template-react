@@ -4,6 +4,9 @@
 Use this checklist when creating a real project from this template.
 使用本模板创建真实项目时，按本清单初始化。
 
+After this checklist is confirmed, follow `PROJECT_WORKFLOW.md` for daily page, API and DApp development.
+本清单确认后，按 `PROJECT_WORKFLOW.md` 继续日常页面、接口和 DApp 开发。
+
 AI should ask one item at a time, summarize all answers, then update project files after the developer confirms.
 AI 应一次询问一项，汇总全部回答，并在开发者确认后统一回填项目文件。
 

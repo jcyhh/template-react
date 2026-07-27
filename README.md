@@ -25,6 +25,9 @@ Project conventions such as import paths, page modules, styles and asset naming 
 Before using this template for a real project, read `PROJECT_SETUP.md`.
 使用本模板创建真实项目前，先阅读 `PROJECT_SETUP.md`。
 
+After setup, follow `PROJECT_WORKFLOW.md` to decide the next development step.
+初始化后，按照 `PROJECT_WORKFLOW.md` 判断下一步开发该做什么。
+
 Project-facing terms are recorded in `PROJECT_TERMS.md`.
 面向项目用户的术语规范记录在 `PROJECT_TERMS.md`。
 

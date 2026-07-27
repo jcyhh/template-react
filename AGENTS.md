@@ -28,6 +28,9 @@ Keep the package-manager guard enabled so npm and yarn fail fast.
 Before developing a real project from this template, read `PROJECT_SETUP.md` and complete the setup checklist with the developer.
 基于本模板开发真实项目前，先阅读 `PROJECT_SETUP.md` 并与开发者完成初始化清单。
 
+After setup, follow `PROJECT_WORKFLOW.md` to decide the next development step instead of guessing from template defaults.
+初始化后，按 `PROJECT_WORKFLOW.md` 判断下一步开发内容，不要根据模板默认值猜测。
+
 Ask one setup item at a time, summarize the answers, then update project files after confirmation.
 一次询问一项初始化配置，汇总答案后再在确认后回填项目文件。
 
