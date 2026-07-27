@@ -39,20 +39,23 @@ The first setup question can ask for the project name and the default setup pack
 Ask these common project defaults together. Most projects can reply `默认`; if a project needs changes, the developer can answer only the changed fields, such as `菜单 tabbar，多语言关闭`.
 这些常用项目默认项可以一起询问。大多数项目可以回复 `默认`；如果项目需要修改，开发者只需要回复要改的字段，例如 `菜单 tabbar，多语言关闭`。
 
-- Route base: `/h5/`.
-- 部署目录：`/h5/`。
-- Default home route: `/home`.
-- 默认首页：`/home`。
-- Layout menu: `sidebar`.
-- 布局菜单：`sidebar`。
-- Login mode: `dapp`.
-- 登录模式：`dapp`。
-- i18n: enabled.
-- 多语言：启用。
-- DApp production chain: BSC.
-- DApp 生产网络：BSC。
-- DApp write defaults: gas check enabled, gas estimate enabled, ERC20 max approve enabled, amount decimals 18.
-- DApp 写合约默认项：开启 gas 检查、开启 gas 估算、开启 ERC20 最大额度授权、金额精度 18。
+When presenting this pack, always include the default value, Available options and short meaning for every item. Do not list defaults only.
+抛出这个配置包时，每一项都要同时说明默认值、可选项和简短含义，不能只列默认值。
+
+- Route base: default `/h5/`. Available options: `/h5/` for a common H5 subdirectory deployment, `/` for root deployment, or a custom server prefix.
+- 部署目录：默认 `/h5/`。可选项：`/h5/` 用于常见 H5 子目录部署，`/` 用于根目录部署，也可以填写服务端约定的自定义前缀。
+- Default home route: `/home`. Available options: `/home` for the normal first page, or another first-level route if the project uses a different home entry.
+- 默认首页：`/home`。可选项：`/home` 用于常规首页，如果项目入口不同，也可以改成其他一级路由。
+- Layout menu: default `sidebar`. Available options: `sidebar` for side navigation, or `tabbar` for bottom navigation.
+- 布局菜单：默认 `sidebar`。可选项：`sidebar` 侧边栏导航，`tabbar` 底部导航。
+- Login mode: default `dapp`. Available options: `dapp` for wallet login only, `hybrid` for wallet and account login, or `account` for account/password login only.
+- 登录模式：默认 `dapp`。可选项：`dapp` 仅钱包登录，`hybrid` 钱包与账号登录，`account` 仅账号密码登录。
+- i18n: default enabled. Available options: `enabled` for language switching and request `lang`, or `disabled` to hide language switching and lock language to `zh-Hans`.
+- 多语言：默认启用。可选项：`enabled` 支持切换语言并在请求中传 `lang`，`disabled` 隐藏语言切换并固定为 `zh-Hans`。
+- DApp production chain: default BSC through the viem `bsc` chain preset. Available options: BSC, or another viem built-in chain; write `other viem chain` when the project needs a different production network.
+- DApp 生产网络：默认使用 viem 的 `bsc` 链配置。可选项：BSC，或其他 viem 内置链；项目需要其他生产网络时可写 `other viem chain`。
+- DApp write defaults: gas check enabled, gas estimate enabled, ERC20 max approve enabled, amount decimals 18. Available options: each switch can be enabled or disabled; decimals can be 18 for BSC and common EVM tokens, 6 for a project token or network that uses 6 decimals, or another confirmed project token decimal value.
+- DApp 写合约默认项：开启 gas 检查、开启 gas 估算、开启 ERC20 最大额度授权、金额精度 18。可选项：每个开关都可启用或关闭；金额精度可用 18 适配 BSC 和常见 EVM Token，也可用 6 适配项目 token 或 6 位精度网络，或填写项目确认的其他精度。
 
 ## Required before development
 ## 开发前必改

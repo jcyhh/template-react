@@ -43,6 +43,12 @@ Ask project-specific unknowns one setup item at a time, but common defaults may 
 The default setup pack may include route base `/h5/`, home route `/home`, layout menu `sidebar`, login mode `dapp`, i18n enabled, BSC production chain and the standard DApp write defaults.
 默认配置包可以包含部署目录 `/h5/`、首页 `/home`、布局菜单 `sidebar`、登录模式 `dapp`、启用多语言、BSC 生产网络和标准 DApp 写合约默认项。
 
+When presenting the default setup pack, include available options and short meanings for each item, not only the default values.
+询问默认配置包时，必须同时列出可选项和简短含义，不能只列默认值。
+
+At minimum, explain `sidebar` side navigation, `tabbar` bottom navigation, `dapp` wallet login, `hybrid` wallet and account login, `account` account/password login, i18n enabled or disabled, BSC, other viem chain, and token decimals such as 18 or 6.
+至少说明 `sidebar` 侧边栏导航、`tabbar` 底部导航、`dapp` 钱包登录、`hybrid` 钱包与账号登录、`account` 账号密码登录、多语言启用或关闭、BSC、other viem chain，以及 18 或 6 等 Token 精度含义。
+
 If the developer replies `默认`, record the whole default setup pack as confirmed. If they provide changed fields such as `菜单 tabbar，多语言关闭`, only change those fields.
 如果开发者回复 `默认`，记录整个默认配置包为已确认。如果开发者提供 `菜单 tabbar，多语言关闭` 这类修改字段，则只改这些字段。
 

@@ -63,6 +63,27 @@ When the dev server is ready, report the Vite `Local` and `Network` URLs, includ
 The developer can reply `默认` to accept the default setup pack. If anything should change, they can answer only the changed fields, such as `菜单 tabbar，多语言关闭`.
 开发者可以回复 `默认` 接受默认配置包。若需要修改，只回复要改的字段即可，例如 `菜单 tabbar，多语言关闭`。
 
+The default setup pack must show available options and meanings, not only the default values.
+默认配置包必须说明可选项和含义，不能只列默认值。
+
+Default setup pack example:
+默认配置包示例：
+
+- Route base: default `/h5/`; options are `/h5/`, `/` or a custom prefix.
+- 部署目录：默认 `/h5/`；可选项为 `/h5/`、`/` 或自定义前缀。
+- Home route: default `/home`; options are `/home` or another first-level home route.
+- 首页路由：默认 `/home`；可选项为 `/home` 或其他一级首页路由。
+- Layout menu: default `sidebar`; options are `sidebar` side navigation or `tabbar` bottom navigation.
+- 布局菜单：默认 `sidebar`；可选项为 `sidebar` 侧边栏导航或 `tabbar` 底部导航。
+- Login mode: default `dapp`; options are `dapp` wallet login, `hybrid` wallet and account login, or `account` account/password login.
+- 登录模式：默认 `dapp`；可选项为 `dapp` 钱包登录、`hybrid` 钱包与账号登录、`account` 账号密码登录。
+- I18n: default enabled; options are enabled language switching or disabled with language locked to `zh-Hans`.
+- 多语言：默认启用；可选项为启用语言切换，或关闭并固定为 `zh-Hans`。
+- Production chain: default BSC; options are BSC or other viem chain.
+- 生产网络：默认 BSC；可选项为 BSC 或 other viem chain。
+- DApp write policy: default gas check, gas estimate and ERC20 max approve enabled, decimals 18; options are each switch enabled or disabled, and decimals 18, 6 or a confirmed project token value.
+- DApp 写合约策略：默认开启 gas 检查、gas 估算、ERC20 最大授权，金额精度 18；可选项为每个开关启用或关闭，金额精度使用 18、6 或项目确认值。
+
 ### Template project prompt
 ### 已复制模板后的提示词
 
@@ -78,7 +99,7 @@ Use this prompt after the template files already exist in the project directory.
 
 项目运行起来后，把 Vite 输出的 Local / Network 访问地址，尤其是局域网地址，和项目名询问、默认配置包一起发给我。
 
-默认配置包里的默认项可以一起询问。我回复 `默认` 即全部采用；如果需要改，我会只说要改的字段，例如 `菜单 tabbar，多语言关闭`。
+默认配置包里的默认项可以一起询问，但每项都要列出默认值、可选项和含义，不要只列默认值。我回复 `默认` 即全部采用；如果需要改，我会只说要改的字段，例如 `菜单 tabbar，多语言关闭`。
 
 然后按 PROJECT_SETUP.md 继续初始化。除默认配置包外，项目特有配置尽量一次只问一项。
 
@@ -119,6 +140,8 @@ pnpm dev
 
 - The default setup pack can be accepted by replying `默认`.
 - 默认配置包可以直接回复 `默认` 接受。
+- Include available options and meanings for every default setup pack item.
+- 默认配置包里的每一项都要写明可选项和含义。
 - If defaults need changes, reply only with changed fields, for example `菜单 tabbar，多语言关闭`.
 - 如需修改默认项，只回复要改的字段即可，例如 `菜单 tabbar，多语言关闭`。
 
