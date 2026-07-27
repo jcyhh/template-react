@@ -24,8 +24,8 @@ AI 应一次询问一项，汇总全部回答，并在开发者确认后统一�
 
 1. Project name and package name.
 1. 项目名称与包名。
-2. Copy `.env.example` to `.env.development` and `.env.production`.
-2. 根据 `.env.example` 创建 `.env.development` 和 `.env.production`。
+2. Run `pnpm env:init`; it reads `.env.example` and creates `.env.development` and `.env.production` without copying example comments.
+2. 运行 `pnpm env:init`；它会读取 `.env.example` 并创建 `.env.development` 和 `.env.production`，不要复制 example 里的注释。
 3. Replace `public/brand/app-logo.png`.
 3. 替换 `public/brand/app-logo.png`。
 4. Replace `public/favicon.ico`.

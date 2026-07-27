@@ -61,16 +61,18 @@ The project rejects npm and yarn for dependency installation and common scripts.
 Only `.env.example` is tracked by git.
 只有 `.env.example` 会被 git 追踪。
 
-After downloading or copying this template, create local runtime env files from `.env.example`.
-下载或复制本模板后，需要根据 `.env.example` 创建本地运行用的 env 文件。
+After downloading or copying this template, create local runtime env files with the init script.
+下载或复制本模板后，使用初始化脚本创建本地运行用的 env 文件。
 
 ```bash
-cp .env.example .env.development
-cp .env.example .env.production
+pnpm env:init
 ```
 
-Then fill the values for the current project.
-然后根据当前项目填写对应配置值。
+The script reads `.env.example`, removes documentation comments, and creates `.env.development` and `.env.production` if they do not already exist.
+脚本会读取 `.env.example`，移除说明注释，并在 `.env.development` 和 `.env.production` 不存在时创建它们。
+
+Then fill the generated values for the current project.
+然后根据当前项目填写生成后的配置值。
 
 Keep `.env.development` and `.env.production` local only.
 `.env.development` 和 `.env.production` 只保留在本地，不提交到 git。
