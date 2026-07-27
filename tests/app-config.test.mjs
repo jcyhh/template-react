@@ -56,3 +56,9 @@ test('feature modules read shared project defaults from app config', () => {
     assert.equal(DEFAULT_LANGUAGE_CODE, APP_CONFIG.defaultLanguageCode)
     assert.equal(STORAGE_DEFAULT.language, APP_CONFIG.defaultLanguageCode)
 })
+
+test('default language follows development and production environments', async () => {
+    const source = await readFile(new URL('../src/config/app.ts', import.meta.url), 'utf8')
+
+    assert.match(source, /defaultLanguageCode:\s*import\.meta\.env\?\.PROD\s*\?\s*'en'\s*:\s*'zh-Hans'/)
+})

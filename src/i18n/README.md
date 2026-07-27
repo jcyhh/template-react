@@ -42,6 +42,9 @@ Each item contains dynamic imports for both common resource packages.
 The template enables i18n by default through `APP_CONFIG.enableI18n`.
 模板通过 `APP_CONFIG.enableI18n` 默认开启多语言。
 
+When i18n is enabled, development defaults to `zh-Hans`, and production defaults to `en`.
+开启多语言时，开发环境默认 `zh-Hans`，生产环境默认 `en`。
+
 When `enableI18n` is `false`, initialization, local storage and the app store are fixed to `zh-Hans`. Translation calls remain available, but language switching and the request `lang` header are disabled.
 当 `enableI18n` 为 `false` 时，初始化、本地缓存和 app store 都固定为 `zh-Hans`。翻译调用仍可正常使用，但语言切换和请求 `lang` 头会关闭。
 

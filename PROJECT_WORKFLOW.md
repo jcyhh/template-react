@@ -77,12 +77,12 @@ Default setup pack example:
 - 布局菜单：默认 `sidebar`；可选项为 `sidebar` 侧边栏导航或 `tabbar` 底部导航。
 - Login mode: default `dapp`; options are `dapp` wallet login, `hybrid` wallet and account login, or `account` account/password login.
 - 登录模式：默认 `dapp`；可选项为 `dapp` 钱包登录、`hybrid` 钱包与账号登录、`account` 账号密码登录。
-- I18n: default enabled; options are enabled language switching or disabled with language locked to `zh-Hans`.
-- 多语言：默认启用；可选项为启用语言切换，或关闭并固定为 `zh-Hans`。
+- I18n: default enabled; development defaults to `zh-Hans`, and production defaults to `en`; options are enabled language switching or disabled with language locked to `zh-Hans`.
+- 多语言：默认启用；开发环境默认 `zh-Hans`，生产环境默认 `en`；可选项为启用语言切换，或关闭多语言功能并固定为 `zh-Hans`。
 - Production chain: default BSC; options are BSC or other viem chain.
 - 生产网络：默认 BSC；可选项为 BSC 或 other viem chain。
-- DApp write policy: default gas check, gas estimate and ERC20 max approve enabled, decimals 18; options are each switch enabled or disabled, and decimals 18, 6 or a confirmed project token value.
-- DApp 写合约策略：默认开启 gas 检查、gas 估算、ERC20 最大授权，金额精度 18；可选项为每个开关启用或关闭，金额精度使用 18、6 或项目确认值。
+- DApp write policy: default gas check disabled, gas estimate disabled, ERC20 approval uses the maximum amount by default, and Token decimals default to 18; options are enabling the gas switches, approving a passed specific amount, or changing to other decimals confirmed by the project.
+- DApp 写合约策略：默认关闭 Gas 检查、关闭 Gas 估算；ERC20 默认授权最大上限；Token 精度默认 18；可选项为开启 Gas 开关、按传入具体数值授权，或改成项目确认的其他精度。
 
 ### Template project prompt
 ### 已复制模板后的提示词

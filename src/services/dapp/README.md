@@ -55,11 +55,17 @@ The wallet client is created with `createWalletClient`, `custom(provider)` and `
 Gas balance check is controlled by `DAPP_CONFIG.enableGasCheck`.
 Gas 余额检查由 `DAPP_CONFIG.enableGasCheck` 控制。
 
+Gas balance check is disabled by default.
+Gas 余额检查默认关闭。
+
 Contract writes call the shared gas checker before sending transactions.
 写合约方法在发送交易前都会先调用统一 Gas 检查。
 
 Frontend gas estimation and gas submission is controlled by `DAPP_CONFIG.enableGasEstimate`.
 前端是否估算并提交 gas 由 `DAPP_CONFIG.enableGasEstimate` 控制。
+
+Frontend gas estimation and gas submission are disabled by default.
+前端 gas 估算和 gas 参数提交默认关闭。
 
 Development mode always skips frontend gas estimation and gas submission.
 开发环境始终跳过前端 gas 估算和 gas 提交。
@@ -82,8 +88,11 @@ ERC20 授权额度不足时的授权金额由 `DAPP_CONFIG.enableErc20MaxApprove
 When enabled, `ensureErc20Allowance()` approves the max amount.
 开启时，`ensureErc20Allowance()` 会授权最大额度。
 
-When disabled, it only approves the requested amount.
-关闭时，只授权本次传入的目标额度。
+This is enabled by default, so insufficient allowance approves the maximum amount by default.
+该项默认开启，因此授权不足时默认授权最大上限。
+
+When disabled, it only approves the passed specific amount.
+关闭时，只授权传入的具体数值。
 
 `UNISWAP_V2_ROUTER_ABI` is provided as a common router ABI for swap-style projects.
 `UNISWAP_V2_ROUTER_ABI` 作为 swap 类项目常用的通用 Router ABI 提供。
@@ -100,11 +109,11 @@ The wait duration is controlled by `DAPP_CONFIG.contractWriteRefreshDelayMs`.
 DApp amount unit conversion is controlled by `DAPP_CONFIG.amountDecimals`.
 DApp 金额单位转换由 `DAPP_CONFIG.amountDecimals` 控制。
 
-The default value is 18, which matches the common BSC project setup.
-默认值为 18，适配常见 BSC 项目配置。
+The default Token decimals value is 18.
+Token 精度默认值为 18。
 
-For 6-decimal networks or assets, set `DAPP_CONFIG.amountDecimals` to `6`.
-如果项目使用 6 位小数的网络或资产，把 `DAPP_CONFIG.amountDecimals` 设置为 `6`。
+For networks or assets with other decimals, set `DAPP_CONFIG.amountDecimals` to the confirmed project value.
+如果项目使用其他精度的网络或资产，把 `DAPP_CONFIG.amountDecimals` 设置为项目确认值。
 
 ## Files
 ## 文件职责

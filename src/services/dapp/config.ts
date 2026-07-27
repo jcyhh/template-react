@@ -69,11 +69,11 @@ export const DAPP_CONFIG = {
 
     // Whether contract writes check the native token balance first.
     // 写合约前是否先检查原生代币余额。
-    enableGasCheck: true,
+    enableGasCheck: false,
 
     // Whether production contract writes estimate and submit gas values.
     // 生产环境写合约时是否估算并提交 gas 参数。
-    enableGasEstimate: true,
+    enableGasEstimate: false,
 
     // Whether insufficient ERC20 allowance is approved with the maximum amount.
     // ERC20 授权不足时是否授权最大额度。

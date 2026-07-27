@@ -13,8 +13,8 @@ The app name is read from `VITE_APP_NAME`, so HTML metadata and TypeScript confi
 `loginMode` controls the permitted authentication entry: `dapp` requires a wallet environment, `hybrid` accepts either a wallet or an account password, and `account` only uses account password login. The template defaults to `dapp`.
 `loginMode` 控制允许的登录入口：`dapp` 必须在钱包环境中登录，`hybrid` 同时支持钱包和账号密码登录，`account` 仅使用账号密码登录。模板默认使用 `dapp`。
 
-`enableI18n` controls both language switching and the request `lang` header. It defaults to `true`; when set to `false`, the application is fixed to `zh-Hans`, and shared components can continue calling `t()` without extra conditions.
-`enableI18n` 同时控制语言切换和请求 `lang` 头，默认值为 `true`；设为 `false` 时，应用固定使用 `zh-Hans`，公共组件仍可直接调用 `t()`，无需增加额外判断。
+`enableI18n` controls both language switching and the request `lang` header. It defaults to `true`; development defaults to `zh-Hans`, and production defaults to `en`. When set to `false`, the application is fixed to `zh-Hans`, and shared components can continue calling `t()` without extra conditions.
+`enableI18n` 同时控制语言切换和请求 `lang` 头，默认值为 `true`；开发环境默认 `zh-Hans`，生产环境默认 `en`。设为 `false` 时，应用固定使用 `zh-Hans`，公共组件仍可直接调用 `t()`，无需增加额外判断。
 
 Module-specific protocol configuration should stay inside its own module, such as `HTTP_HEADER`, `STORAGE_KEY` and i18n resource lists.
 模块内部协议配置应继续留在模块内，例如 `HTTP_HEADER`、`STORAGE_KEY` 和多语言资源列表。

@@ -50,12 +50,12 @@ When presenting this pack, always include the default value, Available options a
 - 布局菜单：默认 `sidebar`。可选项：`sidebar` 侧边栏导航，`tabbar` 底部导航。
 - Login mode: default `dapp`. Available options: `dapp` for wallet login only, `hybrid` for wallet and account login, or `account` for account/password login only.
 - 登录模式：默认 `dapp`。可选项：`dapp` 仅钱包登录，`hybrid` 钱包与账号登录，`account` 仅账号密码登录。
-- i18n: default enabled. Available options: `enabled` for language switching and request `lang`, or `disabled` to hide language switching and lock language to `zh-Hans`.
-- 多语言：默认启用。可选项：`enabled` 支持切换语言并在请求中传 `lang`，`disabled` 隐藏语言切换并固定为 `zh-Hans`。
+- i18n: default enabled. Development defaults to `zh-Hans`, and production defaults to `en`. Available options: `enabled` for language switching and request `lang`, or `disabled` to hide language switching and lock language to `zh-Hans`.
+- 多语言：默认启用。开发环境默认 `zh-Hans`，生产环境默认 `en`。可选项：`enabled` 支持切换语言并在请求中传 `lang`，`disabled` 关闭多语言功能、隐藏语言切换并固定为 `zh-Hans`。
 - DApp production chain: default BSC through the viem `bsc` chain preset. Available options: BSC, or another viem built-in chain; write `other viem chain` when the project needs a different production network.
 - DApp 生产网络：默认使用 viem 的 `bsc` 链配置。可选项：BSC，或其他 viem 内置链；项目需要其他生产网络时可写 `other viem chain`。
-- DApp write defaults: gas check enabled, gas estimate enabled, ERC20 max approve enabled, amount decimals 18. Available options: each switch can be enabled or disabled; decimals can be 18 for BSC and common EVM tokens, 6 for a project token or network that uses 6 decimals, or another confirmed project token decimal value.
-- DApp 写合约默认项：开启 gas 检查、开启 gas 估算、开启 ERC20 最大额度授权、金额精度 18。可选项：每个开关都可启用或关闭；金额精度可用 18 适配 BSC 和常见 EVM Token，也可用 6 适配项目 token 或 6 位精度网络，或填写项目确认的其他精度。
+- DApp write defaults: gas check disabled, gas estimate disabled, ERC20 insufficient allowance approves the maximum amount by default, Token decimals default to 18. Available options: gas check and gas estimate can be enabled when the project needs frontend pre-checks; ERC20 approval can be changed to approve the passed specific amount; Token decimals can be changed to other decimals confirmed by the project.
+- DApp 写合约默认项：默认关闭 Gas 检查、关闭 Gas 估算；ERC20 授权不足时默认授权最大上限；Token 精度默认 18。可选项：项目需要前端预检查时可开启 Gas 检查和 Gas 估算；ERC20 授权可改为按传入的具体数值授权；Token 精度可改为项目确认的其他精度。
 
 ## Required before development
 ## 开发前必改
