@@ -57,8 +57,17 @@ pnpm env:init
 pnpm dev
 ```
 
-When the dev server is ready, report the Vite `Local` and `Network` URLs, including the LAN address, in the same message as the first setup question and the default setup pack.
-开发服务启动成功后，将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和第一个初始化问题及默认配置包放在同一条消息里发给开发者。
+When the dev server is ready, report the Vite `Local` and `Network` URLs, including the LAN address, in the same message as the default setup pack question.
+开发服务启动成功后，将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和默认配置包询问放在同一条消息里发给开发者。
+
+The default setup pack is the only grouped setup question.
+默认配置包是唯一可以合并询问的初始化问题。
+
+Do not ask for the project name, project logo, Empty component icon, env values, contract addresses, social meta, page assets or other non-default setup items in that first message.
+不要在同一轮询问项目名称、项目 logo、Empty 组件图标、env 值、合约地址、社交 meta、页面切图或其他非默认初始化项。
+
+Ask non-default setup items one at a time after the default setup pack is confirmed.
+默认配置包确认后，再对非默认初始化项一次只问一项。
 
 The developer can reply `默认` to accept the default setup pack. If anything should change, they can answer only the changed fields, such as `菜单 tabbar，多语言关闭`.
 开发者可以回复 `默认` 接受默认配置包。若需要修改，只回复要改的字段即可，例如 `菜单 tabbar，多语言关闭`。
@@ -97,11 +106,13 @@ Use this prompt after the template files already exist in the project directory.
 
 先运行 pnpm install、pnpm env:init 和 pnpm dev，让项目跑起来。
 
-项目运行起来后，把 Vite 输出的 Local / Network 访问地址，尤其是局域网地址，和项目名询问、默认配置包一起发给我。
+项目运行起来后，把 Vite 输出的 Local / Network 访问地址，尤其是局域网地址，和默认配置包一起发给我。
 
 默认配置包里的默认项可以一起询问，但每项都要列出默认值、可选项和含义，不要只列默认值。我回复 `默认` 即全部采用；如果需要改，我会只说要改的字段，例如 `菜单 tabbar，多语言关闭`。
 
-然后按 PROJECT_SETUP.md 继续初始化。除默认配置包外，项目特有配置尽量一次只问一项。
+默认配置包是唯一可以合并询问的初始化问题。不要在同一轮询问项目名称、项目 Logo、Empty 空状态图标、env 地址、合约地址、社交 meta 或页面切图。
+
+然后按 PROJECT_SETUP.md 继续初始化。除默认配置包外，项目特有配置必须一次只问一项。
 
 不要直接改代码，不要把模板默认值当成我的真实项目选择。
 
@@ -137,18 +148,24 @@ pnpm env:init
 pnpm dev
 ```
 
-4. Report the Vite `Local` and `Network` URLs, especially the LAN address, together with the project name question and the default setup pack.
-4. 将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和项目名询问、默认配置包一起告诉开发者。
+4. Report the Vite `Local` and `Network` URLs, especially the LAN address, together with the default setup pack question.
+4. 将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和默认配置包询问一起告诉开发者。
 
 - The default setup pack can be accepted by replying `默认`.
 - 默认配置包可以直接回复 `默认` 接受。
+- The default setup pack is the only grouped setup question.
+- 默认配置包是唯一可以合并询问的初始化问题。
 - Include available options and meanings for every default setup pack item.
 - 默认配置包里的每一项都要写明可选项和含义。
 - If defaults need changes, reply only with changed fields, for example `菜单 tabbar，多语言关闭`.
 - 如需修改默认项，只回复要改的字段即可，例如 `菜单 tabbar，多语言关闭`。
+- Do not ask for the project name, project logo, Empty component icon, env values, contract addresses, social meta or page assets in the same message.
+- 不要在同一轮询问项目名称、项目 logo、Empty 组件图标、env 值、合约地址、社交 meta 或页面切图。
+- Ask non-default setup items one at a time after the default setup pack is confirmed.
+- 默认配置包确认后，再对非默认初始化项一次只问一项。
 
-5. Fill `.env.development` for local integration after the developer confirms the relevant setup item.
-5. 开发者确认相关初始化项后，再填写 `.env.development` 用于本地联调。
+5. Ask for the project name after the default setup pack is confirmed.
+5. 默认配置包确认后，再单独询问项目名称。
 
 6. Keep `.env.production` `VITE_BASE_URL` and `VITE_RPC_URL` empty unless the project rules are changed intentionally.
 6. 除非项目规则明确调整，否则 `.env.production` 的 `VITE_BASE_URL` 和 `VITE_RPC_URL` 保持为空。
@@ -161,8 +178,8 @@ pnpm dev
 - If there is no logo yet, it can be skipped during early development. Keep `public/brand/brand-status.json` not ready, and production build will be blocked.
 - 如果暂时没有 logo，前期开发可先跳过。保持 `public/brand/brand-status.json` 为未就绪，生产构建会被阻止。
 
-8. Immediately after the logo question, ask whether the Empty component icon resource is ready.
-8. 在询问 logo 后，紧接着询问 Empty 组件图标资源是否已准备好。
+8. Ask whether the Empty component icon resource is ready after the logo answer has been handled.
+8. 等 logo 回答处理完后，再单独询问 Empty 组件图标资源是否已准备好。
 
 - If there is no Empty component icon yet, it can be skipped during early development and recorded in `PROJECT_SETUP_STATUS.md`.
 - 如果暂时没有 Empty 组件图标，前期开发可先跳过，并记录到 `PROJECT_SETUP_STATUS.md`。

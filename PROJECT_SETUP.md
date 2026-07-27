@@ -22,17 +22,20 @@ Do not ask the developer to confirm colors one by one or run a separate color se
 During page implementation, automatically reuse existing tokens or promote shared colors into `src/styles/color.scss`.
 页面实现时，自动复用已有 token，或把公共颜色提升到 `src/styles/color.scss`。
 
-AI should ask project-specific unknowns one item at a time, but common defaults may be grouped as one default setup pack.
-AI 应对项目特有且未知的配置一次询问一项，但常用默认项可以合并成一个默认配置包统一确认。
+AI should ask project-specific unknowns one item at a time. The default setup pack is the only grouped setup question.
+AI 应对项目特有且未知的配置一次只问一项。默认配置包是唯一可以合并询问的初始化问题。
 
 After the template is copied, AI should run `pnpm install`, `pnpm env:init` and `pnpm dev` before the first setup question.
 模板下载完毕后，AI 应先运行 `pnpm install`、`pnpm env:init` 和 `pnpm dev`，再询问第一个初始化问题。
 
-When the dev server is ready, send the Vite `Local` and `Network` URLs, especially the LAN address, together with the first setup question.
-开发服务启动成功后，将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和第一个初始化问题放在同一条消息里发给开发者。
+When the dev server is ready, send the Vite `Local` and `Network` URLs, especially the LAN address, together with the default setup pack question.
+开发服务启动成功后，将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和默认配置包询问放在同一条消息里发给开发者。
 
-The first setup question can ask for the project name and the default setup pack together. If the developer replies `默认`, record all default setup pack values as confirmed.
-第一个初始化问题可以同时询问项目名称和默认配置包。开发者回复 `默认` 时，记录默认配置包里的所有值为已确认。
+Do not ask for the project name, project logo, Empty component icon, env values, contract addresses, social meta or page assets in the same message as the default setup pack.
+不要在默认配置包同一轮里询问项目名称、项目 logo、Empty 组件图标、env 值、合约地址、社交 meta 或页面切图。
+
+If the developer replies `默认`, record all default setup pack values as confirmed, then continue with non-default setup items one at a time.
+开发者回复 `默认` 时，记录默认配置包里的所有值为已确认，然后继续对非默认初始化项一次只问一项。
 
 ## Fixed constraints
 ## 固定约束
@@ -75,28 +78,28 @@ When presenting this pack, always include the default value, Available options a
 ## Required before development
 ## 开发前必改
 
-1. Project name.
-1. 项目名称。
-2. Run `pnpm env:init`; it reads `.env.example` and creates `.env.development` and `.env.production` without copying example comments.
-2. 运行 `pnpm env:init`；它会读取 `.env.example` 并创建 `.env.development` 和 `.env.production`，不要复制 example 里的注释。
-3. Ask whether the project logo is ready. It must be a square PNG, and the recommended size is 100x100.
-3. 询问项目 logo 是否已准备好。必须是正方形 PNG，建议 100x100。
-4. Immediately after the logo question, ask whether the Empty component icon is ready. It should be a PNG exported from Figma.
-4. 在询问 logo 后，紧接着询问 Empty 组件图标是否已准备好。它通常是从 Figma 导出的 PNG。
-5. If there is no Empty component icon yet, tell the developer it can be skipped during early development and record it in `PROJECT_SETUP_STATUS.md`.
-5. 如果暂时没有 Empty 组件图标，告诉开发者前期开发可先跳过，并记录到 `PROJECT_SETUP_STATUS.md`。
-6. If the Empty component icon is provided, run `pnpm empty:asset -- --input <empty-icon.png>`.
-6. 如果已提供 Empty 组件图标，运行 `pnpm empty:asset -- --input <empty-icon.png>`。
-7. The script reads the PNG width and height automatically. A 1x Figma export uses its original width. A large 2x export, usually close to 750px wide or around 500px tall, uses half of its width. The component writes width only and keeps height as auto.
-7. 脚本会自动读取 PNG 宽高。Figma 导出的 1x 图使用原始宽度；较大的 2x 图通常接近 750px 宽或 500px 高，此时使用宽度的一半。组件只写宽度，高度保持 auto。
-8. If there is no logo yet, tell the developer it can be skipped during early development, and keep `public/brand/brand-status.json` as not ready.
-8. 如果暂时没有 logo，告诉开发者前期开发可先跳过，并保持 `public/brand/brand-status.json` 为未就绪。
-9. Generate the fixed 68x68 favicon from the logo with `pnpm favicon:generate`; do not ask the developer for favicon.
-9. favicon 由 logo 自动生成固定 68x68 尺寸：运行 `pnpm favicon:generate`，不要再向开发者索要 favicon。
-10. Production build is blocked until the project logo is replaced and `public/brand/brand-status.json` is marked ready.
-10. 生产构建会在项目 logo 替换、并将 `public/brand/brand-status.json` 标记为就绪前被阻止。
-11. Confirm the default setup pack. The developer can reply `默认` to accept route base, home route, layout menu, login mode, i18n and DApp production chain defaults together.
-11. 确认默认配置包。开发者可回复 `默认`，一次确认部署目录、首页路由、布局菜单、登录模式、多语言和 DApp 生产网络等默认项。
+1. Run `pnpm env:init`; it reads `.env.example` and creates `.env.development` and `.env.production` without copying example comments.
+1. 运行 `pnpm env:init`；它会读取 `.env.example` 并创建 `.env.development` 和 `.env.production`，不要复制 example 里的注释。
+2. Confirm the default setup pack. The developer can reply `默认` to accept route base, home route, layout menu, login mode, i18n and DApp production chain defaults together.
+2. 确认默认配置包。开发者可回复 `默认`，一次确认部署目录、首页路由、布局菜单、登录模式、多语言和 DApp 生产网络等默认项。
+3. Ask for the project name after the default setup pack is confirmed.
+3. 默认配置包确认后，再单独询问项目名称。
+4. Ask whether the project logo is ready. It must be a square PNG, and the recommended size is 100x100.
+4. 询问项目 logo 是否已准备好。必须是正方形 PNG，建议 100x100。
+5. If there is no logo yet, tell the developer it can be skipped during early development, and keep `public/brand/brand-status.json` as not ready.
+5. 如果暂时没有 logo，告诉开发者前期开发可先跳过，并保持 `public/brand/brand-status.json` 为未就绪。
+6. Generate the fixed 68x68 favicon from the logo with `pnpm favicon:generate`; do not ask the developer for favicon.
+6. favicon 由 logo 自动生成固定 68x68 尺寸：运行 `pnpm favicon:generate`，不要再向开发者索要 favicon。
+7. Production build is blocked until the project logo is replaced and `public/brand/brand-status.json` is marked ready.
+7. 生产构建会在项目 logo 替换、并将 `public/brand/brand-status.json` 标记为就绪前被阻止。
+8. Ask whether the Empty component icon is ready after the logo answer has been handled. It should be a PNG exported from Figma.
+8. 等 logo 回答处理完后，再单独询问 Empty 组件图标是否已准备好。它通常是从 Figma 导出的 PNG。
+9. If there is no Empty component icon yet, tell the developer it can be skipped during early development and record it in `PROJECT_SETUP_STATUS.md`.
+9. 如果暂时没有 Empty 组件图标，告诉开发者前期开发可先跳过，并记录到 `PROJECT_SETUP_STATUS.md`。
+10. If the Empty component icon is provided, run `pnpm empty:asset -- --input <empty-icon.png>`.
+10. 如果已提供 Empty 组件图标，运行 `pnpm empty:asset -- --input <empty-icon.png>`。
+11. The script reads the PNG width and height automatically. A 1x Figma export uses its original width. A large 2x export, usually close to 750px wide or around 500px tall, uses half of its width. The component writes width only and keeps height as auto.
+11. 脚本会自动读取 PNG 宽高。Figma 导出的 1x 图使用原始宽度；较大的 2x 图通常接近 750px 宽或 500px 高，此时使用宽度的一半。组件只写宽度，高度保持 auto。
 
 ## Can be skipped until integration
 ## 可等到联调阶段补充

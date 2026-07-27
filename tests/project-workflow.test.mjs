@@ -86,6 +86,18 @@ test('empty project startup flow runs the dev server before the first setup ques
     assert.match(workflow, /第一个初始化问题/)
     assert.match(workflow, /default setup pack/)
     assert.match(workflow, /默认配置包/)
+    assert.match(workflow, /only grouped setup question/i)
+    assert.match(workflow, /唯一可以合并询问/)
+    assert.match(workflow, /non-default setup items/i)
+    assert.match(workflow, /非默认初始化项/)
+    assert.match(workflow, /one at a time/i)
+    assert.match(workflow, /一次只问一项/)
+    assert.match(workflow, /Do not ask for the project name/i)
+    assert.match(workflow, /不要在同一轮询问项目名称/)
+    assert.match(workflow, /project logo/i)
+    assert.match(workflow, /Empty component icon/)
+    assert.match(workflow, /env values/i)
+    assert.match(workflow, /contract addresses/i)
     assert.match(workflow, /reply `默认`/)
     assert.match(workflow, /回复 `默认`/)
     assert.match(workflow, /菜单 tabbar/)
@@ -105,8 +117,24 @@ test('empty project startup flow runs the dev server before the first setup ques
     assert.match(workflow, /other decimals/)
     assert.match(setup, /first setup question/)
     assert.match(setup, /局域网/)
+    assert.match(setup, /only grouped setup question/i)
+    assert.match(setup, /非默认初始化项/)
     assert.match(agentRules, /first setup question/)
     assert.match(agentRules, /局域网/)
+    assert.match(agentRules, /only grouped setup question/i)
+    assert.match(agentRules, /非默认初始化项/)
+    assert.doesNotMatch(workflow, /project name and the default setup pack together/i)
+    assert.doesNotMatch(workflow, /项目名称和默认配置包一起/)
+    assert.doesNotMatch(setup, /project name and the default setup pack together/i)
+    assert.doesNotMatch(setup, /项目名称和默认配置包一起/)
+    assert.doesNotMatch(agentRules, /project name and the default setup pack together/i)
+    assert.doesNotMatch(agentRules, /项目名称和默认配置包一起/)
+    assertMatchesInOrder(workflow, [
+        /default setup pack/i,
+        /Ask for the project name/i,
+        /Ask whether the project logo/i,
+        /Ask whether the Empty component icon/i,
+    ])
 })
 
 test('post-setup development workflow is sequential with skippable contract preparation', () => {

@@ -70,8 +70,8 @@ Keep decorative gradients, one-off glow colors and page-specific artwork colors 
 Only ask the developer when the decision changes the project-wide theme direction, such as replacing the main brand color, switching the whole project between dark and light visual systems, or resolving a real design contradiction.
 只有当判断会改变全项目主题方向时才询问开发者，例如替换项目主品牌色、整体暗色/亮色体系切换，或设计稿本身出现明显冲突。
 
-Ask project-specific unknowns one setup item at a time, but common defaults may be grouped as one default setup pack.
-项目特有且未知的配置一次询问一项，但常用默认项可以合并成一个默认配置包统一确认。
+Ask project-specific unknowns one setup item at a time. The default setup pack is the only grouped setup question.
+项目特有且未知的配置一次只问一项。默认配置包是唯一可以合并询问的初始化问题。
 
 The default setup pack may include route base `/h5/`, home route `/home`, layout menu `sidebar`, login mode `dapp`, i18n enabled with development `zh-Hans` and production `en`, BSC production chain and the standard DApp write defaults.
 默认配置包可以包含部署目录 `/h5/`、首页 `/home`、布局菜单 `sidebar`、登录模式 `dapp`、启用多语言且开发环境默认 `zh-Hans`、生产环境默认 `en`、BSC 生产网络和标准 DApp 写合约默认项。
@@ -88,14 +88,20 @@ If the developer replies `默认`, record the whole default setup pack as confir
 After the template is copied into a real project, run `pnpm install`, `pnpm env:init` and `pnpm dev` before asking the first setup question.
 模板复制到真实项目后，先运行 `pnpm install`、`pnpm env:init` 和 `pnpm dev`，再询问第一个初始化问题。
 
-When the dev server is ready, report the Vite `Local` and `Network` URLs, especially the LAN address, in the same message as the first setup question and the default setup pack.
-开发服务启动成功后，将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和第一个初始化问题及默认配置包放在同一条消息里发给开发者。
+When the dev server is ready, report the Vite `Local` and `Network` URLs, especially the LAN address, in the same message as the default setup pack question.
+开发服务启动成功后，将 Vite 输出的 `Local` 和 `Network` 访问地址，尤其是局域网地址，和默认配置包询问放在同一条消息里发给开发者。
+
+Do not ask for the project name, project logo, Empty component icon, env values, contract addresses, social meta, page assets or other non-default setup items in the same message as the default setup pack.
+不要在默认配置包同一轮里询问项目名称、项目 logo、Empty 组件图标、env 值、合约地址、社交 meta、页面切图或其他非默认初始化项。
+
+After the default setup pack is confirmed, ask non-default setup items one at a time.
+默认配置包确认后，再对非默认初始化项一次只问一项。
 
 Ask for the project logo resource only; generate favicon from the logo and do not ask the developer for favicon.
 只向开发者索要项目 logo 资源；favicon 由 logo 生成，不要再向开发者索要 favicon。
 
-Immediately after asking for the project logo, ask whether the Empty component icon is ready.
-询问项目 logo 后，紧接着询问 Empty 组件图标是否已准备好。
+Ask whether the Empty component icon is ready only after the project logo answer has been handled.
+只有项目 logo 的回答处理完后，才单独询问 Empty 组件图标是否已准备好。
 
 If the developer has no Empty component icon yet, tell them it can be skipped during early development and record it in `PROJECT_SETUP_STATUS.md`.
 如果开发者暂时没有 Empty 组件图标，告诉他前期开发可先跳过，并记录到 `PROJECT_SETUP_STATUS.md`。
