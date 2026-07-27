@@ -106,6 +106,8 @@ Use this prompt after the template files already exist in the project directory.
 不要直接改代码，不要把模板默认值当成我的真实项目选择。
 
 等你收集完初始化答案后，先汇总给我确认；我确认后你再回填项目文件。
+
+初始化完成后，不要停在完成总结；请按 PROJECT_WORKFLOW.md 的固定后续开发顺序继续引导。先写静态页面，再集中配置接口方法，再准备合约模块；第 3 步合约资料未就绪时可以记录跳过并继续接口逻辑。页面实现时需要自动抽取公共颜色到主题 SCSS 配置，不要让我逐个确认颜色。
 ```
 
 ## 2. First run checklist
@@ -159,8 +161,20 @@ pnpm dev
 - If there is no logo yet, it can be skipped during early development. Keep `public/brand/brand-status.json` not ready, and production build will be blocked.
 - 如果暂时没有 logo，前期开发可先跳过。保持 `public/brand/brand-status.json` 为未就绪，生产构建会被阻止。
 
-8. Confirm project-level settings in `src/config/app.ts`, usually through the default setup pack.
-8. 确认 `src/config/app.ts` 中的项目级设置，通常通过默认配置包一次确认。
+8. Immediately after the logo question, ask whether the Empty component icon resource is ready.
+8. 在询问 logo 后，紧接着询问 Empty 组件图标资源是否已准备好。
+
+- If there is no Empty component icon yet, it can be skipped during early development and recorded in `PROJECT_SETUP_STATUS.md`.
+- 如果暂时没有 Empty 组件图标，前期开发可先跳过，并记录到 `PROJECT_SETUP_STATUS.md`。
+- If it is ready, run `pnpm empty:asset -- --input <empty-icon.png>`.
+- 如果已准备好，运行 `pnpm empty:asset -- --input <empty-icon.png>`。
+- The script detects PNG size from the Figma export: 1x uses the original width, while a large 2x image close to 750px wide or around 500px tall uses half width.
+- 脚本会按 Figma 导出 PNG 的宽高自动判断：1x 使用原始宽度；接近 750px 宽或 500px 高的大图按 2x 处理，使用一半宽度。
+- Empty image style writes width only and keeps height as auto.
+- Empty 图样式只写宽度，高度保持 auto。
+
+9. Confirm project-level settings in `src/config/app.ts`, usually through the default setup pack.
+9. 确认 `src/config/app.ts` 中的项目级设置，通常通过默认配置包一次确认。
 
 - The npm package name stays fixed as `@jcy/template-react`.
 - npm 包名固定为 `@jcy/template-react`。
@@ -177,8 +191,18 @@ pnpm dev
 - DApp production chain and contract-write policies.
 - DApp 生产网络与写合约策略。
 
-9. Run the quality gates before starting real page work.
-9. 开始真实页面开发前先跑质量门禁。
+10. Keep theme colors developer-transparent during page work.
+10. 页面开发时让主题颜色处理对开发者无感。
+
+- Do not create a separate setup question for colors.
+- 不要单独为了颜色创建初始化问题。
+- If no design reference exists yet, keep the template defaults.
+- 如果暂无设计参考，先保留模板默认值。
+- During the first designed page, automatically reuse or promote shared colors into `src/styles/color.scss`.
+- 开发第一个设计页面时，自动复用或提升公共颜色到 `src/styles/color.scss`。
+
+11. Run the quality gates before starting real page work.
+11. 开始真实页面开发前先跑质量门禁。
 
 ```bash
 pnpm test
@@ -221,13 +245,94 @@ Suggested content:
 ## 后续补齐
 
 - Project logo if it was skipped:
+- Empty component icon if it was skipped:
 - Contract addresses:
 - Social share meta:
 - Page-specific assets:
 ```
 
-## 4. Page implementation from Figma
-## 4. 根据 Figma 开发页面
+## 4. After setup next-step guidance
+## 4. 初始化后的下一步引导
+
+After project setup is complete, never stop at a setup completion summary.
+项目初始化完成后，不要停在完成总结。
+
+Always provide next-step guidance in the same message.
+必须在同一条消息里继续给出下一步引导。
+
+The next-step guidance must follow the fixed post-setup development sequence below.
+下一步引导必须按下面的固定后续开发顺序执行。
+
+Do not enter the next step until the current step is complete, except that Step 3 is the only skippable step when contract documentation is not ready yet.
+当前步骤未完成前，不进入下一步；唯一例外是第 3 步，当合约文档暂未就绪时可以跳过。
+
+### Fixed post-setup development sequence
+### 固定后续开发顺序
+
+1. Static pages: implement the designed pages first with static data and local interactions. Ask for the Figma link, exported page assets and page implementation checklist confirmation before writing code. Automatic theme color extraction runs during page implementation.
+1. 静态页面：先用静态数据和本地交互把设计页面写出来。写代码前先索要 Figma 链接、页面切图资源，并输出页面实现清单等待确认；页面实现时自动抽取公共颜色到主题 SCSS 配置。
+2. API documentation: ask the backend developer for an API Markdown document, then centrally configure request methods, request types and response types through `src/features` and `src/services/http`.
+2. 接口文档：向后端索要接口 Markdown 文档，然后通过 `src/features` 和 `src/services/http` 集中配置请求方法、请求类型和响应类型。
+3. Contract documentation: ask the Node or contract developer for a contract Markdown document, then configure DApp contract method wrappers and related env contract address fields. If API documentation is ready before contract documentation, record the skipped contract step in `PROJECT_SETUP_STATUS.md` and continue to Step 4; do not implement contract-dependent logic until the contract document arrives.
+3. 合约文档：向 Node 或合约同事索要合约 Markdown 文档，然后配置 DApp 模块合约方法封装，以及对应的 env 合约地址字段。如果接口文档先出来、合约文档暂未就绪，则把跳过的合约步骤记录到 `PROJECT_SETUP_STATUS.md` 并继续第 4 步；合约相关功能逻辑等合约文档到位后再补。
+4. Feature logic integration: connect page logic with the API documentation and any available contract documentation. Before this step starts, ask for the two development LAN env values: `.env.development` `VITE_BASE_URL` for the backend API and `.env.development` `VITE_RPC_URL` for the local or test-chain RPC. If Step 3 was skipped, integrate API-backed logic first and leave contract-backed logic as TODO until the contract document is provided.
+4. 功能逻辑联调：根据接口文档和已提供的合约文档对接页面功能逻辑。开始本步骤前，必须询问两个开发环境内网地址：后端接口 `.env.development` 的 `VITE_BASE_URL`，以及本地或测试链 RPC 的 `VITE_RPC_URL`。如果第 3 步已跳过，则先对接接口驱动的逻辑，合约驱动的逻辑保留 TODO，等合约文档补齐后再做。
+5. Pre-build preparation: before production packaging, add page-specific custom animations or simple `animate.css` animations where needed; ask which i18n languages should be enabled, then unlock those languages and translate all static page copy.
+5. 打包前准备：正式打包前，按需要给页面追加自定义动画或简单的 `animate.css` 动画；询问需要解开的多语言有哪些，然后启用对应语言并翻译所有静态页面文案。
+
+Suggested reply format after setup:
+初始化后的建议回复格式：
+
+```md
+下一步建议：
+
+现在进入固定流程第 1 步：写静态页面。
+
+请发我第一个页面的 Figma 链接和已导出的切图资源。我会先输出页面实现清单，确认后再写代码。
+
+后续流程固定为：
+1. 写静态页面
+2. 索要后端接口 Markdown 文档并集中配置请求方法
+3. 索要 Node / 合约 Markdown 文档并配置合约封装（可跳过并记录待补）
+4. 根据接口与合约文档联调功能逻辑，并在开始前询问 VITE_BASE_URL / VITE_RPC_URL 两个内网地址
+5. 打包前追加动画、确认多语言并翻译静态文案
+```
+
+## 5. Automatic theme color extraction during page work
+## 5. 页面实现时自动抽取公共颜色
+
+Theme SCSS setup should be handled automatically while implementing designed pages.
+主题 SCSS 配置应在设计页面实现过程中自动处理。
+
+The developer does not need to confirm theme colors one by one.
+开发者不需要逐个确认主题颜色。
+
+The developer also does not need a separate color setup step before asking for the page.
+开发者在要求实现页面前，也不需要单独走一轮颜色配置步骤。
+
+Common tokens usually include primary color, button text color, page background, header background, card background, box background, main text, secondary text, border or divider, and status colors such as success, warning and error when they appear in the design.
+常见 token 通常包括主色、按钮文字色、页面背景、顶部背景、卡片背景、盒子背景、主文字、次级文字、边框或分割线，以及设计中出现的成功、警告、错误等状态色。
+
+During implementation, check `src/styles/color.scss` first, reuse existing tokens when possible, and automatically promote shared colors into `src/styles/color.scss` when needed.
+实现页面时，先检查 `src/styles/color.scss`，能复用已有 token 就复用；需要新增公共颜色时，自动提升到 `src/styles/color.scss`。
+
+If no design reference exists yet, keep the current template defaults and wait until the first designed page.
+如果暂无设计参考，先保留当前模板默认值，等第一个设计页面再处理。
+
+During page implementation, promote a color to `src/styles/color.scss` when it is a brand color, global background, shared card or box color, common text color, common status color, or appears in multiple pages or reusable components.
+页面开发过程中，如果某个颜色属于品牌色、全局背景、共享卡片或盒子色、通用文字色、通用状态色，或在多个页面/可复用组件中出现，就提升到 `src/styles/color.scss`。
+
+Keep decorative gradients, one-off glow colors and page-specific artwork colors in the page SCSS.
+装饰渐变、一次性光效颜色、页面专属切图配色留在页面私有 SCSS。
+
+Only ask the developer when the choice changes the project-wide theme direction, such as replacing the main brand color, switching the whole project between dark and light visual systems, or resolving a real design contradiction.
+只有当判断会改变全项目主题方向时才询问开发者，例如替换项目主品牌色、整体暗色/亮色体系切换，或设计稿本身出现明显冲突。
+
+Before adding a new custom color in page SCSS, check whether an existing token in `src/styles/color.scss` can be reused.
+页面 SCSS 新增自定义颜色前，先检查 `src/styles/color.scss` 里是否已有可复用 token。
+
+## 6. Page implementation from Figma
+## 6. 根据 Figma 开发页面
 
 Do not write code immediately after receiving a Figma link.
 拿到 Figma 链接后不要直接写代码。
@@ -249,18 +354,19 @@ First inspect the design, existing components, global styles, mixins, nearby pag
 
 1. 需要我导出的切图资源，以及建议放到 src/assets/<page-name>/ 下的语义化文件名。
 2. 页面语义结构：哪些地方用 button、input、textarea、img、nav 等。
-3. 可复用组件：优先检查 src/components、src/shared/components、src/showcase。
-4. 可复用样式：优先检查 src/styles 和已有 showcase。
-5. 可复用 mixin。
-6. 页面本身必须单独写的特殊样式。
-7. 本地交互：tab、输入、展开收起、popup、copy 等。
-8. 接口和合约 TODO。
+3. 主题颜色处理：自动判断哪些颜色复用或提升到 src/styles/color.scss，哪些只属于页面私有样式。
+4. 可复用组件：优先检查 src/components、src/shared/components、src/showcase。
+5. 可复用样式：优先检查 src/styles 和已有 showcase。
+6. 可复用 mixin。
+7. 页面本身必须单独写的特殊样式。
+8. 本地交互：tab、输入、展开收起、popup、copy 等。
+9. 接口和合约 TODO。
 
 等我确认清单后再实现。
 ```
 
-## 5. Static page development order
-## 5. 静态页面开发顺序
+## 7. Static page development order
+## 7. 静态页面开发顺序
 
 Use this order after the page checklist is confirmed.
 页面清单确认后，按这个顺序实现。
@@ -298,8 +404,8 @@ Use this order after the page checklist is confirmed.
 6. 完成后运行相关测试；如果涉及全局影响，再运行 pnpm test、pnpm lint、pnpm build。
 ```
 
-## 6. Component development order
-## 6. 组件开发顺序
+## 8. Component development order
+## 8. 组件开发顺序
 
 Use this route when a page reveals a reusable UI pattern.
 当页面里出现可复用 UI 模式时，按这个路线沉淀组件。
@@ -328,8 +434,8 @@ Use this route when a page reveals a reusable UI pattern.
 确认后再创建组件、README 和 showcase 预览。
 ```
 
-## 7. API integration order
-## 7. 接口联调顺序
+## 9. API integration order
+## 9. 接口联调顺序
 
 Use feature modules for business APIs.
 业务接口放在 feature 模块中。
@@ -360,8 +466,8 @@ Use feature modules for business APIs.
 5. 接口字段不确定的位置写 TODO 注释，不要擅自编假字段。
 ```
 
-## 8. DApp and contract integration order
-## 8. DApp 与合约联调顺序
+## 10. DApp and contract integration order
+## 10. DApp 与合约联调顺序
 
 Use the DApp service module for wallet and contract behavior.
 钱包与合约逻辑走 DApp 服务模块。
@@ -394,8 +500,8 @@ Use the DApp service module for wallet and contract behavior.
 5. 如果 ABI 或合约地址缺失，暂停并列出缺失项。
 ```
 
-## 9. Daily finish checklist
-## 9. 每天收尾清单
+## 11. Daily finish checklist
+## 11. 每天收尾清单
 
 Run these commands before saying the work is ready.
 声明当天工作可交付前，运行下面命令。
@@ -409,8 +515,8 @@ pnpm build
 Then review whether any project changes should be fed back into the template.
 然后复盘是否有适合反哺模板的通用改动。
 
-## 10. Template feedback prompt
-## 10. 模板反哺提示词
+## 12. Template feedback prompt
+## 12. 模板反哺提示词
 
 Use this prompt in a real project after several pages or modules have been built.
 真实项目开发了一些页面或模块后，可以用下面提示词整理模板反馈。
@@ -433,14 +539,17 @@ Use this prompt in a real project after several pages or modules have been built
 请输出到 docs/template-react-feedback.md，并按 TRF-001 这种编号列出。
 ```
 
-## 11. What to do when you are unsure
-## 11. 不知道下一步做什么时
+## 13. What to do when you are unsure
+## 13. 不知道下一步做什么时
 
 If the project is not initialized, return to `PROJECT_SETUP.md`.
 如果项目还没完成初始化，回到 `PROJECT_SETUP.md`。
 
-If the project can run but no real page exists, start from the first Figma page checklist.
-如果项目能运行但还没有真实页面，从第一个 Figma 页面清单开始。
+If the project can run but no real page exists, start from the first Figma page checklist and handle automatic theme color extraction during implementation.
+如果项目能运行但还没有真实页面，从第一个 Figma 页面清单开始，并在实现过程中自动抽取公共颜色。
+
+If the project can run but no design reference exists yet, keep the template theme defaults and start from the first Figma page checklist when the design arrives.
+如果项目能运行但暂时没有设计参考，先保留模板主题默认值，等设计图到了再从第一个 Figma 页面清单开始。
 
 If static pages exist but no data exists, start API and contract integration.
 如果静态页面已有但没有真实数据，开始接口和合约联调。

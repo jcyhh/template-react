@@ -7,6 +7,21 @@ Use this checklist when creating a real project from this template.
 After this checklist is confirmed, follow `PROJECT_WORKFLOW.md` for daily page, API and DApp development.
 本清单确认后，按 `PROJECT_WORKFLOW.md` 继续日常页面、接口和 DApp 开发。
 
+After setup is complete, include next-step guidance instead of stopping at a completion summary.
+初始化完成后，要继续给出下一步引导，不要停在完成总结。
+
+The next-step guidance must follow the fixed post-setup development sequence in `PROJECT_WORKFLOW.md`. Step 3 can be skipped only when contract documentation is not ready yet, and the skipped contract step must be recorded for later completion.
+下一步引导必须按 `PROJECT_WORKFLOW.md` 中的固定后续开发顺序执行。只有合约文档暂未就绪时，第 3 步才可以跳过，并且必须记录为后续补齐事项。
+
+Theme SCSS setup should be handled automatically during designed page implementation.
+主题 SCSS 配置应在页面实现时自动抽取公共颜色。
+
+Do not ask the developer to confirm colors one by one or run a separate color setup step.
+不要让开发者一个颜色一个颜色确认，也不要单独走一轮颜色配置步骤。
+
+During page implementation, automatically reuse existing tokens or promote shared colors into `src/styles/color.scss`.
+页面实现时，自动复用已有 token，或把公共颜色提升到 `src/styles/color.scss`。
+
 AI should ask project-specific unknowns one item at a time, but common defaults may be grouped as one default setup pack.
 AI 应对项目特有且未知的配置一次询问一项，但常用默认项可以合并成一个默认配置包统一确认。
 
@@ -66,14 +81,22 @@ When presenting this pack, always include the default value, Available options a
 2. 运行 `pnpm env:init`；它会读取 `.env.example` 并创建 `.env.development` 和 `.env.production`，不要复制 example 里的注释。
 3. Ask whether the project logo is ready. It must be a square PNG, and the recommended size is 100x100.
 3. 询问项目 logo 是否已准备好。必须是正方形 PNG，建议 100x100。
-4. If there is no logo yet, tell the developer it can be skipped during early development, and keep `public/brand/brand-status.json` as not ready.
-4. 如果暂时没有 logo，告诉开发者前期开发可先跳过，并保持 `public/brand/brand-status.json` 为未就绪。
-5. Generate the fixed 68x68 favicon from the logo with `pnpm favicon:generate`; do not ask the developer for favicon.
-5. favicon 由 logo 自动生成固定 68x68 尺寸：运行 `pnpm favicon:generate`，不要再向开发者索要 favicon。
-6. Production build is blocked until the project logo is replaced and `public/brand/brand-status.json` is marked ready.
-6. 生产构建会在项目 logo 替换、并将 `public/brand/brand-status.json` 标记为就绪前被阻止。
-7. Confirm the default setup pack. The developer can reply `默认` to accept route base, home route, layout menu, login mode, i18n and DApp production chain defaults together.
-7. 确认默认配置包。开发者可回复 `默认`，一次确认部署目录、首页路由、布局菜单、登录模式、多语言和 DApp 生产网络等默认项。
+4. Immediately after the logo question, ask whether the Empty component icon is ready. It should be a PNG exported from Figma.
+4. 在询问 logo 后，紧接着询问 Empty 组件图标是否已准备好。它通常是从 Figma 导出的 PNG。
+5. If there is no Empty component icon yet, tell the developer it can be skipped during early development and record it in `PROJECT_SETUP_STATUS.md`.
+5. 如果暂时没有 Empty 组件图标，告诉开发者前期开发可先跳过，并记录到 `PROJECT_SETUP_STATUS.md`。
+6. If the Empty component icon is provided, run `pnpm empty:asset -- --input <empty-icon.png>`.
+6. 如果已提供 Empty 组件图标，运行 `pnpm empty:asset -- --input <empty-icon.png>`。
+7. The script reads the PNG width and height automatically. A 1x Figma export uses its original width. A large 2x export, usually close to 750px wide or around 500px tall, uses half of its width. The component writes width only and keeps height as auto.
+7. 脚本会自动读取 PNG 宽高。Figma 导出的 1x 图使用原始宽度；较大的 2x 图通常接近 750px 宽或 500px 高，此时使用宽度的一半。组件只写宽度，高度保持 auto。
+8. If there is no logo yet, tell the developer it can be skipped during early development, and keep `public/brand/brand-status.json` as not ready.
+8. 如果暂时没有 logo，告诉开发者前期开发可先跳过，并保持 `public/brand/brand-status.json` 为未就绪。
+9. Generate the fixed 68x68 favicon from the logo with `pnpm favicon:generate`; do not ask the developer for favicon.
+9. favicon 由 logo 自动生成固定 68x68 尺寸：运行 `pnpm favicon:generate`，不要再向开发者索要 favicon。
+10. Production build is blocked until the project logo is replaced and `public/brand/brand-status.json` is marked ready.
+10. 生产构建会在项目 logo 替换、并将 `public/brand/brand-status.json` 标记为就绪前被阻止。
+11. Confirm the default setup pack. The developer can reply `默认` to accept route base, home route, layout menu, login mode, i18n and DApp production chain defaults together.
+11. 确认默认配置包。开发者可回复 `默认`，一次确认部署目录、首页路由、布局菜单、登录模式、多语言和 DApp 生产网络等默认项。
 
 ## Can be skipped until integration
 ## 可等到联调阶段补充
@@ -90,14 +113,16 @@ When presenting this pack, always include the default value, Available options a
 ## Before page implementation from Figma
 ## Figma 页面开发前
 
-1. Export required page assets into `src/assets/<page-name>/`.
-1. 将页面所需切图导出到 `src/assets/<page-name>/`。
-2. Check reusable components, utility classes and mixins before writing page SCSS.
-2. 写页面 SCSS 前先检查可复用组件、工具类和 mixin。
-3. Check `PROJECT_TERMS.md` before copying visible design text.
-3. 复制设计稿可见文案前先检查 `PROJECT_TERMS.md`。
-4. Implement basic local interactions even if API data is still static.
-4. 即使接口数据仍是静态的，也要实现基础本地交互。
+1. Let AI handle automatic theme color extraction during page implementation.
+1. 页面实现时自动抽取公共颜色到主题 SCSS 配置。
+2. Export required page assets into `src/assets/<page-name>/`.
+2. 将页面所需切图导出到 `src/assets/<page-name>/`。
+3. Check reusable components, utility classes and mixins before writing page SCSS.
+3. 写页面 SCSS 前先检查可复用组件、工具类和 mixin。
+4. Check `PROJECT_TERMS.md` before copying visible design text.
+4. 复制设计稿可见文案前先检查 `PROJECT_TERMS.md`。
+5. Implement basic local interactions even if API data is still static.
+5. 即使接口数据仍是静态的，也要实现基础本地交互。
 
 ## After API and contract integration
 ## 接口和合约联调后
@@ -124,3 +149,6 @@ Only record confirmed items and skipped items with their follow-up stage.
 
 If the developer skips the logo, record that the project logo is still not replaced and production build cannot pass yet.
 如果开发者暂时没有 logo，要记录项目 logo 尚未替换，生产构建暂时不能通过。
+
+If the developer skips the Empty component icon, record that the shared empty-state image still uses the template placeholder.
+如果开发者暂时没有 Empty 组件图标，要记录通用空状态图仍使用模板占位资源。

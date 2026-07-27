@@ -37,6 +37,39 @@ Before developing a real project from this template, read `PROJECT_SETUP.md` and
 After setup, follow `PROJECT_WORKFLOW.md` to decide the next development step instead of guessing from template defaults.
 初始化后，按 `PROJECT_WORKFLOW.md` 判断下一步开发内容，不要根据模板默认值猜测。
 
+After setup is complete, send next-step guidance in the same message and do not stop at a completion summary.
+初始化完成后，必须在同一条消息里给出下一步引导，不要停在完成总结。
+
+The next-step guidance must follow the fixed post-setup development sequence from `PROJECT_WORKFLOW.md`.
+下一步引导必须按 `PROJECT_WORKFLOW.md` 中的固定后续开发顺序执行。
+
+Do not enter the next step until the current step is complete.
+当前步骤未完成前，不进入下一步。
+
+The fixed post-setup development sequence is: 1) static pages, 2) backend API Markdown documentation and centralized request method setup, 3) Node or contract Markdown documentation and DApp contract wrapper plus env contract address setup, 4) feature logic integration after asking for `.env.development` `VITE_BASE_URL` and `VITE_RPC_URL`, 5) pre-build animations, i18n language unlock and static page copy translation.
+固定后续开发顺序为：1）静态页面，2）索要后端接口 Markdown 文档并集中配置请求方法，3）索要 Node 或合约 Markdown 文档并配置 DApp 合约封装与 env 合约地址，4）询问 `.env.development` 的 `VITE_BASE_URL` 和 `VITE_RPC_URL` 后对接功能逻辑，5）打包前处理动画、多语言解开和静态页面文案翻译。
+
+Step 3 is the only skippable step. If contract documentation is not ready but API documentation is ready, record the skipped contract step in `PROJECT_SETUP_STATUS.md`, continue to Step 4 with API-backed logic, and leave contract-backed logic as TODO until the contract document is provided.
+第 3 步是唯一可跳过步骤。如果合约文档暂未就绪但接口文档已就绪，则把跳过的合约步骤记录到 `PROJECT_SETUP_STATUS.md`，继续第 4 步先对接接口驱动逻辑，合约驱动逻辑保留 TODO，等合约文档补齐后再做。
+
+Theme SCSS setup should be handled automatically during designed page implementation.
+主题 SCSS 配置应在页面实现时自动抽取公共颜色。
+
+Do not ask the developer to confirm colors one by one or run a separate color setup step.
+不要让开发者一个颜色一个颜色确认，也不要单独走一轮颜色配置步骤。
+
+If no design reference exists yet, keep the template defaults and defer shared color extraction until page implementation.
+如果暂无设计参考，先保留模板默认值，等页面实现时再抽取公共颜色。
+
+During page implementation, automatically reuse existing tokens or promote brand colors, global backgrounds, shared card or box colors, common text colors, common status colors and repeated page or component colors to `src/styles/color.scss`.
+页面实现时自动抽取公共颜色：先复用已有 token；品牌色、全局背景、共享卡片或盒子色、通用文字色、通用状态色，以及多个页面或组件重复出现的颜色，应自动提升到 `src/styles/color.scss`。
+
+Keep decorative gradients, one-off glow colors and page-specific artwork colors in page SCSS.
+装饰渐变、一次性光效颜色和页面专属切图配色留在页面私有 SCSS。
+
+Only ask the developer when the decision changes the project-wide theme direction, such as replacing the main brand color, switching the whole project between dark and light visual systems, or resolving a real design contradiction.
+只有当判断会改变全项目主题方向时才询问开发者，例如替换项目主品牌色、整体暗色/亮色体系切换，或设计稿本身出现明显冲突。
+
 Ask project-specific unknowns one setup item at a time, but common defaults may be grouped as one default setup pack.
 项目特有且未知的配置一次询问一项，但常用默认项可以合并成一个默认配置包统一确认。
 
@@ -60,6 +93,18 @@ When the dev server is ready, report the Vite `Local` and `Network` URLs, especi
 
 Ask for the project logo resource only; generate favicon from the logo and do not ask the developer for favicon.
 只向开发者索要项目 logo 资源；favicon 由 logo 生成，不要再向开发者索要 favicon。
+
+Immediately after asking for the project logo, ask whether the Empty component icon is ready.
+询问项目 logo 后，紧接着询问 Empty 组件图标是否已准备好。
+
+If the developer has no Empty component icon yet, tell them it can be skipped during early development and record it in `PROJECT_SETUP_STATUS.md`.
+如果开发者暂时没有 Empty 组件图标，告诉他前期开发可先跳过，并记录到 `PROJECT_SETUP_STATUS.md`。
+
+If the Empty component icon is provided, run `pnpm empty:asset -- --input <empty-icon.png>`.
+如果已提供 Empty 组件图标，运行 `pnpm empty:asset -- --input <empty-icon.png>`。
+
+The Empty asset script must read the PNG width and height automatically. A 1x Figma export uses its original width. A large 2x export, usually close to 750px wide or around 500px tall, uses half width. The component writes width only and keeps height as auto.
+Empty 图标脚本必须自动读取 PNG 宽高。Figma 导出的 1x 图使用原始宽度；较大的 2x 图通常接近 750px 宽或 500px 高，此时使用一半宽度。组件只写宽度，高度保持 auto。
 
 If the developer has no project logo yet, tell them it can be skipped during early development, keep `public/brand/brand-status.json` not ready, and do not mark it ready until the real logo is replaced.
 如果开发者暂时没有项目 logo，告诉他前期开发可先跳过，保持 `public/brand/brand-status.json` 为未就绪，直到替换真实 logo 后才能标记为就绪。
