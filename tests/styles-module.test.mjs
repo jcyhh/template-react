@@ -57,9 +57,11 @@ test('layout style modules expose common flex and grid helpers', () => {
     assert.match(mixins, /#\{\$property\}: calc\(100vh - #\{\$px\}px\)/)
     assert.match(mixins, /#\{\$property\}: calc\(100dvh - #\{\$px\}px\)/)
     assert.match(mixins, /@mixin gradient-card\(/)
-    assert.match(mixins, /isolation:\s*isolate;/)
-    assert.match(mixins, /&::before\s*\{[\s\S]*z-index:\s*0;/)
-    assert.match(mixins, /> \*\s*\{[\s\S]*position:\s*relative;[\s\S]*z-index:\s*1;/)
+    assert.match(mixins, /border:\s*[^;]+solid transparent;/)
+    assert.match(mixins, /background:\s*[^;]+padding-box,\s*[^;]+border-box;/)
+    assert.doesNotMatch(mixins, /\bmask:/)
+    assert.doesNotMatch(mixins, /mask-composite/)
+    assert.doesNotMatch(mixins, /-webkit-mask/)
     assert.match(color, /--app-btn-color:\s*#000000/)
     assert.match(mixins, /\$color:\s*var\(--app-btn-color\)/)
     assert.match(common, /@use '\.\.\/mixins' as \*/)
@@ -102,6 +104,14 @@ test('vite injects global SCSS mixins into every style file', () => {
 
     assert.match(viteConfig, /additionalData/)
     assert.match(viteConfig, /@use "@\/styles\/mixins\.scss" as \*/)
+})
+
+test('vite uses esbuild to minify production css so backdrop-filter stays compatible', () => {
+    const viteConfig = readFileSync('vite.config.ts', 'utf8')
+    const packageJson = JSON.parse(readFileSync('package.json', 'utf8'))
+
+    assert.match(viteConfig, /build:\s*\{[\s\S]*cssMinify:\s*.esbuild./)
+    assert.match(packageJson.devDependencies.esbuild, /^\^/)
 })
 
 test('postcss keeps the mobile 750px design draft adapter', () => {
