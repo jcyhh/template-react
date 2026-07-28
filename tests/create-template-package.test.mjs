@@ -20,6 +20,7 @@ function run(command, args, options = {}) {
 }
 
 test('create package exposes a pnpm dlx friendly CLI package', () => {
+    const rootPackageJson = JSON.parse(readFileSync('package.json', 'utf8'))
     const packageJson = JSON.parse(
         readFileSync('packages/create-template-react/package.json', 'utf8'),
     )
@@ -29,7 +30,7 @@ test('create package exposes a pnpm dlx friendly CLI package', () => {
     assert.equal(packageJson.name, '@jcy/create-template-react')
     assert.equal(packageJson.version, '0.1.0')
     assert.equal(packageJson.type, 'module')
-    assert.equal(packageJson.publishConfig.access, 'public')
+    assert.equal(packageJson.publishConfig, undefined)
     assert.equal(packageJson.bin['create-template-react'], 'bin/create-template-react')
     assert.deepEqual(packageJson.files, [
         'bin',
@@ -41,8 +42,13 @@ test('create package exposes a pnpm dlx friendly CLI package', () => {
         true,
     )
 
-    assert.match(readme, /pnpm dlx @jcy\/create-template-react/)
-    assert.match(workflow, /pnpm dlx @jcy\/create-template-react/)
+    assert.match(rootPackageJson.scripts['create:local'], /pnpm create:pack/)
+    assert.match(rootPackageJson.scripts['create:local'], /pnpm --dir packages\/create-template-react pack/)
+    assert.equal(rootPackageJson.scripts['create:publish'], undefined)
+    assert.match(readme, /pnpm create:local/)
+    assert.match(readme, /pnpm dlx \/Users\/jcy\/React\/template\/packages\/create-template-react\/jcy-create-template-react-0\.1\.0\.tgz/)
+    assert.match(workflow, /pnpm dlx \/Users\/jcy\/React\/template\/packages\/create-template-react\/jcy-create-template-react-0\.1\.0\.tgz/)
+    assert.match(workflow, /https:\/\/github\.com\/jcyhh\/template-react\.git/)
 })
 
 test('create package builds a template archive and creates a project from it', async () => {
@@ -84,6 +90,7 @@ test('create package builds a template archive and creates a project from it', a
 
         assert.equal(createdPackageJson.name, '@jcy/template-react')
         assert.equal(createdPackageJson.scripts['create:pack'], undefined)
+        assert.equal(createdPackageJson.scripts['create:local'], undefined)
         assert.equal(createdPackageJson.scripts['create:publish'], undefined)
 
         const createdProductionEnv = readFileSync(join(target, '.env.production'), 'utf8')

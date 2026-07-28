@@ -11,9 +11,6 @@
         "template.tgz",
         "README.md"
     ],
-    "publishConfig": {
-        "access": "public"
-    },
     "engines": {
         "node": ">=20"
     },

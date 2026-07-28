@@ -86,6 +86,7 @@ function removeTemplatePublisherScripts() {
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'))
 
     delete packageJson.scripts?.['create:pack']
+    delete packageJson.scripts?.['create:local']
     delete packageJson.scripts?.['create:publish']
 
     writeFileSync(`${packageJsonPath}`, `${JSON.stringify(packageJson, null, 4)}\n`)

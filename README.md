@@ -22,19 +22,24 @@ Project conventions such as import paths, page modules, styles and asset naming 
 ## New project setup
 ## 新项目初始化
 
-Create a new project from the npm create package.
-通过 npm create 包创建新项目。
+Build the local create package first.
+先在本机模板目录生成本地创建包。
 
 ```bash
-pnpm dlx @jcy/create-template-react my-app
+cd /Users/jcy/React/template
+git pull
+pnpm create:local
 ```
 
-Or run it inside an empty project directory.
-也可以在空项目目录中执行。
+Then create a project from the local package.
+然后在新项目空目录中使用本地包创建项目。
 
 ```bash
-pnpm dlx @jcy/create-template-react .
+pnpm dlx /Users/jcy/React/template/packages/create-template-react/jcy-create-template-react-0.1.0.tgz .
 ```
+
+If the local package is unavailable, clone the GitHub template from `https://github.com/jcyhh/template-react.git`.
+如果本地包暂不可用，则从 `https://github.com/jcyhh/template-react.git` 克隆模板。
 
 Before using this template for a real project, read `PROJECT_SETUP.md`.
 使用本模板创建真实项目前，先阅读 `PROJECT_SETUP.md`。
