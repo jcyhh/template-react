@@ -4,19 +4,20 @@ import {
     signDappMessage,
     startDappWalletListeners,
     stopDappWalletListeners,
-} from '@/services/dapp/index.ts'
-import type { DappWalletConnection } from '@/services/dapp/types.ts'
+} from '../../services/dapp/index.ts'
+import type { DappWalletConnection } from '../../services/dapp/types.ts'
 import {
     getReferralCode,
     getWalletAddress,
-} from '@/services/storage/index.ts'
+} from '../../services/storage/index.ts'
 
 import { requestDappLogin } from './api.ts'
 import {
     AUTH_ERROR_MESSAGE,
     shouldUseTemporaryDappLogin,
+    translateAuthErrorMessage,
 } from './config.ts'
-import { registerAuthLogoutCleanup } from './lifecycle.ts'
+import { getAuthSessionVersion, registerAuthLogoutCleanup } from './lifecycle.ts'
 import { completeLogin, logout } from './session.ts'
 
 let removeDappLogoutCleanup: (() => void) | undefined
@@ -61,7 +62,7 @@ async function initializeDappAuthSession(options: {
     const initialized = await initializeDappWallet({ attachListeners: false })
 
     if (!initialized) {
-        throw new Error(AUTH_ERROR_MESSAGE.dappUnavailable)
+        throw new Error(translateAuthErrorMessage(AUTH_ERROR_MESSAGE.dappUnavailable))
     }
 
     const storedAddress = options.verifyStoredAddress
@@ -70,7 +71,7 @@ async function initializeDappAuthSession(options: {
     const connection = await connectDappWallet()
 
     if (storedAddress && !isSameDappAddress(storedAddress, connection.address)) {
-        throw new Error(AUTH_ERROR_MESSAGE.dappSessionChanged)
+        throw new Error(translateAuthErrorMessage(AUTH_ERROR_MESSAGE.dappSessionChanged))
     }
 
     startDappAuthListeners()
@@ -79,14 +80,15 @@ async function initializeDappAuthSession(options: {
 
 export async function loginWithDapp(): Promise<void> {
     const attempt = ++dappLoginAttempt
+    const sessionVersion = getAuthSessionVersion()
     const { address } = await initializeDappAuthSession()
     const signResult = await signDappMessage('Login')
 
-    if (shouldUseTemporaryDappLogin()) {
-        if (attempt !== dappLoginAttempt) {
-            throw new Error(AUTH_ERROR_MESSAGE.dappSessionChanged)
-        }
+    if (attempt !== dappLoginAttempt || sessionVersion !== getAuthSessionVersion()) {
+        throw new Error(translateAuthErrorMessage(AUTH_ERROR_MESSAGE.dappSessionChanged))
+    }
 
+    if (shouldUseTemporaryDappLogin()) {
         completeLogin('token')
         return
     }
@@ -98,8 +100,8 @@ export async function loginWithDapp(): Promise<void> {
         timestamp: signResult.timestamp,
     })
 
-    if (attempt !== dappLoginAttempt) {
-        throw new Error(AUTH_ERROR_MESSAGE.dappSessionChanged)
+    if (attempt !== dappLoginAttempt || sessionVersion !== getAuthSessionVersion()) {
+        throw new Error(translateAuthErrorMessage(AUTH_ERROR_MESSAGE.dappSessionChanged))
     }
 
     completeLogin(response.token)

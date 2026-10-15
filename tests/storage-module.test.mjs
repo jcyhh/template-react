@@ -1,4 +1,5 @@
 import test from 'node:test'
+import { STORAGE_DEFAULT } from '../src/services/storage/config.ts'
 import assert from 'node:assert/strict'
 
 import { STORAGE_KEY } from '../src/services/storage/config.ts'
@@ -58,7 +59,7 @@ test('stores, reads, and removes common string values', () => {
 
     assert.equal(getWalletAddress(), '')
     assert.equal(getReferralCode(), '')
-    assert.equal(getLanguage(), 'zh-Hans')
+    assert.equal(getLanguage(), STORAGE_DEFAULT.language)
     assert.equal(getLoginAccount(), '')
 })
 

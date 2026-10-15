@@ -6,7 +6,8 @@ import {
     useDappStore,
     useUserStore,
 } from '../src/stores/index.ts'
-import { DEFAULT_LANGUAGE_CODE } from '../src/i18n/config.ts'
+import { APP_LANGUAGES, DEFAULT_LANGUAGE_CODE, FIXED_LANGUAGE_CODE } from '../src/i18n/config.ts'
+import { APP_CONFIG } from '../src/config/app.ts'
 import { DAPP_PROVIDER_STATUS } from '../src/services/dapp/config.ts'
 
 test('store modules expose their starter states', () => {
@@ -23,9 +24,11 @@ test('store modules expose their starter states', () => {
 })
 
 test('app store keeps the current language code and ignores unsupported values', () => {
-    useAppStore.getState().setLanguageCode('en')
-    assert.equal(useAppStore.getState().languageCode, 'en')
+    const languageCode = APP_LANGUAGES[0].code
+    const expected = APP_CONFIG.enableI18n ? languageCode : FIXED_LANGUAGE_CODE
+    useAppStore.getState().setLanguageCode(languageCode)
+    assert.equal(useAppStore.getState().languageCode, expected)
 
     useAppStore.getState().setLanguageCode('unsupported')
-    assert.equal(useAppStore.getState().languageCode, 'en')
+    assert.equal(useAppStore.getState().languageCode, expected)
 })

@@ -1,6 +1,3 @@
-import {
-    type ReactNode,
-} from 'react'
 import { useTranslation } from 'react-i18next'
 
 import emptyUrl from '@/assets/common/empty.png'
@@ -8,19 +5,18 @@ import emptyUrl from '@/assets/common/empty.png'
 import './Empty.scss'
 
 export interface EmptyProps {
-    text?: ReactNode
     showGap?: boolean
     className?: string
 }
 
 export function Empty({
-    text,
     showGap = true,
     className = '',
 }: EmptyProps) {
     const { t } = useTranslation()
     const classes = [
         'empty',
+        'tc',
         className,
     ].filter(Boolean).join(' ')
 
@@ -28,9 +24,9 @@ export function Empty({
         <div className={classes}>
             {showGap ? <div className="gap-100" /> : null}
 
-            <div className="empty__content">
-                <img src={emptyUrl} className="empty__image" alt="" />
-                <div className="empty__text size-28">{text ?? t('暂无数据')}</div>
+            <div className="empty__content flex flex-column items-center">
+                <img src={emptyUrl} className="empty__image mb-30" alt="" />
+                <div className="empty__text size-28">{t('暂无数据')}</div>
             </div>
 
             {showGap ? <div className="gap-100" /> : null}

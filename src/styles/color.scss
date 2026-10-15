@@ -1,6 +1,21 @@
 :root {
     --app-color: #FFE5A5;
     --app-btn-color: #000000;
+    --app-btn-bg: var(--app-color);
+    --app-btn-disabled-color: #FFFFFF80;
+    --app-btn-disabled-bg: var(--app-box-bg);
+    --app-btn-solid-bg: var(--app-color);
+    --app-btn-gradient-bg: linear-gradient(90deg, var(--app-color), var(--app-yellow));
+    --app-btn-gradient-border: linear-gradient(90deg, var(--app-color), var(--app-blue));
+    --app-secondary-text-color: #FFFFFF80;
+    --app-progress-color: var(--app-color);
+    --app-progress-bg: var(--app-box-bg);
+    --app-segmented-tabs-bg: var(--app-box-bg);
+    --app-segmented-tabs-active-bg: var(--app-btn-bg);
+    --app-segmented-tabs-active-color: var(--app-btn-color);
+    --app-segmented-tabs-inactive-color: var(--app-secondary-text-color);
+    --app-popup-gradient-card-bg: linear-gradient(var(--app-card-bg), var(--app-card-bg));
+    --app-popup-gradient-card-border: linear-gradient(var(--app-color), var(--app-color));
     --app-green: #34B926;
     --app-red: #F1463D;
     --app-blue: #1385FF;

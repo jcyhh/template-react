@@ -1,4 +1,5 @@
 import { useLocation } from 'react-router'
+import { useTranslation } from 'react-i18next'
 
 import { Icon } from '@/components/Icon'
 import { ROUTE_PATH, useAppNavigate } from '@/router'
@@ -14,6 +15,7 @@ export function SecondaryHeader({
     title,
     showGap = true,
 }: SecondaryHeaderProps) {
+    const { t } = useTranslation()
     const location = useLocation()
     const { backRoute, replaceRoute } = useAppNavigate()
 
@@ -38,7 +40,7 @@ export function SecondaryHeader({
                             onClick={handleBackClick}
                         />
                     </div>
-                    <div className="flex-center flex-2 size-30 bold-6">{title}</div>
+                    <div className="flex-center flex-2 size-30 bold-6">{t(title)}</div>
                     <div className="flex justify-end items-center flex-1" />
                 </div>
             </div>

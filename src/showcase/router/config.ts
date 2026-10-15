@@ -8,6 +8,7 @@ export const SHOWCASE_ROUTE_PATH = {
     empty: '/showcase/components/empty',
     languageSwitch: '/showcase/components/language-switch',
     contractLoading: '/showcase/components/contract-loading',
+    primitives: '/showcase/components/primitives',
     styleLayout: '/showcase/styles/layout',
     styleText: '/showcase/styles/text',
     styleSpacing: '/showcase/styles/spacing',

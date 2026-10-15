@@ -5,7 +5,8 @@
 @use './layout/grid';
 @use './common/index';
 @use './common/common';
-@use './common//base.scss';
+@use './common/base';
+@use '../components/Message/Message';
 
 * {
     margin: 0;

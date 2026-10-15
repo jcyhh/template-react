@@ -6,6 +6,8 @@ import {
     buildRoutePath,
     createRouteNavigator,
 } from '../src/router/navigation.ts'
+import { APP_CONFIG } from '../src/config/app.ts'
+import { APP_ROUTE_BASE } from '../src/router/config.ts'
 import { ROUTE_PATH } from '../src/router/routes.ts'
 
 test('builds internal route paths with query and hash', () => {
@@ -21,7 +23,7 @@ test('builds internal route paths with query and hash', () => {
             },
             hash: 'list',
         }),
-        '/home?page=2&keyword=wallet&empty=&disabled=false&tags=dapp&tags=h5#list',
+        `${ROUTE_PATH.home}?page=2&keyword=wallet&empty=&disabled=false&tags=dapp&tags=h5#list`,
     )
 })
 
@@ -40,10 +42,10 @@ test('preserves and merges object route search params', () => {
 })
 
 test('builds hrefs with the configured h5 base path', () => {
-    assert.equal(buildRouteHref(ROUTE_PATH.home), '/h5/home')
+    assert.equal(buildRouteHref(ROUTE_PATH.home), `${APP_ROUTE_BASE}${APP_CONFIG.homeRouteName}`)
     assert.equal(
         buildRouteHref(ROUTE_PATH.root, { query: { invite: 'abc' } }),
-        '/h5/?invite=abc',
+        `${APP_ROUTE_BASE}?invite=abc`,
     )
 })
 
@@ -61,7 +63,7 @@ test('wraps router navigation into project-friendly helpers', () => {
     router.goRoute(-3)
 
     assert.deepEqual(calls, [
-        ['/home', { state: { from: 'test' } }],
+        [ROUTE_PATH.home, { state: { from: 'test' } }],
         ['/user?tab=1', { replace: true }],
         [-1],
         [2],

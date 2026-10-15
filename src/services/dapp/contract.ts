@@ -4,7 +4,6 @@ import type {
     TransactionReceipt,
 } from 'viem'
 
-import { useDappStore } from '../../stores/dapp/store.ts'
 import {
     DAPP_DEFAULT_GAS_PRICE,
     DAPP_ERROR_MESSAGE,
@@ -12,7 +11,10 @@ import {
     DAPP_MIN_GAS_BALANCE,
     shouldCheckDappGas,
     shouldEstimateDappGas,
+    translateDappErrorMessage,
 } from './config.ts'
+import { logDappContractDiagnostic } from './contractDebug.ts'
+import { runDappContractWorkflow } from './contractWorkflow.ts'
 import { getDappWalletClient } from './provider.ts'
 import { getConnectedDappAddress } from './wallet.ts'
 import type {
@@ -32,13 +34,16 @@ export async function readDappContract<TResult = unknown, TAbi extends Abi = Abi
 }: DappContractReadParams<TAbi>): Promise<TResult> {
     const walletClient = getDappWalletClient()
 
-    return walletClient.readContract({
+    const result = await walletClient.readContract({
         address,
         abi,
         functionName,
         args,
         ...(account === undefined ? {} : { account }),
-    } as any) as Promise<TResult>
+    } as any) as TResult
+
+    logDappContractDiagnostic('read', { address, functionName, args, result })
+    return result
 }
 
 export async function estimateDappContractGas<TAbi extends Abi = Abi>({
@@ -46,7 +51,8 @@ export async function estimateDappContractGas<TAbi extends Abi = Abi>({
     abi,
     functionName,
     args = [],
-}: DappContractReadParams<TAbi>): Promise<bigint> {
+    value,
+}: DappContractWriteParams<TAbi>): Promise<bigint> {
     const walletClient = getDappWalletClient()
     const account = await getConnectedDappAddress()
 
@@ -56,6 +62,7 @@ export async function estimateDappContractGas<TAbi extends Abi = Abi>({
         functionName,
         args,
         account,
+        value,
     } as any)
 }
 
@@ -68,52 +75,52 @@ export async function writeDappContract<TAbi extends Abi = Abi>({
     gasPrice,
     value,
 }: DappContractWriteParams<TAbi>): Promise<TransactionReceipt> {
-    await checkDappGasBalance()
+    return runDappContractWorkflow(async () => {
+        await checkDappGasBalance()
 
-    const walletClient = getDappWalletClient()
-    const account = await getConnectedDappAddress()
+        try {
+            const walletClient = getDappWalletClient()
+            const account = await getConnectedDappAddress()
+            const hash = await walletClient.writeContract({
+                address,
+                abi,
+                functionName,
+                args,
+                account,
+                gas,
+                gasPrice,
+                value,
+            } as any)
+            const receipt = await walletClient.waitForTransactionReceipt({ hash })
 
-    useDappStore.getState().setDappLoading(true)
+            if (receipt.status === 'reverted') {
+                throw new Error(translateDappErrorMessage(DAPP_ERROR_MESSAGE.contractReverted))
+            }
 
-    try {
-        const hash = await walletClient.writeContract({
-            address,
-            abi,
-            functionName,
-            args,
-            account,
-            gas,
-            gasPrice,
-            value,
-        } as any)
-        const receipt = await walletClient.waitForTransactionReceipt({ hash })
-
-        if (receipt.status === 'reverted') {
-            throw new Error(DAPP_ERROR_MESSAGE.contractReverted)
+            return receipt
+        } catch (error) {
+            logDappContractDiagnostic('write:failed', { address, functionName, args, value, error })
+            throw error
         }
-
-        // TODO(feedback): Show a shared success message after the global feedback module is ready.
-        // TODO(feedback): 全局反馈模块完成后，在这里展示统一成功提示。
-        return receipt
-    } finally {
-        useDappStore.getState().setDappLoading(false)
-    }
+    })
 }
 
 export async function writeDappContractWithGas<TAbi extends Abi = Abi>(
     params: DappContractWriteParams<TAbi>,
 ): Promise<TransactionReceipt> {
-    if (!shouldEstimateDappGas()) {
-        return writeDappContract(params)
-    }
+    return runDappContractWorkflow(async () => {
+        if (!shouldEstimateDappGas()) {
+            return writeDappContract(params)
+        }
 
-    const estimatedGas = await estimateDappContractGas(params)
-    const gas = estimatedGas * DAPP_GAS_LIMIT_MULTIPLIER / 100n
+        const estimatedGas = await estimateDappContractGas(params)
+        const gas = estimatedGas * DAPP_GAS_LIMIT_MULTIPLIER / 100n
 
-    return writeDappContract({
-        ...params,
-        gas,
-        gasPrice: params.gasPrice ?? DAPP_DEFAULT_GAS_PRICE,
+        return writeDappContract({
+            ...params,
+            gas,
+            gasPrice: params.gasPrice ?? DAPP_DEFAULT_GAS_PRICE,
+        })
     })
 }
 
@@ -127,7 +134,7 @@ export async function checkDappGasBalance(
     const balance = await walletClient.getBalance({ address })
 
     if (balance < minGasBalance) {
-        throw new Error(DAPP_ERROR_MESSAGE.gasBalanceInsufficient)
+        throw new Error(translateDappErrorMessage(DAPP_ERROR_MESSAGE.gasBalanceInsufficient))
     }
 
     return balance
@@ -165,8 +172,8 @@ export function createDappContractActions<TAbi extends Abi>(
                 ...options,
             })
         },
-        estimateGas(functionName, args = []) {
-            return estimateDappContractGas({ address, abi, functionName, args })
+        estimateGas(functionName, args = [], options = {}) {
+            return estimateDappContractGas({ address, abi, functionName, args, ...options })
         },
     }
 }

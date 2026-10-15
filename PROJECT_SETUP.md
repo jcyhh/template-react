@@ -37,6 +37,15 @@ Do not ask for the project name, project logo, Empty component icon, env values,
 If the developer replies `默认`, record all default setup pack values as confirmed, then continue with non-default setup items one at a time.
 开发者回复 `默认` 时，记录默认配置包里的所有值为已确认，然后继续对非默认初始化项一次只问一项。
 
+## Runtime and configuration locations
+## 运行环境与配置位置
+
+Use Node.js 24.11.1+ and pnpm 10.28.2. Deployment prefix is configured once in `src/config/deployment.ts`; Vite and app routes consume the same value. Other app choices stay in `src/config/app.ts`; contract policies stay in `src/services/dapp/config.ts`.
+使用 Node.js 24.11.1+ 与 pnpm 10.28.2。部署目录统一配置在 `src/config/deployment.ts`，Vite 与应用路由读取同一值；其他应用选项在 `src/config/app.ts`，合约策略在 `src/services/dapp/config.ts`。
+
+Default enabled languages are Simplified Chinese, Traditional Chinese and English. Other common language resources remain available; enable them only after product confirmation. Put project-specific words in `src/i18n/locales/project`, leaving shared dictionaries generic.
+默认启用简体中文、繁体中文和英语。其他公共语言资源仍保留，产品确认后再启用；项目词条放 `src/i18n/locales/project`，公共词库保持通用。
+
 ## Fixed constraints
 ## 固定约束
 
@@ -128,6 +137,9 @@ When presenting this pack, always include the default value, Available options a
 4. 复制设计稿可见文案前先检查 `PROJECT_TERMS.md`。
 5. Implement basic local interactions even if API data is still static.
 5. 即使接口数据仍是静态的，也要实现基础本地交互。
+
+Before the first designed page, check AppBrand logo sizing, proportion, app-name visibility, typography and spacing against the design while preserving the shared layout contract. Do not copy a previous project's visual values.
+首个设计页面实现前检查 AppBrand 的 Logo 尺寸与比例、项目名显隐、字号及间距，并保持共享布局契约；不要复制前项目的视觉参数。
 
 ## After API and contract integration
 ## 接口和合约联调后

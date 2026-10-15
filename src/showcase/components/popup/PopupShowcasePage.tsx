@@ -88,7 +88,7 @@ export function PopupShowcasePage() {
                 onClose={handleClose}
             >
                 {activeDemo.contentPreset ? (
-                    <div className="popup-showcase-preset-body">
+                    <div className="popup-showcase-preset-body mt-30">
                         <div className="size-24 mt-30 opc-6 lh-36">
                             {activeDemo.desc}
                         </div>

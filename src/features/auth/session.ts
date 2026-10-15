@@ -5,22 +5,24 @@ import { removeWalletAddress } from '../../services/storage/common.ts'
 import { removeToken, setToken } from '../../services/storage/token.ts'
 import { useUserStore } from '../../stores/user/store.ts'
 
-import { AUTH_ERROR_MESSAGE } from './config.ts'
-import { runAuthLogoutCleanups } from './lifecycle.ts'
+import { AUTH_ERROR_MESSAGE, translateAuthErrorMessage } from './config.ts'
+import { invalidateAuthSession, runAuthLogoutCleanups } from './lifecycle.ts'
 
 export function completeLogin(token: string): void {
     const value = token.trim()
 
     if (!value) {
-        throw new Error(AUTH_ERROR_MESSAGE.tokenUnavailable)
+        throw new Error(translateAuthErrorMessage(AUTH_ERROR_MESSAGE.tokenUnavailable))
     }
 
+    invalidateAuthSession()
     setToken(value)
     useUserStore.getState().markSignedIn()
     replaceAppRoute(ROUTE_PATH.home)
 }
 
 export function clearAuthSession(): void {
+    invalidateAuthSession()
     runAuthLogoutCleanups()
     removeToken()
 

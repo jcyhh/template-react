@@ -63,3 +63,10 @@
 .auto-btn{
     @include auto-button();
 }
+
+.btn-solid { background: var(--app-btn-solid-bg); }
+.btn-gradient { background: var(--app-btn-gradient-bg); }
+.btn-gradient-border {
+    border: 1px solid transparent;
+    background: var(--app-btn-gradient-bg) padding-box, var(--app-btn-gradient-border) border-box;
+}

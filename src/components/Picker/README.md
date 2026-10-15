@@ -54,7 +54,6 @@ It follows the old Vue `CusPicker` behavior: open a bottom popup, slide or tap t
 | `options` | `PickerOption[]` | required | Option list. |
 | `title` | `ReactNode` | `'请选择'` | Header title. |
 | `confirmText` | `ReactNode` | `'确定'` | Confirm button text. |
-| `emptyText` | `ReactNode` | `undefined` | Text passed to `Empty` when `options` is empty. |
 | `value` | `number` | `undefined` | Controlled selected index. |
 | `defaultIndex` | `number` | `0` | Initial selected index in uncontrolled mode. |
 | `allowEmpty` | `boolean` | `false` | Allows an empty selected index of `-1`. |
@@ -72,7 +71,6 @@ It follows the old Vue `CusPicker` behavior: open a bottom popup, slide or tap t
 | `options` | `PickerOption[]` | 必传 | 选项列表。 |
 | `title` | `ReactNode` | `'请选择'` | 顶部标题。 |
 | `confirmText` | `ReactNode` | `'确定'` | 确认按钮文案。 |
-| `emptyText` | `ReactNode` | `undefined` | `options` 为空时传给 `Empty` 的文案。 |
 | `value` | `number` | `undefined` | 受控模式下的选中下标。 |
 | `defaultIndex` | `number` | `0` | 非受控模式下的初始选中下标。 |
 | `allowEmpty` | `boolean` | `false` | 是否允许选中下标为 `-1` 的空选择状态。 |
@@ -157,7 +155,6 @@ When `options` is empty, `Picker` renders the shared `Empty` component and disab
 <Picker
     show={showPicker}
     options={[]}
-    emptyText="暂无可选择数据"
     onClose={() => setShowPicker(false)}
 />
 ```
@@ -200,3 +197,5 @@ The component showcase lives in `src/showcase/components/picker/PickerShowcasePa
 
 Use the showcase as the source of truth for common usage patterns before adding new usage.
 新增使用方式前，优先参考该演示页中的常见写法。
+
+Empty options always use the shared default Empty text; title and confirmText use common translations when omitted.

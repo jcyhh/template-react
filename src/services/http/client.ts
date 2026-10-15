@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import { message } from '../../components/Message/message.ts'
+import { getAuthSessionVersion } from '../../features/auth/lifecycle.ts'
 import { APP_CONFIG } from '../../config/index.ts'
 import { logout } from '../../features/auth/session.ts'
 import { getRequestLanguage } from '../../i18n/getRequestLanguage.ts'
@@ -16,6 +18,8 @@ import {
 } from './config.ts'
 import { toHttpError } from './error.ts'
 
+const requestSessions = new WeakMap<object, { token: string; version: number }>()
+
 export const httpClient = axios.create({
     baseURL: import.meta.env?.VITE_BASE_URL,
     timeout: HTTP_CONFIG.timeout,
@@ -23,6 +27,7 @@ export const httpClient = axios.create({
 
 httpClient.interceptors.request.use((config) => {
     const token = getToken()
+    requestSessions.set(config, { token, version: getAuthSessionVersion() })
 
     config.headers.set(
         HTTP_HEADER.authorization,
@@ -55,12 +60,20 @@ httpClient.interceptors.response.use(
     (error: unknown) => {
         const httpError = toHttpError(error)
 
-        if (httpError.status === HTTP_STATUS.unauthorized) {
+        const snapshot = axios.isAxiosError(error) && error.config
+            ? requestSessions.get(error.config)
+            : undefined
+        const belongsToCurrentSession = snapshot?.version === getAuthSessionVersion()
+            && snapshot.token === getToken()
+        const isUnauthorized = httpError.status === HTTP_STATUS.unauthorized
+
+        if (isUnauthorized && belongsToCurrentSession) {
             logout()
         }
 
-        // TODO(http): Show request errors through the shared message module after it is ready.
-        // TODO(http): 全局消息系统完成后，在统一错误策略中展示请求错误。
+        if (!axios.isCancel(error) && (!isUnauthorized || belongsToCurrentSession)) {
+            message.warning(httpError.message)
+        }
         return Promise.reject(httpError)
     },
 )

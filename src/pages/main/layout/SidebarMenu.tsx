@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router'
+import { useTranslation } from 'react-i18next'
 
 import { Popup } from '@/components/Popup'
 
@@ -19,6 +20,7 @@ export function SidebarMenu({
     show,
     onClose,
 }: SidebarMenuProps) {
+    const { t } = useTranslation()
     function handleMenuLinkClick() {
         onClose()
     }
@@ -55,7 +57,7 @@ export function SidebarMenu({
                                             className="img-44"
                                             alt=""
                                         />
-                                        <div className="ml-20 size-30">{item.title}</div>
+                                        <div className="ml-20 size-30">{t(item.title)}</div>
                                     </div>
                                     <Icon
                                         name="arrow"

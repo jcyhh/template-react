@@ -102,12 +102,13 @@ test('connects through the injected window ethereum provider and stores wallet s
 test('switches chain and adds the chain when the wallet does not know it', async () => {
     const switchError = new Error('unknown chain')
     switchError.code = 4902
-    const provider = createProvider({ chainId: '0x1', switchError })
+    const otherChainId = DAPP_PRODUCTION_CHAIN.id === 1 ? 2 : 1
+    const provider = createProvider({ chainId: `0x${otherChainId.toString(16)}`, switchError })
     setupWalletTest(provider)
 
     await ensureDappChain(DAPP_PRODUCTION_CHAIN, { skipInDevelopment: false })
 
-    assert.equal(provider.addedChain.chainId, '0x38')
+    assert.equal(provider.addedChain.chainId, `0x${DAPP_PRODUCTION_CHAIN.id.toString(16)}`)
     assert.equal(provider.addedChain.chainName, DAPP_PRODUCTION_CHAIN.name)
     assert.deepEqual(
         provider.requests.map((request) => request.method),

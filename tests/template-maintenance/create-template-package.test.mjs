@@ -28,7 +28,7 @@ test('create package exposes a pnpm dlx friendly CLI package', () => {
     const workflow = readFileSync('PROJECT_WORKFLOW.md', 'utf8')
 
     assert.equal(packageJson.name, '@jcy/create-template-react')
-    assert.equal(packageJson.version, '0.1.0')
+    assert.match(packageJson.version, /^\d+\.\d+\.\d+/)
     assert.equal(packageJson.type, 'module')
     assert.equal(packageJson.publishConfig, undefined)
     assert.equal(packageJson.bin['create-template-react'], 'bin/create-template-react')
@@ -83,6 +83,9 @@ test('create package builds a template archive and creates a project from it', a
         assert.equal(existsSync(join(target, 'node_modules')), false)
         assert.equal(existsSync(join(target, 'dist')), false)
         assert.equal(existsSync(join(target, 'packages/create-template-react')), false)
+        assert.equal(existsSync(join(target, 'tests/template-maintenance')), false)
+        assert.equal(existsSync(join(target, 'scripts/pack-create-template.mjs')), false)
+        assert.equal(existsSync(join(target, 'scripts/verify-created-project.mjs')), false)
 
         const createdPackageJson = JSON.parse(
             readFileSync(join(target, 'package.json'), 'utf8'),
@@ -92,6 +95,8 @@ test('create package builds a template archive and creates a project from it', a
         assert.equal(createdPackageJson.scripts['create:pack'], undefined)
         assert.equal(createdPackageJson.scripts['create:local'], undefined)
         assert.equal(createdPackageJson.scripts['create:publish'], undefined)
+        assert.equal(createdPackageJson.scripts['create:verify'], undefined)
+        assert.equal(createdPackageJson.scripts.test, rootTestScript())
 
         const createdProductionEnv = readFileSync(join(target, '.env.production'), 'utf8')
 
@@ -133,3 +138,7 @@ test('create CLI refuses to overwrite a non-empty project directory', async () =
         })
     }
 })
+
+function rootTestScript() {
+    return JSON.parse(readFileSync('package.json', 'utf8')).scripts.test
+}

@@ -5,6 +5,7 @@ import {
     useState,
     type ReactNode,
 } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { Swiper as SwiperInstance } from 'swiper/types'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
@@ -32,7 +33,6 @@ export interface PickerProps {
     options: PickerOption[]
     title?: ReactNode
     confirmText?: ReactNode
-    emptyText?: ReactNode
     value?: number
     defaultIndex?: number
     allowEmpty?: boolean
@@ -80,9 +80,8 @@ function getOptionLabel(option: PickerOption): ReactNode {
 export function Picker({
     show,
     options,
-    title = '请选择',
-    confirmText = '确定',
-    emptyText,
+    title,
+    confirmText,
     value,
     defaultIndex = 0,
     allowEmpty = false,
@@ -94,6 +93,9 @@ export function Picker({
     onConfirm,
     renderOption,
 }: PickerProps) {
+    const { t } = useTranslation()
+    const resolvedTitle = title ?? t('请选择')
+    const resolvedConfirmText = confirmText ?? t('确定')
     const swiperRef = useRef<SwiperInstance | null>(null)
     const isControlled = value !== undefined
     const [innerIndex, setInnerIndex] = useState(() => clampIndex(defaultIndex, options.length, allowEmpty))
@@ -182,11 +184,11 @@ export function Picker({
             onAfterClose={onAfterClose}
         >
             <div className={pickerClassName}>
-                <div className="picker__header">
-                    <div className="picker__title size-32 bold-6">{title}</div>
+                <div className="picker__header flex items-center justify-between mb-60">
+                    <div className="picker__title size-32 bold-6">{resolvedTitle}</div>
                     <button
                         type="button"
-                        className="picker__close"
+                        className="picker__close flex-center"
                         onClick={onClose}
                         aria-label="Close picker"
                     >
@@ -195,7 +197,7 @@ export function Picker({
                 </div>
 
                 {options.length <= 0 ? (
-                    <Empty text={emptyText} />
+                    <Empty />
                 ) : (
                     <Swiper
                         className={swiperClassName}
@@ -209,7 +211,7 @@ export function Picker({
                         {options.map((option, index) => (
                             <SwiperSlide
                                 key={`${String(option.value ?? getOptionLabel(option))}-${index}`}
-                                className="picker__option"
+                                className={`picker__option lh-80 size-28 ${currentIndex === index && !isCurrentEmpty ? 'opc-10' : 'opc-5'}`}
                                 onClick={() => handleSlideClick(index)}
                             >
                                 {renderOption
@@ -220,14 +222,14 @@ export function Picker({
                     </Swiper>
                 )}
 
-                <div className="picker__footer">
+                <div className="picker__footer mt-60">
                     <button
                         type="button"
-                        className="picker__confirm size-30 bold"
+                        className={`picker__confirm size-30 bold${options.length <= 0 ? ' opc-5' : ''}`}
                         onClick={handleConfirm}
                         disabled={options.length <= 0}
                     >
-                        {confirmText}
+                        {resolvedConfirmText}
                     </button>
                 </div>
             </div>

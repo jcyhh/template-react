@@ -4,15 +4,14 @@ import {
 } from 'react'
 
 import { initializeAuthenticatedDappSession } from '../features/auth/startup.ts'
-import {
-    isSplashRoutePath,
-    waitForSplashAnimation,
-} from '../pages/splash/animation.ts'
+import { ContractLoading } from '../components/ContractLoading'
+import { isSplashRoutePath } from '../pages/splash/animation.ts'
 import { AppRouter } from '../router/index.ts'
+import { useDappStore } from '../stores/dapp/store.ts'
 
 async function initializeAuthenticatedDappSessionAfterOpening(): Promise<void> {
     if (isSplashRoutePath()) {
-        await waitForSplashAnimation()
+        return
     }
 
     await initializeAuthenticatedDappSession()
@@ -32,10 +31,13 @@ function AuthenticatedDappSessionBootstrap() {
 }
 
 function App() {
+    const contractPending = useDappStore((state) => state.dappLoading)
+
     return (
         <>
             <AuthenticatedDappSessionBootstrap />
             <AppRouter />
+            <ContractLoading show={contractPending} />
         </>
     )
 }

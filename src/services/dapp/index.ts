@@ -119,3 +119,6 @@ export type {
     DappEip7702SendOptions,
     DappEip7702SupportOptions,
 } from './eip7702.ts'
+
+export { beginDappContractWorkflow, runDappContractWorkflow } from './contractWorkflow.ts'
+export { logDappContractDiagnostic } from './contractDebug.ts'

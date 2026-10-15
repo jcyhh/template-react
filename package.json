@@ -15,12 +15,16 @@
         "prebuild": "node scripts/ensure-pnpm.mjs && pnpm verify && node scripts/verify-brand-assets.mjs",
         "build": "tsc -b && vite build",
         "prelint": "node scripts/ensure-pnpm.mjs",
-        "lint": "oxlint",
+        "lint": "pnpm lint:code && pnpm stylelint && pnpm lint:tsx-styles",
         "pretest": "node scripts/ensure-pnpm.mjs",
-        "test": "node --test tests/*.test.mjs",
+        "test": "node --test",
         "verify": "pnpm lint && pnpm test",
         "prepreview": "node scripts/ensure-pnpm.mjs",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "lint:code": "oxlint",
+        "stylelint": "stylelint \"src/**/*.scss\"",
+        "lint:tsx-styles": "node scripts/lint/noInlineStyles.mjs",
+        "create:verify": "node scripts/verify-created-project.mjs"
     },
     "dependencies": {
         "@metamask/detect-provider": "^2.0.0",
@@ -41,10 +45,16 @@
         "@types/react-dom": "^19.2.3",
         "@vitejs/plugin-react": "^6.0.3",
         "esbuild": "^0.28.1",
+        "happy-dom": "^21.0.1",
         "oxlint": "^1.73.0",
         "postcss-px-to-viewport-8-plugin": "^1.2.5",
+        "postcss-scss": "^4.0.9",
         "sass-embedded": "^1.100.0",
+        "stylelint": "^17.16.0",
         "typescript": "~6.0.2",
         "vite": "^8.1.1"
+    },
+    "engines": {
+        "node": ">=24.11.1"
     }
 }

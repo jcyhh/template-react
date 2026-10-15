@@ -14,3 +14,13 @@ export function runAuthLogoutCleanups(): void {
 
     cleanups.forEach((cleanup) => cleanup())
 }
+
+let authSessionVersion = 0
+
+export function getAuthSessionVersion(): number {
+    return authSessionVersion
+}
+
+export function invalidateAuthSession(): void {
+    authSessionVersion += 1
+}

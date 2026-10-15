@@ -5,6 +5,8 @@ export interface DappStoreState {
     walletAddress: string
     chainId?: number
     dappLoading: boolean
+    pendingContractWorkflows: number
+    beginContractWorkflow: () => () => void
     setProviderStatus: (providerStatus: DappProviderStatus) => void
     setWalletAddress: (walletAddress: string) => void
     clearWalletAddress: () => void

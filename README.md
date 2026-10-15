@@ -19,6 +19,9 @@ AI 工具和协作工程师修改代码前应先阅读 `AGENTS.md`。
 Project conventions such as import paths, page modules, styles and asset naming are recorded there.
 引入路径、页面模块、样式和资源命名等项目规范都记录在其中。
 
+Runtime: Node.js 24.11.1+ and pnpm 10.28.2. The test runner uses native TypeScript support.
+运行环境：Node.js 24.11.1+、pnpm 10.28.2；测试使用 Node 原生 TypeScript 支持。
+
 ## New project setup
 ## 新项目初始化
 
@@ -193,3 +196,18 @@ Social values are configured through env variables and stay blank in the templat
 
 Fill them with public absolute URLs before a real production launch.
 真实项目上线前应填写公网可访问的绝对地址。
+
+## Template validation
+## 模板验收
+
+`pnpm lint` checks code, SCSS utility reuse, dynamic viewport pairs and TSX style boundaries. Deployment prefix has a single source in `src/config/deployment.ts`.
+`pnpm lint` 检查代码、SCSS 工具类复用、动态视口配对和 TSX 样式边界。部署目录统一配置在 `src/config/deployment.ts`。
+
+Run `pnpm create:verify` in the template repository after `pnpm install`. It validates the final creator archive with independent default and alternate projects, including frozen installation, tests, lint and production build. Maintenance tests are excluded from generated projects.
+在模板仓库执行 `pnpm install` 后运行 `pnpm create:verify`，从最终创建包验收独立默认及可选配置项目的冻结安装、测试、lint 和生产构建。生成项目不包含模板维护测试。
+
+The template retains an unready placeholder brand. A direct production build intentionally fails until a real project logo is provided; create:verify initializes its own isolated test brand without changing template assets.
+模板保留未就绪的占位品牌；直接生产构建会在提供真实 Logo 前按设计失败。create:verify 仅初始化独立测试品牌，不改模板资源。
+
+See `docs/template-feedback-status.md` for the reusable improvements and their verification status.
+通用能力回灌及验证状态见 `docs/template-feedback-status.md`。

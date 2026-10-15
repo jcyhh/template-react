@@ -6,6 +6,8 @@ import {
 } from 'vite'
 import react from '@vitejs/plugin-react'
 
+import { APP_DEPLOYMENT } from './src/config/deployment.ts'
+
 const SOCIAL_META_ENABLED_VALUE = '1'
 
 const getEnvValue = (
@@ -82,7 +84,7 @@ export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), 'VITE_')
 
     return {
-        base: '/h5/',
+        base: APP_DEPLOYMENT.routeBase,
         plugins: [
             react(),
             createSocialMetaPlugin(env),

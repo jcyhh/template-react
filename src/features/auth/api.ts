@@ -1,4 +1,4 @@
-import { request } from '@/services/http/request.ts'
+import { request } from '../../services/http/request.ts'
 
 import { AUTH_API_PATH } from './config.ts'
 import type {

@@ -12,4 +12,5 @@ export type {
     PopupContentBottomProps,
     PopupContentCenterProps,
     PopupContentProps,
+    PopupContentTheme,
 } from './PopupContent/index.ts'

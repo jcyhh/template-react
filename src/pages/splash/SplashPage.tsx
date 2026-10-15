@@ -3,6 +3,7 @@ import {
     useRef,
     useState,
 } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
     useNavigate,
     useParams,
@@ -30,6 +31,7 @@ type SplashRouteParams = {
 const appLogoUrl = `${APP_CONFIG.routeBase}brand/app-logo.png`
 
 export function SplashPage() {
+    const { t } = useTranslation()
     const { ref } = useParams<SplashRouteParams>()
     const navigate = useNavigate()
     const hasStartedRef = useRef(false)
@@ -63,7 +65,7 @@ export function SplashPage() {
 
     return (
         <section className="splash-page" data-page="splash">
-            <div className="splash-page__brand flex flex-column items-center justify-center animate__animated animate__zoomIn">
+            <div className="splash-page__brand flex flex-column items-center justify-center animate__animated animate__zoomIn ani-delay-3">
                 <img
                     src={appLogoUrl}
                     className="splash-page__logo"
@@ -75,17 +77,17 @@ export function SplashPage() {
                 </div>
             </div>
 
-            <div className="splash-page__tips vw-100 flex-center gap-10 size-20 tc animate__animated animate__slideInUp">
+            <div className="splash-page__tips vw-100 flex-center gap-10 size-20 tc animate__animated animate__slideInUp ani-delay-3">
                 <span>
                     {walletRequired
-                        ? '请使用钱包环境打开！'
-                        : `Welcome to ${APP_CONFIG.name}`}
+                        ? t('请使用钱包环境打开！')
+                        : t('欢迎来到{{name}}', { name: APP_CONFIG.name })}
                 </span>
 
                 {loading ? (
                     <Icon
                         name="loading"
-                        size={15}
+                        className="size-15"
                         ariaLabel="Loading"
                     />
                 ) : null}

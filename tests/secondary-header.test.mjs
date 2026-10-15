@@ -35,7 +35,7 @@ test('secondary header renders a passed title and handles second-level navigatio
     assert.match(componentSource, /replaceRoute\(ROUTE_PATH\.home\)/)
     assert.match(componentSource, /backRoute\(\)/)
     assert.match(componentSource, /onClick=\{handleBackClick\}/)
-    assert.match(componentSource, /\{title\}/)
+    assert.match(componentSource, /\{t\(title\)\}/)
     assert.doesNotMatch(componentSource, /showSafeTop/)
     assert.match(componentSource, /showGap \? \(/)
     assert.match(componentSource, /<div className="safe-top" \/>/)

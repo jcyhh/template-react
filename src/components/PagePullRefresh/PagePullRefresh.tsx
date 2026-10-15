@@ -20,6 +20,7 @@ import './PagePullRefresh.scss'
 export interface PagePullRefreshProps {
     children: ReactNode
     enabled?: boolean
+    onError?: (error: unknown) => void
     className?: string
 }
 
@@ -74,6 +75,7 @@ export function PagePullRefresh(props: PagePullRefreshProps) {
     const {
         children,
         enabled = true,
+        onError,
         className,
     } = props
     const [status, setStatus] = useState<PagePullRefreshStatus>('idle')
@@ -84,6 +86,10 @@ export function PagePullRefresh(props: PagePullRefreshProps) {
     const settleTimerRef = useRef<number | undefined>(undefined)
     const isTrackingRef = useRef(false)
     const isRefreshingRef = useRef(false)
+    const mountedRef = useRef(true)
+    const refreshGenerationRef = useRef(0)
+    const onErrorRef = useRef(onError)
+    onErrorRef.current = onError
 
     const clearSettleTimer = useCallback(() => {
         if (settleTimerRef.current === undefined) return
@@ -137,19 +143,25 @@ export function PagePullRefresh(props: PagePullRefreshProps) {
         updateIndicator(PULL_REFRESH_READY_DISTANCE, 1, 360)
 
         const startTime = Date.now()
+        const generation = ++refreshGenerationRef.current
+        const isCurrent = () => mountedRef.current && generation === refreshGenerationRef.current
 
         try {
             await refreshHandler()
-        } finally {
-            const elapsed = Date.now() - startTime
-            const remainingDelay = Math.max(PULL_REFRESH_MIN_LOADING_MS - elapsed, 0)
-
-            if (remainingDelay > 0) {
-                await sleep(remainingDelay)
+        } catch (error) {
+            if (isCurrent()) {
+                try { onErrorRef.current?.(error) } catch { /* Preserve the refresh lifecycle if an error observer fails. */ }
             }
-
-            isRefreshingRef.current = false
-            settleIndicator()
+        } finally {
+            if (isCurrent()) {
+                const elapsed = Date.now() - startTime
+                const remainingDelay = Math.max(PULL_REFRESH_MIN_LOADING_MS - elapsed, 0)
+                if (remainingDelay > 0) await sleep(remainingDelay)
+                if (isCurrent()) {
+                    isRefreshingRef.current = false
+                    settleIndicator()
+                }
+            }
         }
     }, [settleIndicator, updateIndicator])
 
@@ -159,9 +171,12 @@ export function PagePullRefresh(props: PagePullRefreshProps) {
         return () => {
             if (refreshHandlerRef.current === handler) {
                 refreshHandlerRef.current = undefined
+                refreshGenerationRef.current += 1
+                isRefreshingRef.current = false
+                if (mountedRef.current) settleIndicator()
             }
         }
-    }, [])
+    }, [settleIndicator])
 
     const contextValue = useMemo(() => ({
         registerPageRefresh,
@@ -266,8 +281,14 @@ export function PagePullRefresh(props: PagePullRefreshProps) {
         }
     }, [settleIndicator])
 
-    useEffect(() => () => {
-        clearSettleTimer()
+    useEffect(() => {
+        mountedRef.current = true
+        return () => {
+            mountedRef.current = false
+            refreshGenerationRef.current += 1
+            isRefreshingRef.current = false
+            clearSettleTimer()
+        }
     }, [clearSettleTimer])
 
     const rootClassName = [

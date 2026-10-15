@@ -20,7 +20,9 @@ test('icon component provides a local inline svg icon contract', async () => {
     assert.match(component, /className=\{iconClassName\}/)
     assert.match(component, /aria-hidden/)
     assert.match(component, /<title>\{title\}<\/title>/)
-    assert.match(component, /normalizeIconSize\(size\)/)
+    assert.doesNotMatch(component, /style=/)
+    assert.doesNotMatch(component, /size\?:/)
+    assert.doesNotMatch(component, /color\?:/)
 
     assert.match(config, /ICON_DEFINITIONS/)
     assert.match(config, /'arrow'/)

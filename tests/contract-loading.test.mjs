@@ -36,7 +36,7 @@ test('contract loading wraps popup and blocks interaction during contract writes
     assert.match(component, /feColorMatrix/)
     assert.match(component, /LOADING_DOTS\.map/)
     assert.match(component, /contract-loading__dot/)
-    assert.match(component, /--i/)
+    assert.doesNotMatch(component, /style=/)
     assert.doesNotMatch(component, /<circle/)
     assert.match(component, /aria-label="Contract loading"/)
 
@@ -50,7 +50,7 @@ test('contract loading wraps popup and blocks interaction during contract writes
     assert.match(styles, /&__inner\s*\{[\s\S]*filter:\s*url\("#gooey"\);/)
     assert.match(styles, /&__dot\s*\{[\s\S]*position:\s*absolute;/)
     assert.match(styles, /animation:\s*contract-loading-rotate 3s ease-in-out infinite/)
-    assert.match(styles, /animation-delay:\s*calc\(0\.2s \* var\(--i\)\)/)
+    assert.match(styles, /&--#\{\$i\}/)
     assert.match(styles, /&::before\s*\{[\s\S]*background-image:\s*linear-gradient\(to right, #50D6FC, #1989F5\);/)
     assert.match(styles, /border-radius:\s*50%/)
     assert.match(styles, /box-shadow:\s*0 0 30px #152535/)

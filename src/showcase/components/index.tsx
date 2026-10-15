@@ -7,6 +7,7 @@ import { SHOWCASE_ROUTE_PATH } from '../router'
 type ShowcaseRoutePath = (typeof SHOWCASE_ROUTE_PATH)[keyof typeof SHOWCASE_ROUTE_PATH]
 
 const COMPONENT_SHOWCASE_LIST = [
+    { title: 'Shared primitives', path: SHOWCASE_ROUTE_PATH.primitives },
     {
         title: '弹窗',
         path: SHOWCASE_ROUTE_PATH.popup,

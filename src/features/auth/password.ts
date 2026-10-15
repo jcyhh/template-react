@@ -1,4 +1,4 @@
-import { setLoginAccount } from '@/services/storage/index.ts'
+import { setLoginAccount } from '../../services/storage/index.ts'
 
 import { requestPasswordLogin } from './api.ts'
 import { completeLogin } from './session.ts'

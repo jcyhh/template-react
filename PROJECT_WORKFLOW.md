@@ -204,8 +204,8 @@ pnpm dev
 - Empty image style writes width only and keeps height as auto.
 - Empty 图样式只写宽度，高度保持 auto。
 
-9. Confirm project-level settings in `src/config/app.ts`, usually through the default setup pack.
-9. 确认 `src/config/app.ts` 中的项目级设置，通常通过默认配置包一次确认。
+9. Confirm the deployment prefix in `src/config/deployment.ts` and other project-level settings in `src/config/app.ts`, usually through the default setup pack.
+9. 确认 `src/config/deployment.ts` 的部署目录和 `src/config/app.ts` 的其他设置，通常通过默认配置包一次确认。
 
 - The npm package name stays fixed as `@jcy/template-react`.
 - npm 包名固定为 `@jcy/template-react`。
@@ -537,8 +537,8 @@ Use the DApp service module for wallet and contract behavior.
 3. 项目专属合约地址放在 env。
 4. Check gas through the shared DApp write flow before contract writes.
 4. 写合约前通过共享 DApp 写入流程检查 gas。
-5. Use `ContractLoading` for contract writes that must block user interaction.
-5. 写合约等待期间需要阻止用户操作时，使用 `ContractLoading`。
+5. Wrap every complete contract action with `runDappContractWorkflow()` and keep `ContractLoading` visible through gas, allowance, wallet confirmation and the final receipt.
+5. 所有写合约操作使用 `runDappContractWorkflow()` 包裹完整流程，`ContractLoading` 必须覆盖 Gas、授权、钱包确认和最终回执。
 6. Refresh page data after contract writes through the same page refresh function.
 6. 写合约成功后，复用页面刷新函数刷新数据。
 
@@ -616,3 +616,18 @@ If one-off code appears in multiple places, extract a component, hook or shared 
 
 If a real project improves the template workflow, write feedback before the details are forgotten.
 如果真实项目改进了模板流程，趁还没忘记时写入反馈文档。
+
+## Template release verification
+## 模板分发验收
+
+Use Node.js 24.11.1+ and pnpm. Run `pnpm create:verify` before reusing an updated create package. It packs the final archive, creates independent projects, installs frozen dependencies offline, checks the placeholder brand guard, initializes fixture assets, and runs the full production build for default and alternate configurations.
+使用 Node.js 24.11.1+ 与 pnpm。复用更新后的创建包前运行 `pnpm create:verify`：它打包最终创建器、创建独立项目、离线安装冻结依赖、验证占位品牌门禁、初始化测试资源，并对默认及可选配置执行完整生产构建。
+
+Initialize the pnpm store with `pnpm install` before offline verification. The template's real placeholder status remains false. New business projects still supply their own logo and complete setup before production build.
+离线验收前先用 `pnpm install` 准备依赖缓存。模板自身占位品牌状态保持 false；真实业务项目仍需提供自己的 Logo 并完成初始化后才能构建。
+
+Use `usePageRefresh`, `useLatestRequest` and the shared Message API for generic loading and errors. Keep second-level business routes inside authentication but outside MainLayout, with their own SecondaryHeader. See `src/router/README.md` for a route example.
+通用刷新和错误处理复用 usePageRefresh、useLatestRequest 和 Message。二级业务页放在鉴权内、MainLayout 外，自己使用 SecondaryHeader；路由示例见 `src/router/README.md`。
+
+At static-page milestones, review cross-page repetitions before extracting visual primitives. Confirm semantics, configurable skin and non-business responsibilities; do not promote one-off artwork or guessed business rules.
+静态页阶段收尾时复盘跨页面重复结构，再抽取视觉原语；先确认语义、皮肤可配置和非业务职责，不提升一次性切图或推测的业务规则。

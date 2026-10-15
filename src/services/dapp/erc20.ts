@@ -7,6 +7,7 @@ import { getWalletAddress } from '../storage/common.ts'
 import {
     DAPP_ERROR_MESSAGE,
     getErc20ApproveAmount,
+    translateDappErrorMessage,
 } from './config.ts'
 import {
     createDappContractActions,
@@ -97,7 +98,7 @@ export function getErc20Address(tokenAddress?: Address): Address {
     const address = tokenAddress ?? import.meta.env?.VITE_USDT as Address | undefined
 
     if (!address) {
-        throw new Error(DAPP_ERROR_MESSAGE.tokenAddressUnavailable)
+        throw new Error(translateDappErrorMessage(DAPP_ERROR_MESSAGE.tokenAddressUnavailable))
     }
 
     return address
@@ -176,7 +177,7 @@ export async function checkErc20Balance(
     const balance = await readErc20Balance(tokenAddress, owner)
 
     if (balance < amount) {
-        throw new Error(DAPP_ERROR_MESSAGE.erc20BalanceInsufficient)
+        throw new Error(translateDappErrorMessage(DAPP_ERROR_MESSAGE.erc20BalanceInsufficient))
     }
 }
 

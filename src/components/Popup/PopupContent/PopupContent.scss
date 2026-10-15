@@ -16,10 +16,26 @@
         background-color: var(--app-card-bg);
     }
 
+    &--gradient-card {
+        @include gradient-card(
+            30px,
+            var(--app-popup-gradient-card-bg, linear-gradient(var(--app-card-bg), var(--app-card-bg))),
+            var(--app-popup-gradient-card-border, linear-gradient(var(--app-color), var(--app-color))),
+            2px
+        );
+    }
+
     &__header {
         display: flex;
         align-items: center;
         justify-content: space-between;
+    }
+
+    &__close {
+        border: 0;
+        color: inherit;
+        background: transparent;
+        cursor: pointer;
     }
 
     &__title {

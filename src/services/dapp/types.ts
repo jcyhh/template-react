@@ -77,6 +77,7 @@ export interface DappContractActions {
     estimateGas(
         functionName: string,
         args?: readonly unknown[],
+        options?: Pick<DappContractWriteOptions, 'value'>,
     ): Promise<bigint>
 }
 

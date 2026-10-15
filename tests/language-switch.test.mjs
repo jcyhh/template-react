@@ -15,7 +15,7 @@ test('language switch exposes a reusable children wrapper module', async () => {
     assert.match(component, /languageIconUrl from '@\/assets\/layout\/headbar\/lang\.svg'/)
     assert.doesNotMatch(component, /import \{ Icon \} from '@\/components\/Icon'/)
     assert.match(component, /APP_CONFIG\.enableI18n/)
-    assert.match(component, /style=\{\{ display: 'none' \}\}/)
+    assert.match(component, /if \(!APP_CONFIG\.enableI18n\) \{\s*return null/)
     assert.match(component, /function LanguageSwitchContent/)
     assert.match(component, /useState\(false\)/)
     assert.match(component, /import \{ Picker/)

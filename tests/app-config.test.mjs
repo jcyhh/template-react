@@ -9,7 +9,7 @@ import {
     APP_LAYOUT_MENU_TYPE,
     APP_LAYOUT_MENU_TYPE_OPTIONS,
 } from '../src/config/app.ts'
-import { DEFAULT_LANGUAGE_CODE } from '../src/i18n/config.ts'
+import { DEFAULT_LANGUAGE_CODE, FIXED_LANGUAGE_CODE } from '../src/i18n/config.ts'
 import { STORAGE_DEFAULT } from '../src/services/storage/config.ts'
 
 test('app config stores project-level startup options', () => {
@@ -53,7 +53,7 @@ test('app config reads the app name from the Vite env', async () => {
 })
 
 test('feature modules read shared project defaults from app config', () => {
-    assert.equal(DEFAULT_LANGUAGE_CODE, APP_CONFIG.defaultLanguageCode)
+    assert.equal(DEFAULT_LANGUAGE_CODE, APP_CONFIG.enableI18n ? APP_CONFIG.defaultLanguageCode : FIXED_LANGUAGE_CODE)
     assert.equal(STORAGE_DEFAULT.language, APP_CONFIG.defaultLanguageCode)
 })
 

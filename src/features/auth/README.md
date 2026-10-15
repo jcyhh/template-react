@@ -28,8 +28,8 @@ The splash page calls `startAuthFlow()` to make the startup decision.
 - DApp 模式已有 Token：先校验当前钱包账号，再加载 `/api/users/my` 等鉴权接口。
 - If the cached wallet address no longer matches the current wallet during splash startup, clear stale auth state and start DApp login again in the same flow.
 - 开屏启动时如果缓存钱包地址与当前钱包不一致，清理旧登录态并在同一轮流程里重新发起 DApp 登录。
-- No token with a detected provider: connect the wallet, sign, then call the address-login API.
-- 没有 Token 且检测到 Provider：连接钱包、签名并请求地址登录接口。
+- No token with a detected provider: connect the wallet and sign. Only development with blank `VITE_BASE_URL` uses a temporary token; production always calls the address-login API.
+- 没有 Token 且检测到 Provider：连接钱包并签名。仅开发环境且 `VITE_BASE_URL` 为空时使用临时 Token；生产环境始终请求地址登录接口。
 - In `hybrid` mode, Flutter or a regular browser without an injected provider opens the email/password login page.
 - 在 `hybrid` 模式中，Flutter 或普通浏览器未检测到注入 Provider 时跳转账号密码登录页。
 
@@ -68,3 +68,15 @@ When application code switches to the configured chain, the matching `chainChang
 If the user changes account or chain while a signature login request is in flight, its stale response is invalidated and cannot sign in the old account.
 
 签名登录请求期间若用户切换账户或网络，旧请求的返回会被作废，不能把旧账户重新登录。
+
+## Restored-session route gate
+## 已登录恢复门槛
+
+A cached token starts with `isSessionReady=false`. `RequireAuthentication` mounts business pages only after `AuthSessionBoundary` becomes ready, so page effects cannot send authenticated APIs before wallet validation.
+存在缓存 Token 时，`isSessionReady` 初始为 false。`RequireAuthentication` 经 `AuthSessionBoundary` 等恢复完成后才挂载业务页，防止页面 effect 抢先使用旧 Token/Address 请求接口。
+
+Splash and referral routes own their startup flow after the splash animation; the App bootstrap skips them to avoid two competing login flows. Direct business-page refreshes use the App bootstrap without an extra animation delay. Account mode never requests a wallet. Hybrid mode can restore account sessions without a provider; DApp-only sessions without a provider return to splash.
+开屏和邀请路由在动画结束后独立处理启动，App bootstrap 跳过这两个路由，避免并行登录。直接刷新业务页由 App 恢复，不额外等待开屏动画。账号模式不请求钱包；混合模式在无 Provider 时仍可恢复账号会话；纯 DApp 模式无 Provider 时回到开屏。
+
+Login and cleanup advance a session version. Async recovery and HTTP 401 handling must verify both the captured version and token before changing the current session. A late response from an old session cannot sign out a newly logged-in user, even when the backend reuses the same token string.
+登录和清理会递增会话版本。异步恢复及 HTTP 401 处理须同时核对版本和 Token，旧会话迟到的响应不得退出新会话，即使后端复用了相同 Token 字符串。

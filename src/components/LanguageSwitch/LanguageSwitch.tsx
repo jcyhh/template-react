@@ -29,7 +29,7 @@ function getLanguageIndex(languageCode: string): number {
 
 export function LanguageSwitch(props: LanguageSwitchProps) {
     if (!APP_CONFIG.enableI18n) {
-        return <div style={{ display: 'none' }} />
+        return null
     }
 
     return <LanguageSwitchContent {...props} />
@@ -133,7 +133,6 @@ function LanguageSwitchContent({
                 value={pendingLanguageIndex}
                 title={t('切换语言')}
                 confirmText={t('确认')}
-                emptyText={t('暂无数据')}
                 onClose={closeLanguageSwitch}
                 onChange={handleLanguagePickerChange}
                 onConfirm={handleLanguagePickerConfirm}

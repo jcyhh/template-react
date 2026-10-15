@@ -6,6 +6,8 @@ import type { UserStoreState } from './types.ts'
 
 export const useUserStore = create<UserStoreState>()((set) => ({
     isAuthenticated: Boolean(getToken()),
-    markSignedIn: () => set({ isAuthenticated: true }),
-    markSignedOut: () => set({ isAuthenticated: false }),
+    isSessionReady: !getToken(),
+    markSessionReady: () => set({ isSessionReady: true }),
+    markSignedIn: () => set({ isAuthenticated: true, isSessionReady: true }),
+    markSignedOut: () => set({ isAuthenticated: false, isSessionReady: true }),
 }))

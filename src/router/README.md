@@ -47,3 +47,23 @@ Use `buildRouteHref` only when code outside React components needs to generate a
 ```ts
 buildRouteHref(ROUTE_PATH.home) // /h5/home
 ```
+
+## Deployment and second-level pages
+
+Configure the base only in `src/config/deployment.ts`; Vite and APP_CONFIG derive their base from it. Root `/` and nested prefixes share the same prefix-free internal routes.
+部署目录只改 `src/config/deployment.ts`；Vite 和 APP_CONFIG 由它派生。根目录与嵌套目录使用同一组无前缀内部路由。
+
+Put second-level routes under RequireAuthentication / PullRefreshRouteOutlet and alongside MainLayout, so they keep authentication and refresh without inheriting the first-level header or menu:
+二级路由放在 RequireAuthentication / PullRefreshRouteOutlet 内、与 MainLayout 平级，保留鉴权和刷新而不继承一级 Header 或菜单：
+
+```tsx
+<Route element={<RequireAuthentication />}>
+    <Route element={<PullRefreshRouteOutlet />}>
+        <Route element={<MainLayout />}>{/* first-level routes */}</Route>
+        <Route path="details" element={<DetailsPage />} />
+    </Route>
+</Route>
+```
+
+DetailsPage uses SecondaryHeader and a real Promise-returning usePageRefresh handler. Keep it out of MAIN_PAGE_ITEMS. RequireAuthentication waits for isSessionReady before mounting pages.
+DetailsPage 使用 SecondaryHeader，并向 usePageRefresh 注册真实返回 Promise 的刷新函数；不要加入 MAIN_PAGE_ITEMS。RequireAuthentication 等待 isSessionReady 后才挂载页面。

@@ -201,3 +201,24 @@ await ensureErc20Allowance(spenderAddress, rawAmount)
 
 Business login should be built on top of these helpers later.
 后续业务登录应该基于这些基础方法继续封装。
+
+## Complete contract workflows
+## 完整写合约流程
+
+`App` mounts the shared `ContractLoading` once. `runDappContractWorkflow()` marks pending synchronously and releases it in `finally`. Its reference-counted ownership supports nested and concurrent actions: one completed write cannot hide another pending workflow. Individual writes already use this helper; wrap multi-step feature actions as well so gas/allowance reads, approvals, wallet confirmation, receipt waits and post-write data synchronization share one uninterrupted pending lifetime.
+`App` 统一挂载 `ContractLoading`。`runDappContractWorkflow()` 在开始时同步开启等待，finally 释放。引用计数支持嵌套与并发，单笔完成不会关闭其他等待流程。底层单笔写入已接入；业务层多步骤 action 仍需整体包裹，覆盖 gas/授权读取、授权交易、钱包确认、回执和写后数据同步。
+
+```ts
+await runDappContractWorkflow(async () => {
+    await ensureErc20Allowance(spender, amount, tokenAddress)
+    await projectContract.submitOrder(amount)
+    await waitForDappContractDataSync()
+    await refreshPageData()
+})
+```
+
+Start the wrapper before the first preparatory read. For manual ownership, `beginDappContractWorkflow()` returns an idempotent finish callback; always call it in `finally`. The legacy `setDappLoading()` is retained for compatibility; new transaction flows must use workflow ownership.
+在第一步准备性读取前启动 wrapper。手动管理时，`beginDappContractWorkflow()` 返回幂等释放方法，必须放入 finally。`setDappLoading()` 仅保留兼容；新增交易流程应使用 workflow 所有权。
+
+Gas estimation forwards native-token `value` together with the ABI call, matching the actual payable write. Contract diagnostics are generic and gated by `DAPP_CONFIG.enableContractDebug` (development by default). They format bigint and must never change a successful result or replace the original error.
+gas 估算同时转发原生币 `value`，与实际 payable 写入一致。合约诊断不绑定业务标识，由 `DAPP_CONFIG.enableContractDebug` 控制（默认仅开发开启），格式化 bigint，且不得影响读取结果或覆盖原始错误。

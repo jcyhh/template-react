@@ -3,8 +3,11 @@ import assert from 'node:assert/strict'
 import { AxiosError } from 'axios'
 
 import { APP_CONFIG } from '../src/config/app.ts'
+import { getRequestLanguage } from '../src/i18n/getRequestLanguage.ts'
 import { httpClient } from '../src/services/http/client.ts'
 import { HttpError } from '../src/services/http/error.ts'
+import { completeLogin, clearAuthSession } from '../src/features/auth/session.ts'
+import { getToken } from '../src/services/storage/token.ts'
 
 function createStorage(token = '') {
     const cache = new Map(token ? [['TOKEN', token]] : [])
@@ -34,7 +37,7 @@ test('only sends Address in a DApp wallet host', async () => {
 
     assert.equal(captured.headers.get('Authorization'), 'Bearer token-value')
     assert.equal(captured.headers.has('Address'), false)
-    assert.equal(captured.headers.get('lang'), 'zh-Hant')
+    assert.equal(captured.headers.get('lang'), APP_CONFIG.enableI18n ? getRequestLanguage() : undefined)
     assert.equal(
         captured.headers.getContentType(),
         'application/json; charset=UTF-8',
@@ -151,3 +154,30 @@ test('normalizes 401 and removes the cached token', async () => {
     })
     assert.equal(storage.getItem('TOKEN'), null)
 })
+
+for (const nextToken of ['new-session', 'same-session-token']) {
+    test(`a late 401 cannot clear a newer login (${nextToken})`, async () => {
+        globalThis.window = { localStorage: createStorage() }
+        completeLogin('same-session-token')
+        let release
+        let started
+        const ready = new Promise((resolve) => { started = resolve })
+        const responseReady = new Promise((resolve) => { release = resolve })
+        const pending = httpClient.request({
+            url: '/private',
+            adapter: async (config) => {
+                started()
+                await responseReady
+                throw new AxiosError('Expired', 'ERR_BAD_REQUEST', config, undefined, {
+                    data: {}, status: 401, statusText: 'Unauthorized', headers: {}, config,
+                })
+            },
+        })
+        await ready
+        completeLogin(nextToken)
+        release()
+        await assert.rejects(pending, (error) => error.status === 401)
+        assert.equal(getToken(), nextToken)
+        clearAuthSession()
+    })
+}

@@ -11,15 +11,15 @@ It is designed for copying a few common Vant icon paths into the project instead
 用法。
 
 ```tsx
-<Icon name="cross" className="color-primary" />
-<Icon name="arrow-left" size={32} color="#fff" />
+<Icon name="cross" className="app-color size-32" />
+<Icon name="arrow-left" className="size-32 white" />
 ```
 
-The icon path uses `currentColor`, so `className`, parent text color, or the `color` prop can change the icon color.
-图标 path 使用 `currentColor`，因此可以通过 `className`、父级文字颜色或 `color` 属性改变颜色。
+The icon path uses `currentColor`, so global size and color utility classes or the parent text color control its appearance. Inline `style`, `size` and `color` props are intentionally unsupported.
+图标 path 使用 `currentColor`，通过全局尺寸、颜色工具类或父级文字颜色控制外观。组件有意不支持内联 `style`、`size` 和 `color` 参数。
 
-`loading` preserves the original thin gray rotating ring. Use `<Icon name="loading" size={20} />` instead of drawing a page-specific CSS spinner.
-`loading` 保留原先的灰色细环旋转样式。使用 `<Icon name="loading" size={20} />`，不要为页面单独绘制 CSS loading。
+`loading` preserves the original thin gray rotating ring. Use `<Icon name="loading" className="size-20" />` instead of drawing a page-specific CSS spinner.
+`loading` 保留原先的灰色细环旋转样式。使用 `<Icon name="loading" className="size-20" />`，不要为页面单独绘制 CSS loading。
 
 ## Add icons
 添加图标。
@@ -36,6 +36,7 @@ Current built-in icons are copied from the Vant iconfont glyphs used by the old 
 - `arrow-down`
 - `cross`
 - `scan`
+- `copy`
 - `loading`
 
 ```ts

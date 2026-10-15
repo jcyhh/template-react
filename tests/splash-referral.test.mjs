@@ -43,7 +43,7 @@ test('splash route reuses the same page and clears referral URL after caching', 
     assert.match(source, /navigate\(ROUTE_PATH\.root,\s*\{\s*replace:\s*true\s*\}\)/)
 })
 
-test('splash page uses a fixed English welcome text and reusable loading icon', async () => {
+test('splash page translates welcome copy and reuses the shared loading icon', async () => {
     const source = await readFile(
         new URL('../src/pages/splash/SplashPage.tsx', import.meta.url),
         'utf8',
@@ -52,11 +52,11 @@ test('splash page uses a fixed English welcome text and reusable loading icon', 
     assert.match(source, /APP_CONFIG\.routeBase/)
     assert.match(source, /brand\/app-logo\.png/)
     assert.match(source, /APP_CONFIG\.name/)
-    assert.match(source, /`Welcome to \$\{APP_CONFIG\.name\}`/)
-    assert.doesNotMatch(source, /useTranslation/)
-    assert.doesNotMatch(source, /欢迎来到\{\{name\}\}/)
+    assert.match(source, /t\('欢迎来到\{\{name\}\}', \{ name: APP_CONFIG\.name \}\)/)
+    assert.match(source, /useTranslation/)
+    assert.match(source, /欢迎来到\{\{name\}\}/)
     assert.match(source, /<Icon[\s\S]*name="loading"/)
-    assert.match(source, /name="loading"[\s\S]*size=\{\d+\}/)
+    assert.match(source, /name="loading"[\s\S]*className="size-\d+"/)
     assert.match(source, /loading \? \(/)
     assert.match(source, /AUTH_STARTUP_RESULT\.walletRequired/)
     assert.match(source, /animate__zoomIn/)

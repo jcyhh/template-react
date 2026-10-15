@@ -9,20 +9,22 @@ import {
     LAYOUT_MENU_TYPE,
     LAYOUT_MENU_TYPE_OPTIONS,
 } from '../src/router/config.ts'
+import { APP_CONFIG } from '../src/config/app.ts'
+import { APP_DEPLOYMENT, getRouterBasename } from '../src/config/deployment.ts'
 import { ROUTE_PATH } from '../src/router/routes.ts'
 
-test('router uses the fixed h5 base path for history mode', () => {
-    assert.equal(APP_ROUTE_BASE, '/h5/')
-    assert.equal(APP_ROUTER_BASENAME, '/h5')
+test('router uses the configured deployment path for history mode', () => {
+    assert.equal(APP_ROUTE_BASE, APP_DEPLOYMENT.routeBase)
+    assert.equal(APP_ROUTER_BASENAME, getRouterBasename(APP_DEPLOYMENT.routeBase))
 })
 
-test('vite build output also uses the fixed h5 base path', async () => {
+test('vite and the app share the deployment path', async () => {
     const source = await readFile(
         new URL('../vite.config.ts', import.meta.url),
         'utf8',
     )
 
-    assert.match(source, /base:\s*'\/h5\/'/)
+    assert.match(source, /base:\s*APP_DEPLOYMENT\.routeBase/)
 })
 
 test('router derives the home path from the project-level home route name', async () => {
@@ -31,7 +33,7 @@ test('router derives the home path from the project-level home route name', asyn
         readFile(new URL('../src/router/config.ts', import.meta.url), 'utf8'),
     ])
 
-    assert.equal(ROUTE_PATH.home, '/home')
+    assert.equal(ROUTE_PATH.home, `/${APP_CONFIG.homeRouteName}`)
     assert.match(routerConfigSource, /export const APP_HOME_ROUTE_NAME\s*=\s*APP_CONFIG\.homeRouteName/)
     assert.match(routesSource, /home:\s*`\/\$\{APP_HOME_ROUTE_NAME\}`/)
     assert.doesNotMatch(routesSource, /home:\s*'\/home'/)
@@ -43,13 +45,13 @@ test('layout exposes the supported menu modes for templates', () => {
         sidebar: 'sidebar',
     })
     assert.deepEqual(LAYOUT_MENU_TYPE_OPTIONS, ['tabbar', 'sidebar'])
-    assert.equal(DEFAULT_LAYOUT_MENU_TYPE, 'sidebar')
+    assert.equal(DEFAULT_LAYOUT_MENU_TYPE, APP_CONFIG.defaultLayoutMenuType)
 })
 
 test('route records keep an initial layout route with starter pages', () => {
     assert.equal(ROUTE_PATH.root, '/')
     assert.equal(ROUTE_PATH.referral, '/ref/:ref')
-    assert.equal(ROUTE_PATH.home, '/home')
+    assert.equal(ROUTE_PATH.home, `/${APP_CONFIG.homeRouteName}`)
     assert.equal(ROUTE_PATH.user, '/user')
 })
 

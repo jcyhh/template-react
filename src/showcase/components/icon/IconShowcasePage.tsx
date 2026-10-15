@@ -30,10 +30,10 @@ export function IconShowcasePage() {
                 <div className="app-card mt-30">
                     <div className="size-28 bold-6">尺寸和颜色</div>
                     <div className="flex items-center mt-30">
-                        <Icon name="arrow-left" size={32} color="var(--app-color)" />
-                        <Icon name="scan" size={44} color="var(--app-blue)" className="ml-30" />
-                        <Icon name="loading" size={44} className="ml-30" />
-                        <Icon name="cross" size={44} color="var(--app-red)" className="ml-30" />
+                        <Icon name="arrow-left" className="size-32 app-color" />
+                        <Icon name="scan" className="size-44 blue ml-30" />
+                        <Icon name="loading" className="size-44 ml-30" />
+                        <Icon name="cross" className="size-44 red ml-30" />
                     </div>
                 </div>
             </main>

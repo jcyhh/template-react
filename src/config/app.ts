@@ -1,3 +1,5 @@
+import { APP_DEPLOYMENT, getRouterBasename } from './deployment.ts'
+
 export const APP_LAYOUT_MENU_TYPE = {
     tabbar: 'tabbar',
     sidebar: 'sidebar',
@@ -34,8 +36,8 @@ export const APP_LOGIN_MODE_OPTIONS = [
 
 export const APP_CONFIG = {
     name: import.meta.env?.VITE_APP_NAME ?? '',
-    routeBase: '/h5/',
-    routerBasename: '/h5',
+    routeBase: APP_DEPLOYMENT.routeBase,
+    routerBasename: getRouterBasename(APP_DEPLOYMENT.routeBase),
 
     // Special home route name used by app-wide navigation logic.
     // 首页路由名称，给全局跳首页等逻辑统一使用。

@@ -8,6 +8,7 @@ import {
 } from 'react-router'
 
 import { PagePullRefresh } from '@/components/PagePullRefresh'
+import { AuthSessionBoundary } from '@/features/auth/AuthSessionBoundary.tsx'
 import { LoginPage } from '@/pages/auth/index.ts'
 import { HomePage, MainLayout, UserPage } from '@/pages/main'
 import { SplashPage } from '@/pages/splash/SplashPage.tsx'
@@ -30,12 +31,13 @@ function RouterNavigationBridge() {
 
 function RequireAuthentication() {
     const isAuthenticated = useUserStore((state) => state.isAuthenticated)
+    const isSessionReady = useUserStore((state) => state.isSessionReady)
 
     if (!isAuthenticated) {
         return <Navigate to={ROUTE_PATH.root} replace />
     }
 
-    return <Outlet />
+    return <AuthSessionBoundary ready={isSessionReady}><Outlet /></AuthSessionBoundary>
 }
 
 function PullRefreshRouteOutlet() {

@@ -1,14 +1,21 @@
-import test from 'node:test'
+import test, { after } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 
 import {
     APP_LANGUAGES,
     DEFAULT_LANGUAGE_CODE,
+    FALLBACK_LANGUAGE_CODE,
+    FIXED_LANGUAGE_CODE,
+    mergeLanguageMessages,
     findAppLanguage,
 } from '../src/i18n/config.ts'
 import { APP_CONFIG } from '../src/config/app.ts'
 import { getRequestLanguage } from '../src/i18n/getRequestLanguage.ts'
+import { installJsonImports } from './helpers/json-imports.mjs'
+
+const jsonImports = installJsonImports()
+after(() => jsonImports.deregister())
 
 function createStorage(language = '') {
     const cache = new Map(language ? [['LANG', language]] : [])
@@ -19,16 +26,19 @@ function createStorage(language = '') {
     }
 }
 
-test('enables all template languages with standard language codes', () => {
-    assert.deepEqual(
-        APP_LANGUAGES.map(({ code }) => code),
-        [
-            'en', 'fr', 'ko', 'ja', 'ru', 'hi', 'ms',
-            'es', 'id', 'tr', 'vi', 'th', 'zh-Hant', 'zh-Hans',
-        ],
-    )
-    assert.equal(DEFAULT_LANGUAGE_CODE, 'zh-Hans')
-    assert.equal(findAppLanguage('zh-Hans')?.code, 'zh-Hans')
+test('enabled languages have unique standard codes and include every fallback', () => {
+    const codes = APP_LANGUAGES.map(({ code }) => code)
+    assert.ok(codes.length > 0)
+    assert.equal(new Set(codes).size, codes.length)
+    for (const { code, name, load } of APP_LANGUAGES) {
+        assert.doesNotThrow(() => new Intl.Locale(code))
+        assert.ok(name.trim())
+        assert.equal(typeof load, 'function')
+        assert.equal(findAppLanguage(code)?.code, code)
+    }
+    assert.ok(codes.includes(DEFAULT_LANGUAGE_CODE))
+    if (APP_CONFIG.enableI18n) assert.ok(codes.includes(FALLBACK_LANGUAGE_CODE))
+    assert.ok(codes.includes(FIXED_LANGUAGE_CODE))
     assert.equal(findAppLanguage('unsupported'), undefined)
 })
 
@@ -45,12 +55,13 @@ test('all enabled common locales translate the splash welcome template', async (
     )
 })
 
-test('returns the configured backend language and safely falls back', () => {
-    globalThis.window = { localStorage: createStorage('ms') }
-    assert.equal(getRequestLanguage(), 'ms')
-
+test('request language follows the enabled language configuration and safely falls back', () => {
+    for (const language of APP_LANGUAGES) {
+        globalThis.window = { localStorage: createStorage(language.code) }
+        assert.equal(getRequestLanguage(), APP_CONFIG.enableI18n ? language.code : FIXED_LANGUAGE_CODE)
+    }
     globalThis.window = { localStorage: createStorage('unsupported') }
-    assert.equal(getRequestLanguage(), 'zh-Hans')
+    assert.equal(getRequestLanguage(), DEFAULT_LANGUAGE_CODE)
 })
 
 test('forces simplified Chinese when i18n is disabled', () => {
@@ -80,4 +91,17 @@ test('i18n initializes and changes the app store language from storage', async (
     assert.match(initializeSource, /useAppStore/)
     assert.match(initializeSource, /APP_CONFIG\.enableI18n/)
     assert.match(initializeSource, /setLanguageCode\(selectedLanguage\.code\)/)
+})
+
+test('language loaders combine common, DApp and project copy', async () => {
+    for (const language of APP_LANGUAGES) {
+        const messages = await language.load()
+        assert.equal(typeof messages['欢迎来到{{name}}'], 'string')
+        assert.equal(typeof messages['auth.tokenUnavailable'], 'string')
+        assert.equal(typeof messages['dapp.invalidAmount'], 'string')
+        assert.equal(typeof messages['暂无数据'], 'string')
+    }
+    assert.deepEqual(mergeLanguageMessages({ shared: 'common' }, { wallet: 'wallet' }, { shared: 'project' }), {
+        shared: 'project', wallet: 'wallet',
+    })
 })

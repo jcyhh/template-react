@@ -1,17 +1,9 @@
 .empty {
     width: 100%;
-    text-align: center;
-
-    &__content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
 
     &__image {
         width: 204px;
         height: auto;
-        margin-bottom: 30px;
     }
 
     &__text {

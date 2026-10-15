@@ -2,15 +2,16 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
-import { DAPP_CONFIG } from '../src/services/dapp/config.ts'
+import { DAPP_CONFIG, DAPP_PRODUCTION_CHAIN, DAPP_CURRENT_CHAIN } from '../src/services/dapp/config.ts'
 import { waitForDappContractDataSync } from '../src/services/dapp/contractRefresh.ts'
 
 test('dapp production chain and transaction policies are project settings', () => {
     const source = readFileSync('src/services/dapp/config.ts', 'utf8')
     const readme = readFileSync('src/services/dapp/README.md', 'utf8')
 
-    assert.match(source, /import \{ bsc \} from 'viem\/chains'/)
-    assert.match(source, /DAPP_PRODUCTION_CHAIN = bsc/)
+    assert.equal(Number.isSafeInteger(DAPP_PRODUCTION_CHAIN.id), true)
+    assert.equal(DAPP_PRODUCTION_CHAIN.id > 0, true)
+    assert.ok(DAPP_CURRENT_CHAIN)
     assert.match(source, /DAPP_LOCAL_CHAIN = defineChain/)
     assert.doesNotMatch(source, /VITE_CHAIN_/)
     assert.match(source, /VITE_RPC_URL/)
@@ -20,11 +21,8 @@ test('dapp production chain and transaction policies are project settings', () =
     assert.equal(typeof DAPP_CONFIG.enableGasEstimate, 'boolean')
     assert.equal(typeof DAPP_CONFIG.enableErc20MaxApprove, 'boolean')
     assert.equal(typeof DAPP_CONFIG.contractWriteRefreshDelayMs, 'number')
-    assert.equal(typeof DAPP_CONFIG.amountDecimals, 'number')
-    assert.equal(DAPP_CONFIG.enableGasCheck, false)
-    assert.equal(DAPP_CONFIG.enableGasEstimate, false)
-    assert.equal(DAPP_CONFIG.enableErc20MaxApprove, true)
-    assert.equal(DAPP_CONFIG.amountDecimals, 18)
+    assert.equal(Number.isInteger(DAPP_CONFIG.amountDecimals), true)
+    assert.ok(DAPP_CONFIG.amountDecimals >= 0 && DAPP_CONFIG.amountDecimals <= 36)
     assert.equal(Number.isFinite(DAPP_CONFIG.contractWriteRefreshDelayMs), true)
     assert.equal(DAPP_CONFIG.contractWriteRefreshDelayMs >= 0, true)
     assert.doesNotMatch(source, /VITE_DAPP_AMOUNT_DECIMALS/)

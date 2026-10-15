@@ -1,7 +1,3 @@
-import {
-    type CSSProperties,
-} from 'react'
-
 import { Popup } from '@/components/Popup'
 
 import './ContractLoading.scss'
@@ -39,10 +35,7 @@ export function ContractLoading({
                     {LOADING_DOTS.map((dotIndex) => (
                         <span
                             key={dotIndex}
-                            className="contract-loading__dot"
-                            style={{
-                                '--i': dotIndex,
-                            } as CSSProperties}
+                            className={`contract-loading__dot contract-loading__dot--${dotIndex}`}
                         />
                     ))}
                 </div>

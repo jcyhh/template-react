@@ -41,7 +41,7 @@
     $height: 80px,
     $radius: 40px,
     $color: var(--app-btn-color),
-    $bg: var(--app-color)
+    $bg: var(--app-btn-bg)
 ){
     width: 100%;
     height: $height;
@@ -58,7 +58,7 @@
     $radius: 26px,
     $padding: 20px,
     $color: var(--app-btn-color),
-    $bg: var(--app-color)
+    $bg: var(--app-btn-bg)
 ){
     height: $height;
     border-radius: $radius;

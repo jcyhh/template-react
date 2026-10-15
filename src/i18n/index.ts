@@ -4,6 +4,7 @@ export {
     DEFAULT_LANGUAGE_CODE,
     FALLBACK_LANGUAGE_CODE,
     findAppLanguage,
+    mergeLanguageMessages,
     type AppLanguage,
 } from './config.ts'
 export { getRequestLanguage } from './getRequestLanguage.ts'

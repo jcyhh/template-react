@@ -8,11 +8,28 @@ import {
 } from '../../services/storage/common.ts'
 import type { DappStoreState } from './types.ts'
 
+const pendingWorkflows = new Set<symbol>()
+let manualLoading = false
+
 export const useDappStore = create<DappStoreState>()((set) => ({
     providerStatus: DAPP_PROVIDER_STATUS.checking,
     walletAddress: getWalletAddress(),
     chainId: undefined,
     dappLoading: false,
+    pendingContractWorkflows: 0,
+    beginContractWorkflow: () => {
+        const workflow = Symbol('contract-workflow')
+        pendingWorkflows.add(workflow)
+        set({ dappLoading: true, pendingContractWorkflows: pendingWorkflows.size })
+
+        return () => {
+            if (!pendingWorkflows.delete(workflow)) return
+            set({
+                dappLoading: manualLoading || pendingWorkflows.size > 0,
+                pendingContractWorkflows: pendingWorkflows.size,
+            })
+        }
+    },
     setProviderStatus: (providerStatus) => set({ providerStatus }),
     setWalletAddress: (walletAddress) => {
         setWalletAddress(walletAddress)
@@ -23,14 +40,18 @@ export const useDappStore = create<DappStoreState>()((set) => ({
         set({ walletAddress: '' })
     },
     setChainId: (chainId) => set({ chainId }),
-    setDappLoading: (dappLoading) => set({ dappLoading }),
+    setDappLoading: (dappLoading) => {
+        manualLoading = dappLoading
+        set({ dappLoading: manualLoading || pendingWorkflows.size > 0 })
+    },
     resetDappState: () => {
+        manualLoading = false
         removeWalletAddress()
         set({
             providerStatus: DAPP_PROVIDER_STATUS.checking,
             walletAddress: '',
             chainId: undefined,
-            dappLoading: false,
+            dappLoading: pendingWorkflows.size > 0,
         })
     },
 }))

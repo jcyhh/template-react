@@ -180,11 +180,10 @@ test('splash opening animation gates every auth startup path', async () => {
         splashSource,
         /APP_CONFIG\.loginMode === APP_LOGIN_MODE\.account[\s\S]*await waitForSplashAnimation\(\)/,
     )
-    assert.match(appSource, /waitForSplashAnimation/)
     assert.match(appSource, /isSplashRoutePath/)
     assert.match(
         appSource,
-        /if \(isSplashRoutePath\(\)\) \{[\s\S]*await waitForSplashAnimation\(\)[\s\S]*\}[\s\S]*await initializeAuthenticatedDappSession\(\)/,
+        /if \(isSplashRoutePath\(\)\) \{\s*return\s*\}[\s\S]*await initializeAuthenticatedDappSession\(\)/,
     )
 })
 
@@ -198,6 +197,7 @@ test('app startup resumes an authenticated DApp session before page modules load
     assert.match(appSource, /AuthenticatedDappSessionBootstrap/)
     assert.match(appSource, /initializeAuthenticatedDappSession/)
     assert.match(appSource, /void initializeAuthenticatedDappSessionAfterOpening\(\)/)
+    assert.match(routerSource, /AuthSessionBoundary ready=\{isSessionReady\}/)
     assert.match(startupSource, /export async function initializeAuthenticatedDappSession/)
     assert.match(startupSource, /const token = getToken\(\)/)
     assert.match(startupSource, /if \(!token\) return AUTH_STARTUP_RESULT\.completed/)

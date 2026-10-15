@@ -8,7 +8,10 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 
-import { getPopupContentComponent } from './PopupContent/index.ts'
+import {
+    getPopupContentComponent,
+    type PopupContentTheme,
+} from './PopupContent/index.ts'
 import './Popup.scss'
 
 export type PopupPosition = 'center' | 'right' | 'left' | 'bottom'
@@ -42,6 +45,7 @@ export interface PopupProps {
     className?: string
     overlayClassName?: string
     contentClassName?: string
+    contentTheme?: PopupContentTheme
     contentPreset?: boolean
 }
 
@@ -84,6 +88,7 @@ export function Popup({
     className = '',
     overlayClassName = '',
     contentClassName = '',
+    contentTheme = 'default',
     contentPreset = true,
 }: PopupProps) {
     const [shouldRender, setShouldRender] = useState(show)
@@ -173,6 +178,9 @@ export function Popup({
                 {!PopupContentComponent ? (
                     <div
                         className={popupContentClassName}
+                        role="dialog"
+                        aria-modal={backdrop}
+                        aria-label={typeof title === 'string' ? title : undefined}
                         onClick={handleContentClick}
                         onAnimationEnd={handleContentAnimationEnd}
                     >
@@ -181,7 +189,11 @@ export function Popup({
                 ) : (
                     <PopupContentComponent
                         className={popupContentClassName}
+                        role="dialog"
+                        aria-modal={backdrop}
+                        aria-label={typeof title === 'string' ? title : undefined}
                         title={title}
+                        theme={contentTheme}
                         onClose={onClose}
                         onClick={handleContentClick}
                         onAnimationEnd={handleContentAnimationEnd}

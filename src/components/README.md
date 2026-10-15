@@ -9,3 +9,5 @@ Keep business-specific components inside their feature or page directory until t
 
 `PagePullRefresh` is the authenticated business route pull-refresh container. Pages opt in by registering `usePageRefresh()`.
 `PagePullRefresh` 是已登录业务路由的下拉刷新容器，页面通过注册 `usePageRefresh()` 启用刷新。
+
+Shared primitives now include `ProgressBar`, `SegmentedTabs`, `InfiniteScroll`, `CountdownTimer`, `ConfirmPopup`, and the method-level `Message` service. See their README files and `/showcase/components/primitives` for neutral usage examples. Business requests, list state and contract actions stay outside these components.

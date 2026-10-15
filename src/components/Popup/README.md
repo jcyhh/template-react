@@ -266,3 +266,8 @@ The component showcase lives in `src/showcase/components/popup/PopupShowcasePage
 
 Use the showcase as the source of truth for common usage patterns before adding new usage.
 新增使用方式前，优先参考该演示页中的常见写法。
+
+`contentTheme="default" | "gradient-card"` selects an optional shared content skin for center and bottom content. It defaults to the existing template appearance. Gradient-card background images come from `--app-popup-gradient-card-bg` and `--app-popup-gradient-card-border`, with neutral template fallbacks; do not hard-code project gradients in this module. The content uses dialog semantics and the close action is a button.
+
+The gradient-card skin paints two background image layers: the inner fill is clipped to `padding-box` and the border is clipped to `border-box`. Both theme tokens must therefore be CSS images such as `linear-gradient(...)`, not bare colors. For a solid appearance, use `linear-gradient(var(--app-card-bg), var(--app-card-bg))` and `linear-gradient(var(--app-color), var(--app-color))`. Custom gradients may use different stops without changing the shared component.
+渐变卡片通过两个背景图像层绘制：内层填充裁切到 `padding-box`，边框层裁切到 `border-box`。因此两个主题变量必须是 `linear-gradient(...)` 等 CSS 图像，不能直接填写颜色。纯色效果也使用 `linear-gradient(var(--app-card-bg), var(--app-card-bg))` 和 `linear-gradient(var(--app-color), var(--app-color))`。项目可以修改渐变色标，无需改动公共组件。

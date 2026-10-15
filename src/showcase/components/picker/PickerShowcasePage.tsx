@@ -25,9 +25,9 @@ const BASIC_OPTION_LIST: PickerOption[] = [
 ]
 
 const TOKEN_OPTION_LIST: PickerOption[] = [
-    { label: 'USDT', value: 'USDT', name: 'Tether USD', color: '#26A17B' },
-    { label: 'BNB', value: 'BNB', name: 'BNB Smart Chain', color: '#F3BA2F' },
-    { label: 'ETH', value: 'ETH', name: 'Ethereum', color: '#627EEA' },
+    { label: 'USDT', value: 'USDT', name: 'Tether USD', tone: 'usdt' },
+    { label: 'BNB', value: 'BNB', name: 'BNB Smart Chain', tone: 'bnb' },
+    { label: 'ETH', value: 'ETH', name: 'Ethereum', tone: 'eth' },
 ]
 
 const PICKER_DEMO_LIST: PickerDemo[] = [
@@ -101,8 +101,7 @@ export function PickerShowcasePage() {
         return (
             <div className="picker-showcase-option flex-center gap-16">
                 <div
-                    className="picker-showcase-token-icon img-44 flex-center black size-22 bold"
-                    style={{ backgroundColor: String(option.color ?? 'var(--app-color)') }}
+                    className={`picker-showcase-token-icon picker-showcase-token-icon--${String(option.tone)} img-44 flex-center black size-22 bold`}
                 >
                     {String(option.value ?? '').slice(0, 1)}
                 </div>
@@ -150,7 +149,6 @@ export function PickerShowcasePage() {
                 title={activeDemo.title}
                 options={activeOptions}
                 value={activeIndex}
-                emptyText="暂无可选择数据"
                 onClose={handleClose}
                 onConfirm={handleConfirm}
                 renderOption={isCustomDemo ? renderTokenOption : undefined}

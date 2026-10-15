@@ -27,11 +27,14 @@ const EXCLUDED_PREFIXES = [
     'dist-ssr/',
     'node_modules/',
     'packages/create-template-react/',
+    'tests/template-maintenance/',
 ]
 const EXCLUDED_FILES = new Set([
     '.DS_Store',
     '.env.development',
     '.env.production',
+    'scripts/pack-create-template.mjs',
+    'scripts/verify-created-project.mjs',
 ])
 
 function run(command, args, options = {}) {
@@ -55,12 +58,14 @@ function shouldInclude(file) {
 }
 
 function getTemplateFiles() {
-    const output = run('git', ['ls-files', '-z'])
+    const output = run('git', ['ls-files', '--cached', '--others', '--exclude-standard', '-z'])
 
     return output
         .split('\0')
         .filter(Boolean)
+        .filter((file, index, files) => files.indexOf(file) === index)
         .filter(shouldInclude)
+        .filter((file) => existsSync(join(rootDir, file)))
 }
 
 function copyTemplateFiles(files) {
@@ -88,6 +93,7 @@ function removeTemplatePublisherScripts() {
     delete packageJson.scripts?.['create:pack']
     delete packageJson.scripts?.['create:local']
     delete packageJson.scripts?.['create:publish']
+    delete packageJson.scripts?.['create:verify']
 
     writeFileSync(`${packageJsonPath}`, `${JSON.stringify(packageJson, null, 4)}\n`)
 }

@@ -54,6 +54,10 @@ function createShowcaseRouteElements(): ReactElement[] {
 
         return { default: page.ContractLoadingShowcasePage }
     })
+    const primitivesRoutePage = lazy(async () => {
+        const page = await import('@/showcase/components/primitives/PrimitivesShowcasePage.tsx')
+        return { default: page.PrimitivesShowcasePage }
+    })
     const layoutStylesRoutePage = lazy(async () => {
         const page = await import('@/showcase/styles/layout/LayoutStylesPage.tsx')
 
@@ -76,6 +80,9 @@ function createShowcaseRouteElements(): ReactElement[] {
     })
 
     return [
+        <Route key={SHOWCASE_ROUTE_PATH.primitives} path={SHOWCASE_ROUTE_PATH.primitives} element={(
+            <Suspense fallback={null}>{createElement(primitivesRoutePage)}</Suspense>
+        )} />,
         <Route
             key={SHOWCASE_ROUTE_PATH.home}
             path={SHOWCASE_ROUTE_PATH.home}

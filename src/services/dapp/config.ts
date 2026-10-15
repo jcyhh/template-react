@@ -5,6 +5,8 @@ import {
 } from 'viem'
 import { bsc } from 'viem/chains'
 
+import { translate } from '../../i18n/index.ts'
+
 export type DappEnv = Partial<Record<string, string>>
 
 export const DAPP_DEFAULT_AMOUNT_DECIMALS = 18
@@ -39,8 +41,8 @@ export type DappProviderStatus =
 // 生产目标链。项目使用其他网络时，替换为对应的 viem 预设链。
 export const DAPP_PRODUCTION_CHAIN = bsc
 
-// Local test chain. Its RPC endpoint is read from VITE_RPC_URL for LAN development.
-// 本地测试链。其 RPC 节点从 VITE_RPC_URL 读取，便于局域网开发。
+// Local test chain. Only development reads VITE_RPC_URL; production uses DAPP_PRODUCTION_CHAIN.
+// 本地测试链。仅开发环境读取 VITE_RPC_URL；生产环境使用 DAPP_PRODUCTION_CHAIN。
 export const DAPP_LOCAL_CHAIN = defineChain({
     id: 31337,
     name: 'Local Testnet',
@@ -63,6 +65,8 @@ export const DAPP_CURRENT_CHAIN = import.meta.env?.PROD
 // DApp transaction and amount settings shared by the current project.
 // 当前项目共用的 DApp 交易和金额设置。
 export const DAPP_CONFIG = {
+    enableContractDebug: Boolean(import.meta.env?.DEV),
+
     // Minimum native token balance required before contract writes.
     // 写合约前要求的最低原生代币余额。
     minGasBalance: '0.0004',
@@ -127,15 +131,22 @@ export function getDappAmountDecimals(): number {
 export const DAPP_AMOUNT_DECIMALS = getDappAmountDecimals()
 
 export const DAPP_ERROR_MESSAGE = {
-    providerUnavailable: '没有钱包环境',
-    walletAddressUnavailable: '未获取到钱包地址',
-    gasBalanceInsufficient: 'Gas费用不足',
-    contractReverted: '交易执行失败',
-    tokenAddressUnavailable: '未配置 Token 合约地址',
-    eip7702Unavailable: '当前钱包暂不支持7702批量调用',
-    erc20BalanceInsufficient: '余额不足',
-    invalidAmount: '金额格式错误',
+    providerUnavailable: 'dapp.providerUnavailable',
+    walletAddressUnavailable: 'dapp.walletAddressUnavailable',
+    gasBalanceInsufficient: 'dapp.gasBalanceInsufficient',
+    contractReverted: 'dapp.contractReverted',
+    tokenAddressUnavailable: 'dapp.tokenAddressUnavailable',
+    eip7702Unavailable: 'dapp.eip7702Unavailable',
+    erc20BalanceInsufficient: 'dapp.erc20BalanceInsufficient',
+    invalidAmount: 'dapp.invalidAmount',
 } as const
+
+export type DappErrorMessage =
+    (typeof DAPP_ERROR_MESSAGE)[keyof typeof DAPP_ERROR_MESSAGE]
+
+export function translateDappErrorMessage(message: DappErrorMessage): string {
+    return translate(message)
+}
 
 export type DappSignMessage =
     | 'Login'

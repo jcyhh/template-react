@@ -298,6 +298,15 @@ After API or contract integration, use `useLatestRequest()` or `AbortController`
 When a page has timers, manual pull refresh and post-write refresh should reuse the same screen refresh function and guard timer restart with mounted or lifecycle tokens.
 页面存在定时器时，手动下拉刷新和写入成功后的刷新应复用同一个整屏刷新函数，并用 mounted 或生命周期 token 防止离页后旧异步重启定时器。
 
+## Runtime and deployment
+## 运行环境与部署
+
+Use Node.js 24.11.1 or later and the pnpm version declared in package.json. Creator and project engines must agree.
+使用 Node.js 24.11.1 或更新版本及 package.json 声明的 pnpm 版本；创建器和项目 engines 必须一致。
+
+Edit the deployment prefix only in `src/config/deployment.ts`; Vite, app config and navigation derive from it. Root and nested deployments are supported.
+部署目录仅修改 `src/config/deployment.ts`；Vite、应用配置和导航由它派生，支持根目录和嵌套目录部署。
+
 ## Auth startup
 ## 认证启动
 
@@ -309,6 +318,9 @@ In DApp login modes, an existing token must validate and resume the current wall
 
 If the cached token and wallet address belong to a different current wallet account during splash startup, clear the stale auth session and immediately start DApp login again in the same startup flow.
 开屏启动时如果缓存 Token 与钱包地址属于旧账号，应清理旧登录态，并在同一轮启动流程中立即重新发起 DApp 登录。
+
+Business routes must wait for isSessionReady before mounting. Never send page-owned authenticated requests before wallet restoration finishes. Late responses from an old session must not clear a newer session.
+业务路由挂载前必须等待 isSessionReady；钱包恢复结束前不得发送页面鉴权请求。旧会话迟到的响应不得清除新会话。
 
 Use `clearAuthSession()` when stale auth state must be cleared without forcing a route replacement; use `logout()` when the user should be redirected to splash.
 需要清理旧登录态但不强制替换路由时使用 `clearAuthSession()`；需要用户回到开屏页时使用 `logout()`。
@@ -354,6 +366,45 @@ Only write custom SCSS for styles that are genuinely page-specific or hard to ex
 
 For example, use `className="flex items-center justify-center tc size-24"` instead of rewriting the same flex, alignment, text-align or font-size CSS.
 例如，使用 `className="flex items-center justify-center tc size-24"`，不要重复编写同等的 flex、对齐、文本居中或字号 CSS。
+
+Run `pnpm stylelint` and `pnpm lint:tsx-styles`; `pnpm lint` includes both checks alongside Oxlint.
+使用 `pnpm stylelint` 和 `pnpm lint:tsx-styles`；`pnpm lint` 会同时执行它们及 Oxlint。
+
+JSX `style` attributes are forbidden. Express visual states through classes; do not bypass PostCSS viewport conversion with inline React styles.
+禁止 JSX `style` 属性。视觉状态通过类名表达，不要用 React 内联样式绕过 PostCSS 视口转换。
+
+Every private SCSS declaration using vh/vw must be immediately followed by the matching dvh/dvw declaration. TSX viewport strings must also include matching dynamic units.
+私有 SCSS 中使用 vh/vw 的声明必须紧接相同属性、表达式的 dvh/dvw 声明；TSX 视口字符串也必须有对应动态单位。
+
+Custom rules apply only to first-party source. Exclude node_modules, src/vendor and src/third-party; project-written wrappers remain first-party.
+自定义规则只约束一方源码；排除 node_modules、src/vendor 和 src/third-party，项目自行编写的封装仍是一方代码。
+
+Primary action buttons use `full-btn` / `full-button` or `auto-btn` / `auto-button`. Their skin is controlled by `--app-btn-bg` and `--app-btn-color`; solid, gradient and gradient-border skin classes are optional. Header wallet controls and other scene-specific controls do not inherit the primary skin automatically.
+主操作按钮使用 `full-btn` / `full-button` 或 `auto-btn` / `auto-button`，皮肤由 `--app-btn-bg` 与 `--app-btn-color` 控制；可选纯色、渐变、渐变描边皮肤。Header 钱包等场景控件不自动继承主操作皮肤。
+
+## Contract write feedback
+## 合约写入反馈
+
+Every contract-write workflow must render ContractLoading for its complete pending lifetime, including gas checks, allowance reads, wallet confirmation, sequential approvals and the final receipt. Use `runDappContractWorkflow()` around the entire feature action; the App host renders ContractLoading from the shared pending state.
+所有写合约流程必须在完整等待期间展示 ContractLoading，覆盖 Gas 检查、授权额度读取、钱包确认、连续授权与最终回执。使用 `runDappContractWorkflow()` 包裹完整功能操作；App 中统一的宿主按共享等待状态渲染 ContractLoading。
+
+A disabled button or local spinner may supplement but cannot replace ContractLoading. After success, await `waitForDappContractDataSync()` before refreshing chain-indexed APIs; the delay comes only from DAPP_CONFIG.contractWriteRefreshDelayMs.
+禁用按钮或局部 spinner 可以补充但不能替代 ContractLoading。成功后刷新链上索引接口前必须 await `waitForDappContractDataSync()`；延迟仅由 DAPP_CONFIG.contractWriteRefreshDelayMs 控制。
+
+Project contract wrappers must explicitly map supported UI actions and backend signatures to contract methods. An ABI method name alone must not enable an asset action.
+业务合约封装必须明确映射可用的 UI 动作、后端签名与写链方法；不能仅凭 ABI 方法名称开放资产操作。
+
+## Reuse review
+## 复用复盘
+
+After a static-page or integration milestone, review repeated structures. Extract components only when semantics match across unrelated pages, business logic is light and appearance can use tokens. Keep one-off artwork and business data orchestration local.
+静态页或联调阶段完成后复盘重复结构。仅在不同页面语义一致、业务逻辑轻且视觉可用 token 配置时抽公共组件；一次性切图和业务数据编排留在页面内。
+
+Use semantic page names such as home, user, asset, swap, team and order as suggestions. The configured home route may change; navigation and tests must read APP_CONFIG.homeRouteName. Sidebar remains full-height.
+页面命名推荐 home、user、asset、swap、team、order 等语义词；首页路由可配置，跳转和测试必须读取 APP_CONFIG.homeRouteName。Sidebar 保持全屏高度。
+
+Keep tutorial material and cross-module conventions in Markdown. Preserve only comments needed for compatibility, non-obvious boundaries or actionable TODOs in code.
+教程和跨模块规范优先放 Markdown；源码仅保留兼容性、非显然边界或可执行 TODO 所需注释。
 
 ## Editor tools
 ## 编辑器工具
@@ -411,6 +462,9 @@ At minimum, run `pnpm test`, `pnpm build` and `pnpm lint`.
 
 `pnpm build` is a hard quality gate: its prebuild lifecycle runs `pnpm verify`, which runs lint and tests before TypeScript and Vite can emit production assets. Do not bypass or remove this lifecycle.
 `pnpm build` 是强制质量门禁：prebuild 生命周期会先运行 `pnpm verify`，由它执行 lint 和测试，全部通过后 TypeScript 和 Vite 才能生成生产产物。不得绕过或删除该生命周期。
+
+Template maintenance files and tests must stay out of generated projects. Before distributing a changed template, run `pnpm create:verify`; it validates the final creator archive by generating and building projects with default and alternate configurations. Keep the template placeholder brand unready; verification uses its own initialized fixture brand.
+模板维护代码与测试不得进入生成项目。分发前运行 `pnpm create:verify`，它从最终创建包生成项目并验证默认及可选配置的完整构建。模板占位品牌保持未就绪，验收仅为独立测试项目初始化品牌。
 
 ## Test design
 ## 测试设计

@@ -41,3 +41,5 @@ usePageRefresh(refreshPageData, !submitting)
 
 Do not wrap splash, login or other flow pages with this component.
 不要把开屏页、登录页或其他流程页包进这个组件。
+
+`onError(error)` optionally handles rejected refresh work. Failures settle the indicator and permit a later pull; no rejected promise escapes a touch event. Route handler cleanup and container unmount invalidate the pending refresh, so late work does not update the next page or restart a settle timer. Pages remain responsible for cancelling their actual requests or ignoring stale response data.
